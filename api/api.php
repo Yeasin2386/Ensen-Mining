@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: application/json');
-$file = 'users.json';
+// Fix the file path to ensure it works on Vercel
+$file = __DIR__ . '/users.json';
 $data = json_decode(file_get_contents($file), true) ?? [];
 
 function save_data($data, $file) {

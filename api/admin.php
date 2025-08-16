@@ -1,6 +1,6 @@
 <?php
 session_start();
-// Fix the file path to ensure it works on Vercel
+// ফাইলের পথ ঠিক করা হয়েছে
 $file = __DIR__ . '/users.json';
 $data = json_decode(file_get_contents($file), true) ?? [];
 

@@ -604,14 +604,31 @@
                 <div class="header">
                     <h2>Tasks 🚀</h2>
                 </div>
-                <div class="task-list-item" onclick="showAd()">
-                    <i class="fas fa-ad task-icon ad-icon"></i>
+                <div class="task-list-item" onclick="showAd1()">
+                    <i class="fas fa-video task-icon ad-icon"></i>
                     <div class="task-info">
-                        <h4>Watch Ads</h4>
-                        <p>Watch short video ads to earn <span id="adTaskRate">50</span> BDT.</p>
+                        <h4>Watch a Video Ad</h4>
+                        <p>Watch a short video to earn <span id="ad1Rate">50</span> BDT.</p>
                     </div>
-                    <button class="task-button" onclick="event.stopPropagation(); showAd();">Watch Ad</button>
+                    <button class="task-button" onclick="event.stopPropagation(); showAd1();">Watch Ad</button>
                 </div>
+                <div class="task-list-item" onclick="showAd2()">
+                    <i class="fas fa-window-maximize task-icon ad-icon"></i>
+                    <div class="task-info">
+                        <h4>View a Popup Ad</h4>
+                        <p>View a popup ad to earn <span id="ad2Rate">40</span> BDT.</p>
+                    </div>
+                    <button class="task-button" onclick="event.stopPropagation(); showAd2();">Watch Ad</button>
+                </div>
+                <div class="task-list-item" onclick="showAd3()">
+                    <i class="fas fa-scroll task-icon ad-icon"></i>
+                    <div class="task-info">
+                        <h4>View a Banner Ad</h4>
+                        <p>View a banner ad to earn <span id="ad3Rate">30</span> BDT.</p>
+                    </div>
+                    <button class="task-button" onclick="event.stopPropagation(); showAd3();">Watch Ad</button>
+                </div>
+                
                 <div class="task-list-item">
                     <i class="fab fa-facebook-f task-icon facebook-icon"></i>
                     <div class="task-info">
@@ -981,7 +998,7 @@
     <script>
         const GMAIL_RATE = 500;
         const INSTAGRAM_RATE = 300;
-        const AD_RATE = 50;
+        const AD_RATE = 50; // default ad rate, though we will use specific rates for each type
         const DAILY_CHECKIN_BDT = 50;
         const FB_FOLLOW_RATE = 30;
         const INSTA_JOIN_RATE = 25;
@@ -989,6 +1006,11 @@
         const FB_CODE = "FB123";
         const INSTA_CODE = "IG123";
         
+        // Define specific ad rates
+        const VIDEO_AD_RATE = 50;
+        const POPUP_AD_RATE = 40;
+        const BANNER_AD_RATE = 30;
+
         let balance = 0;
         let username = "";
         let nickname = "";
@@ -999,7 +1021,12 @@
         let accountsSold = 0;
         let taskEarnings = 0;
         
-        const MONETAG_AD_URL = 'https://otieu.com/4/9721070';
+        // Placeholder URLs for different ad types.
+        // Replace these with your actual Monetag direct links.
+        const VIDEO_AD_URL = 'https://otieu.com/4/9721070';
+        const POPUP_AD_URL = 'https://monetag.com/ad/your-popup-ad-link';
+        const BANNER_AD_URL = 'https://monetag.com/ad/your-banner-ad-link';
+
 
         function loadData() {
             const userData = JSON.parse(localStorage.getItem('userData'));
@@ -1067,9 +1094,12 @@
             
             document.getElementById('gmailRate').textContent = GMAIL_RATE + ' BDT';
             document.getElementById('instagramRate').textContent = INSTAGRAM_RATE + ' BDT';
-            document.getElementById('adRate').textContent = AD_RATE + ' BDT';
+            document.getElementById('adRate').textContent = VIDEO_AD_RATE + ' BDT';
 
-            document.getElementById('adTaskRate').textContent = AD_RATE;
+            document.getElementById('ad1Rate').textContent = VIDEO_AD_RATE;
+            document.getElementById('ad2Rate').textContent = POPUP_AD_RATE;
+            document.getElementById('ad3Rate').textContent = BANNER_AD_RATE;
+
             document.getElementById('profileUsername').textContent = username;
             document.getElementById('profileNickname').textContent = nickname;
             document.getElementById('profilePhoneNumber').textContent = phoneNumber;
@@ -1215,22 +1245,27 @@
                 alert("Invalid code. Please check our Telegram channel for the correct code.");
             }
         }
+        
+        // New Ad Functions
+        function showAd1() {
+            window.open(VIDEO_AD_URL, '_blank');
+            setTimeout(() => {
+                completeTask('ads1');
+            }, 3000); // Simulate ad completion
+        }
 
-        function showAd() {
-            if (window.show_9716498) {
-                window.show_9716498().then(() => {
-                    // Reward the user after they watch the ad.
-                    completeTask('ads');
-                }).catch(e => {
-                    // Handle errors if the ad fails to load or the user closes it.
-                    console.error('Ad failed to load or play', e);
-                    alert("Sorry, the ad could not be shown. Please try again later.");
-                });
-            } else {
-                // This is a fallback if the Monetag SDK script did not load properly.
-                console.warn("Monetag SDK is not loaded. Please check the network connection.");
-                alert("Monetag SDK is not loaded. Please try refreshing the page.");
-            }
+        function showAd2() {
+            window.open(POPUP_AD_URL, '_blank');
+            setTimeout(() => {
+                completeTask('ads2');
+            }, 3000); // Simulate ad completion
+        }
+
+        function showAd3() {
+            window.open(BANNER_AD_URL, '_blank');
+            setTimeout(() => {
+                completeTask('ads3');
+            }, 3000); // Simulate ad completion
         }
 
         function openExternalLink(url, taskName) {
@@ -1258,11 +1293,21 @@
 
         function completeTask(taskName) {
             let bdt = 0;
-            if (taskName === 'ads') {
-                bdt = AD_RATE;
+            if (taskName === 'ads1') {
+                bdt = VIDEO_AD_RATE;
                 adsWatched++;
                 taskEarnings += bdt;
-                alert(`You watched an ad and earned ${bdt} BDT.`);
+                alert(`You watched a video ad and earned ${bdt} BDT.`);
+            } else if (taskName === 'ads2') {
+                bdt = POPUP_AD_RATE;
+                adsWatched++;
+                taskEarnings += bdt;
+                alert(`You viewed a popup ad and earned ${bdt} BDT.`);
+            } else if (taskName === 'ads3') {
+                bdt = BANNER_AD_RATE;
+                adsWatched++;
+                taskEarnings += bdt;
+                alert(`You viewed a banner ad and earned ${bdt} BDT.`);
             } else if (taskName === 'gmail') {
                 bdt = GMAIL_RATE;
                 accountsSold++;

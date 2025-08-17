@@ -1,203 +1,109 @@
 <?php
-// Function to read data from users.json
-function read_users_data() {
-    $file_path = 'users.json';
-    if (file_exists($file_path)) {
-        $json_data = file_get_contents($file_path);
-        return json_decode($json_data, true);
-    }
-    return [];
+session_start();
+$ADMIN_PASSWORD = "admin123"; 
+
+if (isset($_POST['password']) && $_POST['password'] === $ADMIN_PASSWORD) { $_SESSION['loggedin'] = true; }
+if (isset($_GET['logout'])) { session_destroy(); header('Location: admin.php'); exit; }
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Admin Login</title><style>body{font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f0f2f5;}form{background:white;padding:40px;border-radius:8px;box-shadow:0 4px 8px rgba(0,0,0,0.1);}.form-group{margin-bottom:15px;}input[type=password]{width:100%;padding:10px;border:1px solid #ddd;border-radius:4px;}input[type=submit]{width:100%;padding:10px;border:none;border-radius:4px;background:#007bff;color:white;cursor:pointer;}</style></head><body><form method="POST"><h3>Admin Login</h3><div class="form-group"><input type="password" name="password" placeholder="Password" required></div><input type="submit" value="Login"></form></body></html>';
+    exit;
 }
 
-// Function to write data to users.json
-function write_users_data($data) {
-    $file_path = 'users.json';
-    $json_data = json_encode($data, JSON_PRETTY_PRINT);
-    return file_put_contents($file_path, $json_data);
-}
+$usersFile = 'users.json';
+$configFile = 'config.json';
+$uploadDir = 'uploads/';
 
-$users = read_users_data();
+function read_json($file) { return json_decode(file_get_contents($file), true) ?? []; }
+function save_json($file, $data) { file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); }
 
-// Handle POST requests for admin actions
+$usersData = read_json($usersFile);
+$configData = read_json($configFile);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = $_POST['action'];
-
-    switch ($action) {
-        case 'completeWithdrawal':
-            $userId = $_POST['userId'];
-            $withdrawalId = $_POST['withdrawalId'];
-            foreach ($users as &$user) {
-                if ($user['id'] == $userId && isset($user['withdrawalHistory'])) {
-                    foreach ($user['withdrawalHistory'] as &$withdrawal) {
-                        if ($withdrawal['id'] == $withdrawalId) {
-                            $withdrawal['status'] = 'Completed';
-                            break;
-                        }
+    if ($action === 'approveActivation' || $action === 'approveFile' || $action === 'completeWithdrawal') {
+        $userId = $_POST['userId'];
+        $userKey = array_search($userId, array_column($usersData, 'id'));
+        if ($userKey !== false) {
+            if ($action === 'approveActivation') $usersData[$userKey]['status'] = 'active';
+            if ($action === 'completeWithdrawal') {
+                foreach($usersData[$userKey]['withdrawalHistory'] as &$w) {
+                    if ($w['id'] === $_POST['withdrawalId']) $w['status'] = 'Completed';
+                }
+            }
+            if ($action === 'approveFile') {
+                $fileId = $_POST['fileId'];
+                $rate = ($_POST['fileType'] === 'gmail') ? $configData['gmailRate'] : $configData['instagramRate'];
+                foreach($usersData[$userKey]['submittedFiles'] as &$f) {
+                    if ($f['id'] === $fileId) {
+                        $f['status'] = 'approved';
+                        $usersData[$userKey]['balance'] += $rate;
                     }
                 }
             }
-            break;
-
-        case 'updateBalance':
-            $userId = $_POST['userId'];
-            $newBalance = $_POST['balance'];
-            foreach ($users as &$user) {
-                if ($user['id'] == $userId) {
-                    $user['balance'] = $newBalance;
-                    break;
-                }
-            }
-            break;
-
-        case 'deleteUser':
-            $userId = $_POST['userId'];
-            $users = array_filter($users, function($user) use ($userId) {
-                return $user['id'] != $userId;
-            });
-            $users = array_values($users); // Re-index the array
-            break;
+        }
+        save_json($usersFile, $usersData);
+    } elseif ($action === 'updateSettings') {
+        foreach ($_POST as $key => $value) {
+            if (isset($configData[$key])) $configData[$key] = is_numeric($value) ? (float)$value : $value;
+        }
+        save_json($configFile, $configData);
     }
-
-    write_users_data($users);
-    header("Location: admin.php"); // Redirect to prevent form resubmission
-    exit();
+    header("Location: admin.php");
+    exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <meta charset="UTF-8"><title>Admin Panel</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; color: #333; margin: 0; padding: 20px; }
-        .container { max-width: 1200px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header { text-align: center; margin-bottom: 20px; }
-        .tab-buttons { display: flex; justify-content: center; margin-bottom: 20px; }
-        .tab-buttons button { padding: 10px 20px; border: none; background: #ddd; cursor: pointer; margin: 0 5px; border-radius: 5px; }
-        .tab-buttons button.active { background: #007BFF; color: #fff; }
-        .main-content-section { display: none; }
-        .main-content-section.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background: #f2f2f2; }
-        .form-container { margin-top: 20px; }
-        .status-badge { padding: 5px 10px; border-radius: 12px; font-weight: bold; font-size: 0.8em; }
-        .status-pending { background: #ffc107; color: #333; }
-        .status-completed { background: #28a745; color: #fff; }
-        .action-buttons { padding: 5px 10px; border: none; cursor: pointer; border-radius: 5px; margin-right: 5px; }
-        .complete { background: #28a745; color: #fff; }
-        .delete { background: #dc3545; color: #fff; }
-        .update { background: #007BFF; color: #fff; }
+        body { font-family: sans-serif; background: #f4f4f4; color: #333; margin:0; }
+        .container { max-width: 1400px; margin: auto; padding: 20px; }
+        .card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1, h2, h3 { border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        button, .btn { background: #007bff; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; text-decoration:none; display:inline-block; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .form-group label { margin-bottom: 5px; font-weight: bold; display:block; }
+        .form-group input { width:100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing:border-box;}
+        .btn-approve { background: #28a745; }
+        .btn-download { background: #17a2b8; }
+        .btn-save { background: #ffc107; color: #333; }
+        .btn-logout { background: #dc3545; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h2>Admin Dashboard</h2>
-        </div>
-        <div class="tab-buttons">
-            <button class="tab-button active" onclick="showSection('users')">Users</button>
-            <button class="tab-button" onclick="showSection('withdrawals')">Withdrawal Requests</button>
-            <button class="tab-button" onclick="showSection('accountSales')">Account Sales</button>
-        </div>
-
-        <div id="users" class="main-content-section active">
-            <h3>All Users</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nickname</th>
-                        <th>Balance</th>
-                        <th>Referred By</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($user['id']) ?></td>
-                        <td><?= htmlspecialchars($user['nickname'] ?? 'N/A') ?></td>
-                        <td><?= htmlspecialchars($user['balance'] ?? 0) ?> BDT</td>
-                        <td><?= htmlspecialchars($user['referred_by'] ?? 'N/A') ?></td>
-                        <td>
-                            <form action="admin.php" method="POST" style="display:inline;">
-                                <input type="hidden" name="action" value="updateBalance">
-                                <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                                <input type="number" name="balance" placeholder="New Balance" required>
-                                <button type="submit" class="action-buttons update">Update Balance</button>
-                            </form>
-                            <form action="admin.php" method="POST" style="display:inline;">
-                                <input type="hidden" name="action" value="deleteUser">
-                                <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                                <button type="submit" class="action-buttons delete" onclick="return confirm('Are you sure you want to delete this user?');">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="withdrawals" class="main-content-section">
-            <h3>Pending Withdrawal Requests</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>User ID</th>
-                        <th>Amount</th>
-                        <th>Method</th>
-                        <th>Details</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <?php if (isset($user['withdrawalHistory'])): ?>
-                            <?php foreach ($user['withdrawalHistory'] as $withdrawal): ?>
-                                <?php if ($withdrawal['status'] === 'Pending'): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($user['id']) ?></td>
-                                    <td><?= htmlspecialchars($withdrawal['amount']) ?> BDT</td>
-                                    <td><?= htmlspecialchars($withdrawal['method']) ?></td>
-                                    <td><?= htmlspecialchars($withdrawal['account_info']) ?></td>
-                                    <td><span class="status-badge status-pending">Pending</span></td>
-                                    <td>
-                                        <form action="admin.php" method="POST">
-                                            <input type="hidden" name="action" value="completeWithdrawal">
-                                            <input type="hidden" name="userId" value="<?= htmlspecialchars($user['id']) ?>">
-                                            <input type="hidden" name="withdrawalId" value="<?= htmlspecialchars($withdrawal['id']) ?>">
-                                            <button type="submit" class="action-buttons complete">Complete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="accountSales" class="main-content-section">
-            <h3>Account Sales</h3>
-            <p>This section lists all user-submitted accounts. You will need to implement file upload and processing logic in your `api.php` to handle this. You can add a new field to `users.json` for `uploaded_accounts` to track these.</p>
-        </div>
+<div class="container">
+    <h1>Admin Panel <a href="?logout=true" class="btn btn-logout">Logout</a></h1>
+    <div class="card">
+        <h2>Pending Activations</h2>
+        <table><thead><tr><th>User</th><th>Phone</th><th>Txn ID</th><th>Action</th></tr></thead>
+            <tbody><?php foreach ($usersData as $u) if ($u['status'] === 'pending_activation') echo "<tr><td>{$u['nickname']}</td><td>{$u['phone']}</td><td>{$u['activationTxId']}</td><td><form method='POST'><input type='hidden' name='action' value='approveActivation'><input type='hidden' name='userId' value='{$u['id']}'><button class='btn-approve' type='submit'>Approve</button></form></td></tr>"; ?></tbody>
+        </table>
     </div>
-
-    <script>
-        function showSection(sectionId) {
-            const sections = document.querySelectorAll('.main-content-section');
-            sections.forEach(section => section.classList.remove('active'));
-            document.getElementById(sectionId).classList.add('active');
-
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active'));
-            document.querySelector(`.tab-button[onclick="showSection('${sectionId}')"]`).classList.add('active');
-        }
-    </script>
+    <div class="card">
+        <h2>Submitted Files</h2>
+        <table><thead><tr><th>User</th><th>Type</th><th>File</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody><?php foreach($usersData as $u) if(!empty($u['submittedFiles'])) foreach($u['submittedFiles'] as $f) echo "<tr><td>{$u['nickname']}</td><td>{$f['type']}</td><td>{$f['originalName']}</td><td>{$f['date']}</td><td>{$f['status']}</td><td><a class='btn btn-download' href='{$f['path']}' download>Download</a>".($f['status']==='pending_review' ? "<form method='POST' style='display:inline;'><input type='hidden' name='action' value='approveFile'><input type='hidden' name='userId' value='{$u['id']}'><input type='hidden' name='fileId' value='{$f['id']}'><input type='hidden' name='fileType' value='{$f['type']}'><button class='btn-approve' type='submit'>Approve</button></form>" : "")."</td></tr>"; ?></tbody>
+        </table>
+    </div>
+    <div class="card">
+        <h2>Withdrawal Requests</h2>
+        <table><thead><tr><th>User</th><th>Amount</th><th>Method</th><th>Account</th><th>Date</th><th>Action</th></tr></thead>
+             <tbody><?php foreach($usersData as $u) if(!empty($u['withdrawalHistory'])) foreach($u['withdrawalHistory'] as $w) if($w['status'] === 'Pending') echo "<tr><td>{$u['nickname']}</td><td>{$w['amount']}</td><td>{$w['method']}</td><td>{$w['account']}</td><td>{$w['date']}</td><td><form method='POST'><input type='hidden' name='action' value='completeWithdrawal'><input type='hidden' name='userId' value='{$u['id']}'><input type='hidden' name='withdrawalId' value='{$w['id']}'><button class='btn-approve' type='submit'>Complete</button></form></td></tr>"; ?></tbody>
+        </table>
+    </div>
+    <div class="card">
+        <h2>App Settings</h2>
+        <form method="POST">
+            <input type="hidden" name="action" value="updateSettings">
+            <div class="form-grid"><?php foreach($configData as $k => $v) echo "<div class='form-group'><label for='{$k}'>".ucfirst(preg_replace('/(?<!^)[A-Z]/',' $0',$k))."</label><input type='text' id='{$k}' name='{$k}' value='{$v}'></div>"; ?></div><br>
+            <button type="submit" class="btn-save">Save Settings</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>

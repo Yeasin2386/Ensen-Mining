@@ -1,121 +1,129 @@
 <?php
 header('Content-Type: application/json');
 
-// Function to read data from users.json
-function read_users_data() {
-    $file_path = 'users.json';
-    if (file_exists($file_path)) {
-        $json_data = file_get_contents($file_path);
-        return json_decode($json_data, true);
-    }
-    return [];
-}
+$usersFile = 'users.json';
+$configFile = 'config.json';
+$uploadDir = 'uploads/';
 
-// Function to write data to users.json
-function write_users_data($data) {
-    $file_path = 'users.json';
-    $json_data = json_encode($data, JSON_PRETTY_PRINT);
-    return file_put_contents($file_path, $json_data);
-}
+if (!is_dir($uploadDir)) { @mkdir($uploadDir, 0777, true); }
+if (!file_exists($usersFile)) { file_put_contents($usersFile, '[]'); }
+if (!file_exists($configFile)) { file_put_contents($configFile, '{}'); }
 
-// Get the requested action from the URL
-$action = $_GET['action'] ?? '';
-$data = read_users_data();
-$response = ['status' => 'error', 'message' => 'Invalid action'];
+function read_json($file) { return json_decode(file_get_contents($file), true) ?? []; }
+function save_json($file, $data) { file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); }
+
+$input = json_decode(file_get_contents('php://input'), true);
+$action = $input['action'] ?? $_POST['action'] ?? null;
+
+$usersData = read_json($usersFile);
+$configData = read_json($configFile);
+
+$userId = $input['userId'] ?? $_POST['userId'] ?? null;
+$userKey = null;
+if ($userId) {
+    $userKey = array_search($userId, array_column($usersData, 'id'));
+}
 
 switch ($action) {
-    case 'login':
-        $phone = $_POST['phone'] ?? '';
-        $user_found = false;
-        foreach ($data as $user) {
-            if ($user['phone'] === $phone) {
-                $response = ['status' => 'success', 'user' => $user];
-                $user_found = true;
-                break;
-            }
-        }
-        if (!$user_found) {
-            $response = ['status' => 'error', 'message' => 'User not found.'];
-        }
+    case 'getConfig':
+        echo json_encode(['status' => 'success', 'config' => $configData]);
         break;
 
-    case 'register':
-        $username = $_POST['username'] ?? '';
-        $nickname = $_POST['nickname'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $referred_by = $_POST['referred_by'] ?? '';
-
-        $user_exists = false;
-        foreach ($data as $user) {
-            if ($user['phone'] === $phone) {
-                $user_exists = true;
-                break;
+    case 'registerUser':
+        $newUser = $input['user'];
+        foreach ($usersData as $user) {
+            if ($user['username'] === $newUser['username'] || $user['phone'] === $newUser['phone']) {
+                echo json_encode(['status' => 'error', 'message' => 'Username or Phone already exists.']);
+                exit;
             }
         }
+        
+        $newUser['id'] = 'user_' . uniqid();
+        $newUser['balance'] = 0;
+        $newUser['status'] = 'registered';
+        $newUser['registrationDate'] = date('Y-m-d H:i:s');
+        $newUser['tasks'] = ['adsWatched' => 0, 'accountsSold' => 0, 'totalEarnings' => 0];
+        $newUser['submittedFiles'] = [];
+        $newUser['withdrawalHistory'] = [];
 
-        if ($user_exists) {
-            $response = ['status' => 'error', 'message' => 'User with this phone number already exists.'];
+        $usersData[] = $newUser;
+        save_json($usersFile, $usersData);
+        echo json_encode(['status' => 'success', 'message' => 'Registration successful.', 'userId' => $newUser['id']]);
+        break;
+
+    case 'submitActivation':
+        if ($userKey !== false) {
+            $usersData[$userKey]['status'] = 'pending_activation';
+            $usersData[$userKey]['activationTxId'] = $input['activationTxId'];
+            save_json($usersFile, $usersData);
+            echo json_encode(['status' => 'success', 'message' => 'Activation request submitted.']);
         } else {
-            $new_user_id = uniqid();
-            $new_user = [
-                'id' => $new_user_id,
-                'username' => $username,
-                'nickname' => $nickname,
-                'phone' => $phone,
-                'balance' => 0,
-                'tasks' => ['accountsSold' => 0],
-                'withdrawalHistory' => [],
-                'referred_by' => $referred_by
-            ];
-            $data[] = $new_user;
-            write_users_data($data);
-            $response = ['status' => 'success', 'message' => 'Registration successful!'];
+            echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
         break;
 
+    case 'getUserData':
+        echo json_encode(['status' => 'success', 'user' => ($userKey !== false) ? $usersData[$userKey] : null]);
+        break;
+        
     case 'updateBalance':
-        $userId = $_POST['userId'] ?? '';
-        $amount = $_POST['amount'] ?? 0;
-        foreach ($data as &$user) {
-            if ($user['id'] === $userId) {
-                $user['balance'] += $amount;
-                write_users_data($data);
-                $response = ['status' => 'success', 'message' => 'Balance updated.'];
-                break;
+        if ($userKey !== false) {
+            $taskType = $input['taskType'];
+            $amount = 0;
+            if ($taskType === 'adWatch') {
+                $amount = $configData['adRate'] ?? 0;
+                $usersData[$userKey]['tasks']['adsWatched'] += 1;
             }
+            $usersData[$userKey]['balance'] += $amount;
+            $usersData[$userKey]['tasks']['totalEarnings'] += $amount;
+            save_json($usersFile, $usersData);
+            echo json_encode(['status' => 'success', 'message' => "You earned {$amount} BDT!", 'user' => $usersData[$userKey]]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
         break;
 
-    case 'requestWithdrawal':
-        $userId = $_POST['userId'] ?? '';
-        $amount = $_POST['amount'] ?? 0;
-        $method = $_POST['method'] ?? '';
-        $account_info = $_POST['account_info'] ?? '';
-
-        foreach ($data as &$user) {
-            if ($user['id'] === $userId) {
-                if ($user['balance'] >= $amount) {
-                    $withdrawal_id = uniqid();
-                    $new_withdrawal = [
-                        'id' => $withdrawal_id,
-                        'amount' => (float)$amount,
-                        'method' => $method,
-                        'account_info' => $account_info,
-                        'status' => 'Pending',
-                        'timestamp' => date('Y-m-d H:i:s')
-                    ];
-                    $user['withdrawalHistory'][] = $new_withdrawal;
-                    $user['balance'] -= (float)$amount;
-                    write_users_data($data);
-                    $response = ['status' => 'success', 'message' => 'Withdrawal request submitted successfully.'];
-                } else {
-                    $response = ['status' => 'error', 'message' => 'Insufficient balance.'];
-                }
-                break;
+    case 'requestWithdraw':
+        if ($userKey !== false) {
+            $user = $usersData[$userKey];
+            $amount = $input['amount'];
+            if ($user['transactionPassword'] !== $input['password']) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid transaction password.']); exit;
             }
+            if ($user['balance'] < $amount) {
+                echo json_encode(['status' => 'error', 'message' => 'Insufficient balance.']); exit;
+            }
+
+            $usersData[$userKey]['balance'] -= $amount;
+            $usersData[$userKey]['withdrawalHistory'][] = ['id' => uniqid(), 'amount' => $amount, 'method' => $input['method'], 'account' => $input['account'], 'date' => date('Y-m-d H:i:s'), 'status' => 'Pending'];
+            save_json($usersFile, $usersData);
+            echo json_encode(['status' => 'success', 'message' => 'Withdrawal request submitted.', 'user' => $usersData[$userKey]]);
+        } else {
+             echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
+        break;
+
+    case 'submitFile':
+        if ($userKey !== false && isset($_FILES['file'])) {
+            $file = $_FILES['file'];
+            $type = $_POST['type'];
+            $fileName = $userId . '_' . $type . '_' . time() . '_' . basename($file['name']);
+            $targetPath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($file['tmp_name'], $targetPath)) {
+                $usersData[$userKey]['submittedFiles'][] = ['id' => uniqid(), 'type' => $type, 'path' => $targetPath, 'originalName' => basename($file['name']), 'date' => date('Y-m-d H:i:s'), 'status' => 'pending_review'];
+                save_json($usersFile, $usersData);
+                echo json_encode(['status' => 'success', 'message' => 'File submitted for review.']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to upload file.']);
+            }
+        } else {
+             echo json_encode(['status' => 'error', 'message' => 'User not found or file not provided.']);
+        }
+        break;
+
+    default:
+        echo json_encode(['status' => 'error', 'message' => 'Invalid action.']);
         break;
 }
-
-echo json_encode($response);
 ?>

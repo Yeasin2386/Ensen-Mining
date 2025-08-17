@@ -5,1315 +5,317 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Sleek Mini App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <meta name="monetag" content="43e6429a21f320fe82110a8a6c86a0e7">
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --card-color: #2c2c2c;
-            --text-color: #f0f0f0;
-            --secondary-text-color: #b0b0b0;
-            --accent-color: #00d68f;
-            --button-color: #00d68f;
-            --button-text-color: #1a1a1a;
-            --border-color: #444;
-            --telegram-color: #0088cc;
-            --whatsapp-color: #25D366;
-            --gmail-color: #EA4335;
-            --instagram-color: #E1306C;
+            --bg-color: #1a1a1a; --card-color: #2c2c2c; --text-color: #f0f0f0; --secondary-text-color: #b0b0b0;
+            --accent-color: #00d68f; --button-color: #00d68f; --button-text-color: #1a1a1a; --border-color: #444;
+            --telegram-color: #0088cc; --whatsapp-color: #25D366; --gmail-color: #EA4335; --instagram-color: #E1306C;
             --facebook-color: #1877F2;
         }
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(200deg, #1b263b, #0d1b2a, #1a1a1a);
-            background-size: 400% 400%;
-            animation: gradientBG 20s ease infinite;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .container {
-            max-width: 500px;
-            width: 100%;
-            margin: auto;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            flex-grow: 1;
-            padding-bottom: 80px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            animation: slideInDown 0.6s ease-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        .header .back-btn {
-            position: absolute;
-            left: 0;
-            font-size: 1.5em;
-            color: var(--secondary-text-color);
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-        .header .back-btn:hover {
-            color: #fff;
-        }
-        h2 {
-            color: #fff;
-            margin: 0;
-            flex-grow: 1;
-        }
-        .balance-card {
-            background: var(--card-color);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-left: 4px solid var(--accent-color);
-            animation: fadeInScale 0.8s ease-out;
-        }
-        .balance-info {
-            text-align: left;
-        }
-        .balance-text {
-            font-size: 0.9em;
-            color: var(--secondary-text-color);
-            margin: 0;
-        }
-        .balance-value {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 5px 0 0 0;
-            letter-spacing: 1px;
-        }
-        .balance-icon {
-            font-size: 2.5em;
-            color: var(--border-color);
-        }
-        .button {
-            display: block;
-            width: 100%;
-            padding: 18px;
-            margin-top: 25px;
-            background-color: var(--button-color);
-            color: var(--button-text-color);
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        .button:hover {
-            background-color: #00b377;
-        }
-        .button:active {
-            transform: scale(0.98);
-        }
-        #telegram-link {
-            background-color: var(--telegram-color);
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            transition: background-color 0.3s;
-            margin-bottom: 20px;
-        }
-        #telegram-link:hover {
-            background-color: #006699;
-        }
-        #telegram-link i {
-            margin-right: 10px;
-        }
-        .nav-bar {
-            background-color: var(--card-color);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
-            border-radius: 15px 15px 0 0;
-            z-index: 100;
-        }
-        .nav-item {
-            text-align: center;
-            color: var(--secondary-text-color);
-            font-size: 0.8em;
-            text-decoration: none;
-            cursor: pointer;
-            padding: 5px;
-            transition: color 0.3s ease;
-        }
-        .nav-item i {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-            display: block;
-        }
-        .nav-item.active {
-            color: var(--accent-color);
-            font-weight: bold;
-        }
-        .content-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        .content-section.active {
-            display: block;
-        }
-        .task-list-item, .settings-list .list-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            background-color: var(--card-color);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            transition: border-left 0.3s ease;
-            border-left: 3px solid transparent;
-            animation: slideInUp 0.5s ease-out;
-        }
-        .task-list-item:hover, .settings-list .list-item:hover {
-            border-left: 3px solid var(--accent-color);
-        }
-        .task-list-item .task-icon {
-            font-size: 1.5em;
-            width: 25px;
-            text-align: center;
-        }
-        .task-list-item .whatsapp-icon { color: var(--whatsapp-color); }
-        .task-list-item .gmail-icon { color: var(--gmail-color); }
-        .task-list-item .instagram-icon { color: var(--instagram-color); }
-        .task-list-item .facebook-icon { color: var(--facebook-color); }
-        .task-list-item .ad-icon { color: var(--accent-color); }
-
-        .settings-list .list-item i {
-            color: var(--accent-color);
-            font-size: 1.5em;
-        }
-        .sub-content {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-            margin-top: 20px;
-        }
-        .sub-content.active {
-            display: block;
-        }
-        .sub-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .sub-header h3 {
-            margin: 0;
-            color: #fff;
-        }
-        .whatsapp-tutorial {
-            background-color: var(--card-color);
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .whatsapp-tutorial .video-placeholder {
-            width: 100%;
-            height: 200px;
-            background-color: #333;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--secondary-text-color);
-            font-size: 1.2em;
-        }
-        .whatsapp-tutorial .step-text {
-            color: var(--secondary-text-color);
-            text-align: left;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        .whatsapp-tutorial .binding-section {
-            background-color: #333;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: left;
-            margin-top: 15px;
-        }
-        .whatsapp-tutorial .binding-section h4 {
-            margin-top: 0;
-            color: var(--accent-color);
-        }
-        .whatsapp-tutorial .phone-input-group {
-            display: flex;
-            gap: 10px;
-        }
-        .whatsapp-tutorial .phone-input-group input {
-            flex-grow: 1;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background-color: #222;
-            color: var(--text-color);
-        }
-        .whatsapp-tutorial .phone-input-group span {
-            padding: 10px;
-            background-color: var(--border-color);
-            border-radius: 5px;
-            color: var(--secondary-text-color);
-        }
-        .whatsapp-tutorial .verification-code-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 5px;
-            margin-top: 15px;
-        }
-        .whatsapp-tutorial .verification-code-group input {
-            width: 50px;
-            text-align: center;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid var(--border-color);
-            background-color: #222;
-            color: var(--text-color);
-            font-size: 1.1em;
-        }
-        .whatsapp-tutorial .status-table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-            text-align: left;
-        }
-        .whatsapp-tutorial .status-table th, .whatsapp-tutorial .status-table td {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            color: var(--secondary-text-color);
-        }
-        .whatsapp-tutorial .status-table th {
-            background-color: var(--border-color);
-            color: #fff;
-        }
-        .task-button {
-            background-color: var(--accent-color);
-            color: var(--button-text-color);
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.3s ease;
-            white-space: nowrap;
-        }
-        .task-button:hover {
-            background-color: #00b377;
-        }
-        .task-button.loading {
-            background-color: #555;
-            cursor: not-allowed;
-        }
-        .earnings-history-list {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            text-align: left;
-        }
-        .earnings-history-list li {
-            background-color: var(--card-color);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .earnings-history-list li .earning-item {
-            color: var(--secondary-text-color);
-        }
-        .earnings-history-list li .earning-value {
-            font-weight: bold;
-            color: var(--accent-color);
-        }
-        .rates-list-card {
-            background-color: var(--card-color);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            margin-bottom: 25px;
-            animation: fadeIn 0.8s ease-out;
-        }
-        .rates-list-card h3 {
-            margin: 0 0 15px 0;
-            color: #fff;
-            font-size: 1.2em;
-        }
-        .rate-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .rate-item:last-child {
-            border-bottom: none;
-        }
-        .rate-item .label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--secondary-text-color);
-        }
-        .rate-item .label i {
-            color: var(--accent-color);
-        }
-        .rate-item .value {
-            font-weight: bold;
-            color: var(--text-color);
-        }
-        .input-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--secondary-text-color);
-            font-size: 0.9em;
-        }
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-color);
-            color: var(--text-color);
-            font-size: 1em;
-            box-sizing: border-box;
-        }
-        .input-group input:focus, .input-group select:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-        /* Profile and Password Change Specific Styles */
-        .profile-card, .password-card {
-            background-color: var(--card-color);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            text-align: left;
-        }
-        .profile-info-item, .password-info-item {
-            margin-bottom: 15px;
-        }
-        .profile-info-item label, .password-info-item label {
-            font-weight: bold;
-            color: var(--accent-color);
-            display: block;
-            margin-bottom: 5px;
-        }
-        .profile-info-item span, .password-info-item span {
-            color: var(--text-color);
-            display: block;
-        }
-        #registration-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        #registration-form {
-            background-color: var(--card-color);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 350px;
-            text-align: center;
-        }
-        #registration-form h3 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            color: #fff;
-            font-size: 1.5em;
-        }
-        .alert-box {
-            background-color: rgba(255, 100, 100, 0.2);
-            border-left: 4px solid #ff6464;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .alert-box h4 {
-            color: #ff6464;
-            margin: 0 0 5px 0;
-        }
-        .alert-box p {
-            font-size: 0.9em;
-            color: var(--secondary-text-color);
-            margin: 0;
-        }
-        #file-upload-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px dashed var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-        #file-upload-section i {
-            font-size: 2em;
-            color: var(--secondary-text-color);
-            margin-bottom: 10px;
-        }
-        #file-upload-section input[type="file"] {
-            display: none;
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .checkbox-group input {
-            width: auto;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideInDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes slideInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0; background: linear-gradient(200deg, #1b263b, #0d1b2a, #1a1a1a); background-size: 400% 400%; animation: gradientBG 20s ease infinite; color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .container { max-width: 500px; width: 100%; margin: auto; padding: 20px; box-sizing: border-box; text-align: center; flex-grow: 1; padding-bottom: 80px; }
+        .header { text-align: center; margin-bottom: 25px; animation: slideInDown 0.6s ease-out; display: flex; align-items: center; justify-content: center; position: relative; }
+        .header .back-btn { position: absolute; left: 0; font-size: 1.5em; color: var(--secondary-text-color); cursor: pointer; }
+        h2 { color: #fff; margin: 0; flex-grow: 1; }
+        .balance-card { background: var(--card-color); padding: 20px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--accent-color); animation: fadeInScale 0.8s ease-out; }
+        .balance-info { text-align: left; }
+        .balance-text { font-size: 0.9em; color: var(--secondary-text-color); margin: 0; }
+        .balance-value { font-size: 1.8em; font-weight: bold; color: var(--accent-color); margin: 5px 0 0 0; }
+        .balance-icon { font-size: 2.5em; color: var(--border-color); }
+        .button { display: block; width: 100%; padding: 18px; margin-top: 25px; background-color: var(--button-color); color: var(--button-text-color); text-decoration: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; border: none; }
+        .screen { display: none; padding: 20px; box-sizing: border-box; }
+        .screen.active { display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 100vh; }
+        .form-container { background-color: var(--card-color); padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); width: 100%; max-width: 350px; text-align: center; }
+        .form-container h3 { margin-top: 0; margin-bottom: 25px; color: #fff; font-size: 1.5em; }
+        .input-group { text-align: left; margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: var(--secondary-text-color); font-size: 0.9em; }
+        .input-group input, .input-group select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: #1f1f1f; color: var(--text-color); font-size: 1em; box-sizing: border-box; }
+        .alert-box { border-left: 4px solid; padding: 15px; border-radius: 8px; margin-top: 20px; margin-bottom: 20px; text-align: left; }
+        .nav-bar { background-color: var(--card-color); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding: 15px 0; position: fixed; bottom: 0; width: 100%; max-width: 500px; margin: 0 auto; box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5); border-radius: 15px 15px 0 0; z-index: 100; }
+        .nav-item { text-align: center; color: var(--secondary-text-color); font-size: 0.8em; text-decoration: none; cursor: pointer; padding: 5px; }
+        .nav-item i { font-size: 1.5em; margin-bottom: 5px; display: block; }
+        .nav-item.active { color: var(--accent-color); }
+        .content-section { display: none; animation: fadeIn 0.5s; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .task-list-item { display: flex; align-items: center; gap: 15px; background-color: var(--card-color); padding: 15px; margin-bottom: 15px; border-radius: 10px; text-align: left; border-left: 3px solid transparent; }
+        .task-list-item .task-icon { font-size: 1.5em; width: 25px; text-align: center; }
+        .ad-icon { color: var(--accent-color); }
+        .facebook-icon { color: var(--facebook-color); }
+        .instagram-icon { color: var(--instagram-color); }
+        .whatsapp-icon { color: var(--whatsapp-color); }
+        .gmail-icon { color: var(--gmail-color); }
+        #file-upload-section { display: flex; flex-direction: column; align-items: center; border: 2px dashed var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <div id="registration-screen">
-        <div id="registration-form">
+    <div id="registration-screen" class="screen active">
+        <div class="form-container">
             <h3>Complete your Profile 📝</h3>
-            <div class="input-group">
-                <label for="reg-username">Username</label>
-                <input type="text" id="reg-username" placeholder="Enter your username">
-            </div>
-            <div class="input-group">
-                <label for="reg-nickname">Nickname</label>
-                <input type="text" id="reg-nickname" placeholder="Enter your nickname">
-            </div>
-            <div class="input-group">
-                <label for="reg-phone">Phone Number (e.g. 01712345678)</label>
-                <input type="tel" id="reg-phone" placeholder="Enter your 11-digit phone number">
-            </div>
-            <div class="input-group">
-                <label for="reg-password">Transaction Password (6 digits)</label>
-                <input type="password" id="reg-password" placeholder="Set a 6-digit password">
-            </div>
+            <div class="input-group"><label for="reg-username">Username</label><input type="text" id="reg-username"></div>
+            <div class="input-group"><label for="reg-nickname">Nickname</label><input type="text" id="reg-nickname"></div>
+            <div class="input-group"><label for="reg-phone">Phone Number</label><input type="tel" id="reg-phone"></div>
+            <div class="input-group"><label for="reg-password">Transaction Password (6 digits)</label><input type="password" id="reg-password" maxlength="6"></div>
             <button class="button" onclick="registerUser()">Register</button>
         </div>
     </div>
 
-    <div id="main-app" style="display: none;">
-        <div class="container">
-            
-            <div id="home" class="content-section active">
-                <div class="header">
-                    <h2>Welcome, <span id="welcome-nickname"></span> 👋</h2>
-                </div>
-                
-                <a id="telegram-link" href="https://t.me/your_telegram_channel" target="_blank">
-                    <i class="fab fa-telegram-plane"></i> Join Our Telegram Channel
-                </a>
+    <div id="activation-screen" class="screen">
+        <div class="form-container">
+            <h3>Activate Your Account 🚀</h3>
+            <div class="alert-box" style="background-color: rgba(0, 214, 143, 0.1); border-color: var(--accent-color);">
+                <p>আপনার অ্যাকাউন্টটি সক্রিয় করতে, অনুগ্রহ করে <strong id="activationFee"></strong> টাকা নিচের নম্বরে Send Money করুন।</p>
+                <h4 style="color: #fff; text-align: center; margin: 10px 0;">নম্বর: <span id="paymentNumber"></span></h4>
+                <p>টাকা পাঠানোর পর, নিচের বক্সে আপনার Transaction ID দিন।</p>
+            </div>
+            <div class="input-group"><label for="txn-id">Transaction ID</label><input type="text" id="txn-id"></div>
+            <button class="button" onclick="submitActivation()">Submit for Review</button>
+        </div>
+    </div>
 
+    <div id="pending-screen" class="screen">
+        <div class="form-container">
+            <h3>Account Pending Approval ⏳</h3>
+            <p style="color: var(--secondary-text-color);">আপনার অ্যাক্টিভেশন অনুরোধ জমা দেওয়া হয়েছে। অ্যাডমিন আপনার পেমেন্ট যাচাই করার পর আপনার অ্যাকাউন্টটি সক্রিয় করা হবে। অনুগ্রহ করে অপেক্ষা করুন।</p>
+        </div>
+    </div>
+
+    <div id="main-app" class="screen">
+        <div class="container">
+            <div id="home" class="content-section active">
+                <div class="header"><h2>Welcome, <span id="welcome-nickname"></span> 👋</h2></div>
                 <div class="balance-card">
-                    <div class="balance-info">
-                        <p class="balance-text">Your Current Balance</p>
-                        <h1 class="balance-value" id="balanceDisplay">0 BDT</h1>
-                    </div>
+                    <div class="balance-info"><p class="balance-text">Current Balance</p><h1 class="balance-value" id="balanceDisplay">0 BDT</h1></div>
                     <i class="fas fa-wallet balance-icon"></i>
                 </div>
-                
-                <div class="rates-list-card">
-                    <h3>Today's Rates ✨</h3>
-                    <div class="rate-item">
-                        <div class="label">
-                            <i class="fas fa-envelope"></i>
-                            <span>Gmail Account</span>
-                        </div>
-                        <div class="value" id="gmailRate">500 BDT</div>
-                    </div>
-                    <div class="rate-item">
-                        <div class="label">
-                            <i class="fab fa-instagram"></i>
-                            <span>Instagram Account</span>
-                        </div>
-                        <div class="value" id="instagramRate">300 BDT</div>
-                    </div>
-                    <div class="rate-item">
-                        <div class="label">
-                            <i class="fas fa-ad"></i>
-                            <span>Per Ad View</span>
-                        </div>
-                        <div class="value" id="adRate">50 BDT</div>
+                <div class="rates-list-card task-list-item">
+                    <div>
+                        <h3>Today's Rates ✨</h3>
+                        <div id="rates-container"></div>
                     </div>
                 </div>
-
-                <button class="button" onclick="dailyCheckin()">Daily Check-in 🎁</button>
             </div>
-
             <div id="tasks" class="content-section">
-                <div class="header">
-                    <h2>Tasks 🚀</h2>
-                </div>
-                <div class="task-list-item" onclick="showAd()">
-                    <i class="fas fa-ad task-icon ad-icon"></i>
-                    <div class="task-info">
-                        <h4>Watch Ads</h4>
-                        <p>Watch short video ads to earn <span id="adTaskRate">50</span> BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="event.stopPropagation(); showAd();">Watch Ad</button>
-                </div>
-                <div class="task-list-item">
-                    <i class="fab fa-facebook-f task-icon facebook-icon"></i>
-                    <div class="task-info">
-                        <h4>Follow on Facebook</h4>
-                        <p>Follow our page for 30 BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="openExternalLink('https://www.facebook.com/your-page', 'facebook')">Complete</button>
-                </div>
-                <div class="task-list-item">
-                    <i class="fab fa-instagram task-icon instagram-icon"></i>
-                    <div class="task-info">
-                        <h4>Follow on Instagram</h4>
-                        <p>Follow our account for 25 BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="openExternalLink('https://www.instagram.com/your-page', 'instagram')">Complete</button>
-                </div>
+                <div class="header"><h2>Tasks 🚀</h2></div>
+                <div class="task-list-item"><i class="fas fa-ad task-icon ad-icon"></i><div><h4>Watch Ads</h4><p>Watch ads to earn <span id="adTaskRate"></span> BDT.</p></div><button class="button" style="padding: 10px 15px; margin: 0;" onclick="updateBalance('adWatch')">Watch</button></div>
             </div>
-
             <div id="extra-earning" class="content-section">
-                <div class="header">
-                    <h2>Extra Earning 💰</h2>
-                </div>
-                
-                <div class="task-list-item" onclick="showSubSection('whatsapp-task')">
-                    <i class="fab fa-whatsapp task-icon whatsapp-icon"></i>
-                    <div class="task-info">
-                        <h4>Connect WhatsApp</h4>
-                        <p>Connect your WhatsApp number to earn 200 BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="event.stopPropagation(); showSubSection('whatsapp-task');">Go</button>
-                </div>
-                <div class="task-list-item" onclick="showSubSection('gmail-sell')">
-                    <i class="fas fa-envelope task-icon gmail-icon"></i>
-                    <div class="task-info">
-                        <h4>Sell Gmail Account</h4>
-                        <p>Sell your Gmail account for <span id="gmailTaskRate">500</span> BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="event.stopPropagation(); showSubSection('gmail-sell');">Sell</button>
-                </div>
-                <div class="task-list-item" onclick="showSubSection('instagram-sell')">
-                    <i class="fab fa-instagram task-icon instagram-icon"></i>
-                    <div class="task-info">
-                        <h4>Sell Instagram Account</h4>
-                        <p>Sell your Instagram account for <span id="instagramTaskRate">300</span> BDT.</p>
-                    </div>
-                    <button class="task-button" onclick="event.stopPropagation(); showSubSection('instagram-sell');">Sell</button>
-                </div>
+                <div class="header"><h2>Extra Earning 💰</h2></div>
+                <div class="task-list-item" onclick="showSection('gmail-sell')"><i class="fas fa-envelope task-icon gmail-icon"></i><div><h4>Sell Gmail Account</h4><p>Sell your Gmail for <span id="gmailTaskRate"></span> BDT.</p></div></div>
+                <div class="task-list-item" onclick="showSection('instagram-sell')"><i class="fab fa-instagram task-icon instagram-icon"></i><div><h4>Sell Instagram Account</h4><p>Sell your Instagram for <span id="instagramTaskRate"></span> BDT.</p></div></div>
             </div>
-
-            <div id="referral" class="content-section">
-                <div class="header">
-                    <h2>Referral System 🤝</h2>
-                </div>
-                <div class="balance-card">
-                    <div class="balance-info">
-                        <p class="balance-text">Total Referrals</p>
-                        <h1 class="balance-value" id="totalReferrals">0</h1>
-                    </div>
-                    <i class="fas fa-share-alt balance-icon"></i>
-                </div>
-                <p style="margin-top: -15px; color:var(--secondary-text-color);">Earn 100 BDT for each new referral.</p>
-                <div class="task-list-item" style="border-left: 3px solid var(--border-color);">
-                    <div class="task-info">
-                        <h4>Your Referral Link</h4>
-                        <p id="referralLink">https://your-mini-app-url.vercel.app/?ref=USER_ID</p>
-                    </div>
-                    <button class="task-button" onclick="copyLink()" style="background-color: var(--secondary-button-color);">Copy Link</button>
-                </div>
-            </div>
-
             <div id="settings" class="content-section">
-                <div class="header">
-                    <h2>Settings ⚙️</h2>
-                </div>
-                <div class="settings-list">
-                    <div class="list-item" onclick="showSubSection('profile-page')">
-                        <i class="fas fa-user"></i>
-                        <h4>Profile</h4>
-                    </div>
-                    <div class="list-item" onclick="showSubSection('withdraw-page')">
-                        <i class="fas fa-wallet"></i>
-                        <h4>Withdraw</h4>
-                    </div>
-                    <div class="list-item" onclick="showSubSection('history-page')">
-                        <i class="fas fa-history"></i>
-                        <h4>Withdrawal History</h4>
-                    </div>
-                    <div class="list-item" onclick="showSubSection('earnings-history-page')">
-                        <i class="fas fa-chart-line"></i>
-                        <h4>Earnings Report</h4>
-                    </div>
-                    <div class="list-item" onclick="showSubSection('change-password-page')">
-                        <i class="fas fa-lock"></i>
-                        <h4>Change Transaction Password</h4>
-                    </div>
-                    <div class="list-item" onclick="showSubSection('privacy-policy-page')">
-                        <i class="fas fa-shield-alt"></i>
-                        <h4>Privacy Policy</h4>
-                    </div>
-                </div>
+                 <div class="header"><h2>Settings ⚙️</h2></div>
+                 <div class="task-list-item" onclick="showSection('withdraw-page')"><i class="fas fa-wallet"></i><h4>Withdraw</h4></div>
+                 <div class="task-list-item" onclick="showSection('history-page')"><i class="fas fa-history"></i><h4>Withdrawal History</h4></div>
             </div>
-
-            <div id="profile-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Profile</h2>
-                </div>
-                <div class="profile-card">
-                    <div class="profile-info-item">
-                        <label>Username:</label>
-                        <span id="profileUsername"></span>
-                    </div>
-                    <div class="profile-info-item">
-                        <label>Nickname:</label>
-                        <span id="profileNickname"></span>
-                    </div>
-                    <div class="profile-info-item">
-                        <label>Phone Number:</label>
-                        <span id="profilePhoneNumber"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div id="withdraw-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Withdraw Your BDT 💸</h2>
-                </div>
-                <div class="input-group">
-                    <label for="amount">Enter Amount (BDT)</label>
-                    <input type="number" id="amount" placeholder="e.g. 5000">
-                </div>
-                <div class="input-group">
-                    <label for="method">Select Method</label>
-                    <select id="method">
-                        <option value="bkash">bKash</option>
-                        <option value="binance">Binance</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="account">bKash/Binance Account</label>
-                    <input type="text" id="account" placeholder="Enter your number/ID">
-                </div>
-                <div class="input-group">
-                    <label for="transaction-password">Transaction Password</label>
-                    <input type="password" id="transaction-password" placeholder="Enter your password">
-                </div>
+             <div id="withdraw-page" class="content-section">
+                <div class="header"><i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i><h2>Withdraw 💸</h2></div>
+                <div class="input-group"><label for="amount">Amount (BDT)</label><input type="number" id="amount"></div>
+                <div class="input-group"><label for="method">Method</label><select id="method"><option value="bkash">bKash</option><option value="binance">Binance</option></select></div>
+                <div class="input-group"><label for="account">Account Number/ID</label><input type="text" id="account"></div>
+                <div class="input-group"><label for="transaction-password">Transaction Password</label><input type="password" id="transaction-password"></div>
                 <button class="button" onclick="requestWithdraw()">Request Withdraw</button>
             </div>
-
             <div id="history-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Withdrawal History 📜</h2>
-                </div>
-                <p style="color: var(--secondary-text-color);">No history available yet.</p>
+                <div class="header"><i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i><h2>Withdrawal History 📜</h2></div>
+                <div id="history-container"></div>
             </div>
-
-            <div id="earnings-history-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Earnings Report 📊</h2>
-                </div>
-                <ul class="earnings-history-list">
-                    <li>
-                        <span class="earning-item">Total Ads Watched:</span>
-                        <span class="earning-value" id="adsWatchedCount">0</span>
-                    </li>
-                    <li>
-                        <span class="earning-item">Accounts Sold:</span>
-                        <span class="earning-value" id="accountsSoldCount">0</span>
-                    </li>
-                    <li>
-                        <span class="earning-item">Total Task Earnings:</span>
-                        <span class="earning-value" id="taskEarnings">0 BDT</span>
-                    </li>
-                </ul>
-            </div>
-            
-            <div id="change-password-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Change Transaction Password 🔒</h2>
-                </div>
-                <div class="password-card">
-                    <div class="input-group">
-                        <label for="old-password">Old Password</label>
-                        <input type="password" id="old-password" placeholder="Enter old password">
-                    </div>
-                    <div class="input-group">
-                        <label for="new-password">New Password</label>
-                        <input type="password" id="new-password" placeholder="Enter new password">
-                    </div>
-                    <div class="input-group">
-                        <label for="confirm-password">Confirm New Password</label>
-                        <input type="password" id="confirm-password" placeholder="Confirm new password">
-                    </div>
-                    <button class="button" onclick="changeTransactionPassword()">Change Password</button>
-                </div>
-            </div>
-
-            <div id="privacy-policy-page" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('settings')"></i>
-                    <h2>Privacy Policy 📜</h2>
-                </div>
-                <div class="privacy-policy-text" style="text-align: left;">
-                    <p style="font-weight: bold; color: #fff;">Privacy Policy 🔒</p>
-                    <p style="color: var(--secondary-text-color);">
-                        **Your Privacy is Our Priority!** We are committed to protecting your personal information. This policy explains what data we collect and how we use it.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">What We Collect 📝</p>
-                    <p style="color: var(--secondary-text-color);">
-                        We collect information you provide directly, such as your username, nickname, and phone number when you register. This data is stored locally on your device to manage your profile and balance. We do not store this information on a remote server.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">How We Use Your Data ⚙️</p>
-                    <p style="color: var(--secondary-text-color);">
-                        - To manage your account and track your earnings. <br>
-                        - To process your withdrawal requests. <br>
-                        - To communicate with you regarding your account and tasks.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">Data Sharing 🤝</p>
-                    <p style="color: var(--secondary-text-color);">
-                        We do not share your personal information with any third-party services. The information you provide for tasks like connecting a WhatsApp account or selling a Gmail account is for our internal use only to complete the process.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">Security Measures 🛡️</p>
-                    <p style="color: var(--secondary-text-color);">
-                        We take reasonable precautions to protect your data. However, as this is a client-side application, please be aware that the security is limited to your device. We encourage you to use a strong transaction password.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">Changes to This Policy 🔄</p>
-                    <p style="color: var(--secondary-text-color);">
-                        We may update this policy from time to time. We will notify you of any changes by posting the new policy on this page.
-                    </p>
-                    <p style="font-weight: bold; color: #fff;">Contact Us ✉️</p>
-                    <p style="color: var(--secondary-text-color);">
-                        If you have any questions or concerns about this Privacy Policy, please contact us through our Telegram support channel.
-                    </p>
-                </div>
-            </div>
-
-            <div id="whatsapp-task" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('extra-earning')"></i>
-                    <h2>Connect WhatsApp 📱</h2>
-                </div>
-                <p style="text-align:center; color:var(--secondary-text-color);">
-                    আপনার হোয়াটসঅ্যাপ নাম্বার জমা দিন। 
-                </p>
-                <div class="whatsapp-tutorial">
-                    <div class="binding-section">
-                        <h4><i class="fab fa-whatsapp" style="color: var(--whatsapp-color);"></i> হোয়াটসঅ্যাপ সংযুক্ত করুন</h4>
-                        <p style="font-size: 0.8em; margin-top: 10px; color: var(--secondary-text-color);">
-                            অনুগ্রহ করে আপনার হোয়াটসঅ্যাপ নম্বরটি নিচে দিন।
-                        </p>
-                        <div class="phone-input-group">
-                            <span>+880</span>
-                            <input type="tel" id="whatsapp-phone" placeholder="আপনার ফোন নম্বর লিখুন">
-                        </div>
-                        <button class="button" style="margin-top: 15px;" onclick="submitWhatsApp()">জমা দিন</button>
-                        <p id="whatsapp-message" style="margin-top: 20px; color: var(--accent-color); font-weight: bold; display: none;"></p>
-                    </div>
-                </div>
-            </div>
-
             <div id="gmail-sell" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('extra-earning')"></i>
-                    <h2>Sell Gmail Account 📧</h2>
-                </div>
-                <div class="rates-list-card" style="margin-bottom: 20px;">
-                    <h3>আজকের রেট 🔥</h3>
-                    <div class="rate-item">
-                        <div class="label">
-                            <i class="fas fa-envelope"></i>
-                            <span>প্রতিটি Gmail Account</span>
-                        </div>
-                        <div class="value" id="gmailSellRate">500 BDT</div>
-                    </div>
-                </div>
-                <div class="alert-box">
-                    <h4>সতর্কতা! ⚠️</h4>
-                    <p>
-                        জিমেইল দেওয়ার পর কোনো রকম পাসওয়ার্ড চেঞ্জ করবেন না। যদি চেঞ্জ করেন বা কোনো কারণে যদি জিমেইল অ্যাকাউন্ট কানেক্ট না করা যায়, তাহলে আপনার টাকা দেওয়া হবে না। এখানে দুই নাম্বারি চলে না।
-                    </p>
-                </div>
-                <div class="input-group">
-                    <label for="gmail-count">কয়টা জিমেইল দিয়েছেন?</label>
-                    <input type="number" id="gmail-count" placeholder="যেমন: ১, ২, ৩">
-                </div>
-                <div id="file-upload-section" onclick="document.getElementById('gmail-file').click();">
-                    <i class="fas fa-file-upload"></i>
-                    <p>ফাইল জমা দিন</p>
-                    <input type="file" id="gmail-file" accept=".txt, .csv" style="display: none;">
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="password-sure">
-                    <label for="password-sure">পাসওয়ার্ড ১০০% শিউর</label>
-                </div>
-                <button class="button" onclick="submitGmail()">সাবমিট</button>
-                <p id="gmail-message" style="margin-top: 20px; color: var(--accent-color); font-weight: bold; display: none;"></p>
+                <div class="header"><i class="fas fa-arrow-left back-btn" onclick="showSection('extra-earning')"></i><h2>Sell Gmail Account 📧</h2></div>
+                <div class="alert-box" style="border-color: #ff4d4f;"><h4>সতর্কতা! ⚠️</h4><p>জিমেইল দেওয়ার পর পাসওয়ার্ড পরিবর্তন করলে পেমেন্ট পাবেন না।</p></div>
+                <div id="file-upload-section" onclick="document.getElementById('gmail-file').click();"><i class="fas fa-file-upload"></i><p>ফাইল জমা দিন (.txt)</p><input type="file" id="gmail-file" accept=".txt" style="display: none;"></div>
+                <button class="button" onclick="submitFile('gmail')">সাবমিট</button>
             </div>
-
             <div id="instagram-sell" class="content-section">
-                <div class="header">
-                    <i class="fas fa-arrow-left back-btn" onclick="showSection('extra-earning')"></i>
-                    <h2>Sell Instagram Account 📸</h2>
-                </div>
-                <div class="rates-list-card" style="margin-bottom: 20px;">
-                    <h3>আজকের রেট 🔥</h3>
-                    <div class="rate-item">
-                        <div class="label">
-                            <i class="fab fa-instagram"></i>
-                            <span>প্রতিটি Instagram Account</span>
-                        </div>
-                        <div class="value" id="instagramSellRate">300 BDT</div>
-                    </div>
-                </div>
-                <div class="alert-box">
-                    <h4>সতর্কতা! ⚠️</h4>
-                    <p>
-                        ইনস্টাগ্রাম অ্যাকাউন্ট দেওয়ার পর কোনো রকম পাসওয়ার্ড চেঞ্জ করবেন না। যদি চেঞ্জ করেন বা কোনো কারণে যদি অ্যাকাউন্ট কানেক্ট না করা যায়, তাহলে আপনার টাকা দেওয়া হবে না। এখানে দুই নাম্বারি চলে না।
-                    </p>
-                </div>
-                <div class="input-group">
-                    <label for="insta-count">কয়টা ইনস্টাগ্রাম দিয়েছেন?</label>
-                    <input type="number" id="insta-count" placeholder="যেমন: ১, ২, ৩">
-                </div>
-                <div id="file-upload-section" onclick="document.getElementById('insta-file').click();">
-                    <i class="fas fa-file-upload"></i>
-                    <p>ফাইল জমা দিন</p>
-                    <input type="file" id="insta-file" accept=".txt, .csv" style="display: none;">
-                </div>
-                <div class="checkbox-group">
-                    <input type="checkbox" id="insta-password-sure">
-                    <label for="insta-password-sure">পাসওয়ার্ড ১০০% শিউর</label>
-                </div>
-                <button class="button" onclick="submitInstagram()">সাবমিট</button>
-                <p id="instagram-message" style="margin-top: 20px; color: var(--accent-color); font-weight: bold; display: none;"></p>
+                <div class="header"><i class="fas fa-arrow-left back-btn" onclick="showSection('extra-earning')"></i><h2>Sell Instagram Account 📸</h2></div>
+                <div class="alert-box" style="border-color: #ff4d4f;"><h4>সতর্কতা! ⚠️</h4><p>ইনস্টাগ্রাম দেওয়ার পর পাসওয়ার্ড পরিবর্তন করলে পেমেন্ট পাবেন না।</p></div>
+                <div id="file-upload-section" onclick="document.getElementById('insta-file').click();"><i class="fas fa-file-upload"></i><p>ফাইল জমা দিন (.txt)</p><input type="file" id="insta-file" accept=".txt" style="display: none;"></div>
+                <button class="button" onclick="submitFile('instagram')">সাবমিট</button>
             </div>
-
         </div>
-
         <div class="nav-bar">
-            <a class="nav-item active" onclick="showSection('home', this)">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a class="nav-item" onclick="showSection('tasks', this)">
-                <i class="fas fa-tasks"></i>
-                <span>Tasks</span>
-            </a>
-            <a class="nav-item" onclick="showSection('extra-earning', this)">
-                <i class="fas fa-coins"></i>
-                <span>Extra Earning</span>
-            </a>
-            <a class="nav-item" onclick="showSection('referral', this)">
-                <i class="fas fa-share-alt"></i>
-                <span>Referral</span>
-            </a>
-            <a class="nav-item" onclick="showSection('settings', this)">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
-            </a>
+            <a class="nav-item active" onclick="showSection('home', this)"><i class="fas fa-home"></i><span>Home</span></a>
+            <a class="nav-item" onclick="showSection('tasks', this)"><i class="fas fa-tasks"></i><span>Tasks</span></a>
+            <a class="nav-item" onclick="showSection('extra-earning', this)"><i class="fas fa-coins"></i><span>Extra</span></a>
+            <a class="nav-item" onclick="showSection('settings', this)"><i class="fas fa-cog"></i><span>Settings</span></a>
         </div>
     </div>
 
     <script>
-        const GMAIL_RATE = 500;
-        const INSTAGRAM_RATE = 300;
-        const AD_RATE = 50;
-        const DAILY_CHECKIN_BDT = 50;
-        const FB_FOLLOW_RATE = 30;
-        const INSTA_JOIN_RATE = 25;
-        const DAILY_CHECKIN_CODE = "TELEGRAM_CODE123";
-        const FB_CODE = "FB123";
-        const INSTA_CODE = "IG123";
-        
-        let balance = 0;
-        let username = "";
-        let nickname = "";
-        let phoneNumber = "";
-        let transactionPassword = "";
-        let totalReferrals = 0;
-        let adsWatched = 0;
-        let accountsSold = 0;
-        let taskEarnings = 0;
-        
-        const MONETAG_AD_URL = 'https://otieu.com/4/9721070';
+        let config = {};
+        let userData = {};
+        const API_URL = 'api.php';
 
-        function loadData() {
-            const userData = JSON.parse(localStorage.getItem('userData'));
-            if (userData) {
-                username = userData.username;
-                nickname = userData.nickname;
-                phoneNumber = userData.phoneNumber;
-                transactionPassword = userData.transactionPassword;
-                balance = userData.balance || 0;
-                totalReferrals = userData.totalReferrals || 0;
-                adsWatched = userData.adsWatched || 0;
-                accountsSold = userData.accountsSold || 0;
-                taskEarnings = userData.taskEarnings || 0;
+        async function apiRequest(action, body) {
+            const isFormData = body instanceof FormData;
+            const options = {
+                method: 'POST',
+                headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+                body: isFormData ? body : JSON.stringify({ action, ...body })
+            };
+            const response = await fetch(API_URL, options);
+            return response.json();
+        }
 
-                document.getElementById('registration-screen').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                updateUI();
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+            const screen = document.getElementById(screenId);
+            screen.style.display = 'flex';
+            screen.classList.add('active');
+        }
+
+        async function initializeApp() {
+            const configResponse = await apiRequest('getConfig');
+            if (configResponse.status === 'success') {
+                config = configResponse.config;
+                document.getElementById('activationFee').textContent = config.activationFee;
+                document.getElementById('paymentNumber').textContent = config.paymentNumber;
+            }
+
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                const userResponse = await apiRequest('getUserData', { userId });
+                if (userResponse.status === 'success' && userResponse.user) {
+                    userData = userResponse.user;
+                    if (userData.status === 'active') {
+                        switchScreen('main-app');
+                        updateUI();
+                    } else if (userData.status === 'pending_activation') {
+                        switchScreen('pending-screen');
+                    } else {
+                        localStorage.removeItem('userId');
+                        switchScreen('registration-screen');
+                    }
+                } else {
+                    localStorage.removeItem('userId');
+                    switchScreen('registration-screen');
+                }
             } else {
-                document.getElementById('registration-screen').style.display = 'flex';
-                document.getElementById('main-app').style.display = 'none';
+                switchScreen('registration-screen');
+            }
+        }
+        
+        async function registerUser() {
+            const user = {
+                username: document.getElementById('reg-username').value.trim(),
+                nickname: document.getElementById('reg-nickname').value.trim(),
+                phone: document.getElementById('reg-phone').value.trim(),
+                transactionPassword: document.getElementById('reg-password').value.trim()
+            };
+            if (Object.values(user).some(v => !v)) return alert("Please fill all fields.");
+            if (user.phone.length !== 11 || isNaN(user.phone)) return alert("Phone number must be 11 digits.");
+            if (user.transactionPassword.length !== 6 || isNaN(user.transactionPassword)) return alert("Password must be 6 digits.");
+            
+            const response = await apiRequest('registerUser', { user });
+            if (response.status === 'success') {
+                localStorage.setItem('tempUserId', response.userId);
+                switchScreen('activation-screen');
+            } else {
+                alert(response.message);
             }
         }
 
-        function registerUser() {
-            const regUsername = document.getElementById('reg-username').value;
-            const regNickname = document.getElementById('reg-nickname').value;
-            const regPhone = document.getElementById('reg-phone').value;
-            const regPassword = document.getElementById('reg-password').value;
-
-            if (regUsername === regNickname) {
-                alert("Username and Nickname cannot be the same. Please choose a different nickname.");
-                return;
-            }
-            if (regPhone.length !== 11 || isNaN(regPhone)) {
-                alert("Phone Number must be an 11-digit number.");
-                return;
-            }
-            if (regPassword.length !== 6 || isNaN(regPassword)) {
-                alert("Transaction Password must be a 6-digit number.");
-                return;
-            }
-
-            if (regUsername && regNickname && regPhone && regPassword) {
-                const userData = {
-                    username: regUsername,
-                    nickname: regNickname,
-                    phoneNumber: regPhone,
-                    transactionPassword: regPassword,
-                    balance: 0,
-                    totalReferrals: 0,
-                    adsWatched: 0,
-                    accountsSold: 0,
-                    taskEarnings: 0
-                };
-                localStorage.setItem('userData', JSON.stringify(userData));
-                loadData();
+        async function submitActivation() {
+            const userId = localStorage.getItem('tempUserId');
+            const activationTxId = document.getElementById('txn-id').value.trim();
+            if (!activationTxId) return alert("Please enter the transaction ID.");
+            
+            const response = await apiRequest('submitActivation', { userId, activationTxId });
+            if (response.status === 'success') {
+                localStorage.setItem('userId', userId);
+                localStorage.removeItem('tempUserId');
+                switchScreen('pending-screen');
             } else {
-                alert("Please fill in all the details.");
+                alert(response.message);
             }
         }
         
         function updateUI() {
-            document.getElementById('welcome-nickname').textContent = nickname;
-            document.getElementById('balanceDisplay').textContent = balance.toLocaleString() + ' BDT';
+            document.getElementById('welcome-nickname').textContent = userData.nickname;
+            document.getElementById('balanceDisplay').textContent = `${userData.balance.toLocaleString()} BDT`;
             
-            document.getElementById('gmailRate').textContent = GMAIL_RATE + ' BDT';
-            document.getElementById('instagramRate').textContent = INSTAGRAM_RATE + ' BDT';
-            document.getElementById('adRate').textContent = AD_RATE + ' BDT';
+            document.getElementById('rates-container').innerHTML = `
+                <p>Gmail Account: ${config.gmailRate} BDT</p>
+                <p>Instagram Account: ${config.instagramRate} BDT</p>
+                <p>Per Ad View: ${config.adRate} BDT</p>`;
 
-            document.getElementById('adTaskRate').textContent = AD_RATE;
-            document.getElementById('profileUsername').textContent = username;
-            document.getElementById('profileNickname').textContent = nickname;
-            document.getElementById('profilePhoneNumber').textContent = phoneNumber;
-            document.getElementById('totalReferrals').textContent = totalReferrals;
-            
-            document.getElementById('adsWatchedCount').textContent = adsWatched;
-            document.getElementById('accountsSoldCount').textContent = accountsSold;
-            document.getElementById('taskEarnings').textContent = taskEarnings.toLocaleString() + ' BDT';
+            document.getElementById('adTaskRate').textContent = config.adRate;
+            document.getElementById('gmailTaskRate').textContent = config.gmailRate;
+            document.getElementById('instagramTaskRate').textContent = config.instagramRate;
 
-            document.getElementById('gmailSellRate').textContent = GMAIL_RATE + ' BDT';
-            document.getElementById('instagramSellRate').textContent = INSTAGRAM_RATE + ' BDT';
-
-            saveData();
+            const historyContainer = document.getElementById('history-container');
+            if (userData.withdrawalHistory && userData.withdrawalHistory.length > 0) {
+                historyContainer.innerHTML = userData.withdrawalHistory.map(h => 
+                    `<div class="task-list-item"><span>${h.date} - ${h.amount} BDT (${h.method})</span><span>${h.status}</span></div>`
+                ).join('');
+            } else {
+                historyContainer.innerHTML = '<p>No history available.</p>';
+            }
         }
 
-        function saveData() {
-            const userData = {
-                username,
-                nickname,
-                phoneNumber,
-                transactionPassword,
-                balance,
-                totalReferrals,
-                adsWatched,
-                accountsSold,
-                taskEarnings
+        async function updateBalance(taskType) {
+            const response = await apiRequest('updateBalance', { userId: userData.id, taskType });
+            if (response.status === 'success') {
+                alert(response.message);
+                userData = response.user;
+                updateUI();
+            } else {
+                alert(response.message);
+            }
+        }
+
+        async function requestWithdraw() {
+            const withdrawData = {
+                userId: userData.id,
+                amount: parseInt(document.getElementById('amount').value),
+                method: document.getElementById('method').value,
+                account: document.getElementById('account').value,
+                password: document.getElementById('transaction-password').value,
             };
-            localStorage.setItem('userData', JSON.stringify(userData));
+            if (!withdrawData.amount || !withdrawData.account || !withdrawData.password) return alert("Please fill all fields.");
+
+            const response = await apiRequest('requestWithdraw', withdrawData);
+            if(response.status === 'success') {
+                alert(response.message);
+                userData = response.user;
+                updateUI();
+                showSection('settings');
+            } else {
+                alert(response.message);
+            }
         }
 
-        function showSection(sectionId, element) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        async function submitFile(type) {
+            const fileInput = document.getElementById(type === 'gmail' ? 'gmail-file' : 'insta-file');
+            if (fileInput.files.length === 0) return alert('Please select a file.');
+
+            const formData = new FormData();
+            formData.append('action', 'submitFile');
+            formData.append('userId', userData.id);
+            formData.append('type', type);
+            formData.append('file', fileInput.files[0]);
+
+            const response = await apiRequest(null, formData);
+            alert(response.message);
+            if (response.status === 'success') {
+                showSection('extra-earning');
+            }
+        }
+        
+        function showSection(sectionId, element = null) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                nav.classList.remove('active');
-            });
+
             if (element) {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
                 element.classList.add('active');
             }
         }
-
-        function showSubSection(subId) {
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            document.getElementById(subId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(nav => {
-                nav.classList.remove('active');
-            });
-            
-            const parentNav = document.querySelector(`.nav-item[onclick*="showSection('${getParentSection(subId)}')"]`);
-            if (parentNav) {
-                parentNav.classList.add('active');
-            } else {
-                 const extraEarningNav = document.querySelector(`.nav-item[onclick*="showSection('extra-earning')"]`);
-                 if (extraEarningNav) extraEarningNav.classList.add('active');
-            }
-        }
         
-        function getParentSection(subId) {
-            if (subId.includes('page')) return 'settings';
-            if (subId.includes('task') || subId.includes('sell')) return 'extra-earning';
-            return '';
-        }
-
-        function submitWhatsApp() {
-            const phone = document.getElementById('whatsapp-phone').value;
-            if (phone.length !== 11 || isNaN(phone)) {
-                alert("অনুগ্রহ করে একটি ১১-সংখ্যার সঠিক ফোন নম্বর লিখুন।");
-                return;
-            }
-            
-            document.getElementById('whatsapp-message').textContent = `আপনার হোয়াটসঅ্যাপ নাম্বার (${phone}) জমা হয়েছে। হোয়াটসঅ্যাপ কানেকশন সম্পূর্ণ করতে আমাদের টেলিগ্রাম সাপোর্ট গ্রুপে যোগাযোগ করুন।`;
-            document.getElementById('whatsapp-message').style.display = 'block';
-        }
-
-        function submitGmail() {
-            const count = document.getElementById('gmail-count').value;
-            const file = document.getElementById('gmail-file').files[0];
-            const sure = document.getElementById('password-sure').checked;
-
-            if (count && file && sure) {
-                document.getElementById('gmail-message').textContent = `আপনার ${count}টি জিমেইল অ্যাকাউন্টের ফাইল জমা দেওয়া হয়েছে। অনুগ্রহ করে পেমেন্টের জন্য আমাদের টেলিগ্রাম সাপোর্ট গ্রুপে যোগাযোগ করুন।`;
-                document.getElementById('gmail-message').style.display = 'block';
-                // You can add logic here to send the file to your server if you have one.
-            } else {
-                alert("সব তথ্য সঠিকভাবে পূরণ করুন এবং ফাইল আপলোড করুন।");
-            }
-        }
-
-        function submitInstagram() {
-            const count = document.getElementById('insta-count').value;
-            const file = document.getElementById('insta-file').files[0];
-            const sure = document.getElementById('insta-password-sure').checked;
-
-            if (count && file && sure) {
-                document.getElementById('instagram-message').textContent = `আপনার ${count}টি ইনস্টাগ্রাম অ্যাকাউন্টের ফাইল জমা দেওয়া হয়েছে। অনুগ্রহ করে পেমেন্টের জন্য আমাদের টেলিগ্রাম সাপোর্ট গ্রুপে যোগাযোগ করুন।`;
-                document.getElementById('instagram-message').style.display = 'block';
-            } else {
-                alert("সব তথ্য সঠিকভাবে পূরণ করুন এবং ফাইল আপলোড করুন।");
-            }
-        }
-
-        function changeTransactionPassword() {
-            const oldPassword = document.getElementById('old-password').value;
-            const newPassword = document.getElementById('new-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
-
-            if (oldPassword === transactionPassword) {
-                if (newPassword === confirmPassword) {
-                    if (newPassword.length === 6 && !isNaN(newPassword)) {
-                        transactionPassword = newPassword;
-                        const userData = JSON.parse(localStorage.getItem('userData'));
-                        userData.transactionPassword = newPassword;
-                        localStorage.setItem('userData', JSON.stringify(userData));
-                        alert("Transaction password changed successfully!");
-                        document.getElementById('old-password').value = '';
-                        document.getElementById('new-password').value = '';
-                        document.getElementById('confirm-password').value = '';
-                        showSection('settings');
-                    } else {
-                        alert("New password must be a 6-digit number.");
-                    }
-                } else {
-                    alert("New passwords do not match.");
-                }
-            } else {
-                alert("Incorrect old password.");
-            }
-        }
-
-        function dailyCheckin() {
-            const userCode = prompt("Please enter the daily check-in code from our Telegram channel:");
-            if (userCode === DAILY_CHECKIN_CODE) {
-                balance += DAILY_CHECKIN_BDT;
-                updateUI();
-                alert(`You have received ${DAILY_CHECKIN_BDT} BDT for Daily Check-in!`);
-            } else {
-                alert("Invalid code. Please check our Telegram channel for the correct code.");
-            }
-        }
-
-        function showAd() {
-            // This opens the direct link in a new window/tab
-            window.open(MONETAG_AD_URL, '_blank');
-            
-            // This function simulates the ad being watched and rewards the user
-            setTimeout(() => {
-                completeTask('ads');
-            }, 3000); // 3 seconds delay to simulate ad watching
-        }
-
-        function openExternalLink(url, taskName) {
-            window.open(url, '_blank');
-            
-            setTimeout(() => {
-                let code = '';
-                if (taskName === 'facebook') {
-                    code = prompt("Please enter the special code from the Facebook page to complete the task:");
-                    if (code === FB_CODE) {
-                        completeTask('facebook');
-                    } else {
-                        alert("Incorrect code. Task not completed.");
-                    }
-                } else if (taskName === 'instagram') {
-                    code = prompt("Please enter the special code from the Instagram page to complete the task:");
-                    if (code === INSTA_CODE) {
-                        completeTask('instaJoin');
-                    } else {
-                        alert("Incorrect code. Task not completed.");
-                    }
-                }
-            }, 3000);
-        }
-
-        function completeTask(taskName) {
-            let bdt = 0;
-            if (taskName === 'ads') {
-                bdt = AD_RATE;
-                adsWatched++;
-                taskEarnings += bdt;
-                alert(`You watched an ad and earned ${bdt} BDT.`);
-            } else if (taskName === 'gmail') {
-                bdt = GMAIL_RATE;
-                accountsSold++;
-                taskEarnings += bdt;
-                alert(`You sold a Gmail account and earned ${bdt} BDT.`);
-            } else if (taskName === 'whatsapp') {
-                bdt = 200;
-                taskEarnings += bdt;
-                alert(`You connected your WhatsApp number and earned ${bdt} BDT.`);
-            } else if (taskName === 'instagram') {
-                bdt = INSTAGRAM_RATE;
-                accountsSold++;
-                taskEarnings += bdt;
-                alert(`You sold an Instagram account and earned ${bdt} BDT.`);
-            } else if (taskName === 'facebook') {
-                bdt = FB_FOLLOW_RATE;
-                taskEarnings += bdt;
-                alert(`You followed on Facebook and earned ${bdt} BDT.`);
-            } else if (taskName === 'instaJoin') {
-                bdt = INSTA_JOIN_RATE;
-                taskEarnings += bdt;
-                alert(`You followed on Instagram and earned ${bdt} BDT.`);
-            }
-            balance += bdt;
-            updateUI();
-        }
-        
-        function requestWithdraw() {
-            const amount = document.getElementById('amount').value;
-            const method = document.getElementById('method').value;
-            const account = document.getElementById('account').value;
-            const password = document.getElementById('transaction-password').value;
-
-            if (amount && method && account && password) {
-                if (transactionPassword !== password) {
-                    alert("Invalid transaction password.");
-                    return;
-                }
-                if (parseInt(amount) > balance) {
-                    alert("Not enough BDT to withdraw.");
-                    return;
-                }
-                balance -= parseInt(amount);
-                updateUI();
-                alert(`Withdrawal request for ${amount} BDT via ${method} to ${account} has been submitted.`);
-            } else {
-                alert("Please fill in all the details.");
-            }
-        }
-
-        function copyLink() {
-            const referralLink = document.getElementById('referralLink');
-            navigator.clipboard.writeText(referralLink.textContent)
-                .then(() => alert('Referral link copied to clipboard!'))
-                .catch(err => console.error('Failed to copy text: ', err));
-        }
-
-        document.addEventListener('DOMContentLoaded', loadData);
+        document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
 </html>

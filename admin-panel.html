@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EarnHub Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #1a1e36; color: #e0e6f6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .header { text-align: center; margin-bottom: 25px; }
+        .card { background: #0c0e1b; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .request-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #343b59; }
+        .request-item:last-child { border-bottom: none; }
+        .request-info { text-align: left; }
+        .request-info h4 { margin: 0; }
+        .request-info p { margin: 5px 0 0; font-size: 0.9em; color: #9299b8; }
+        .actions button { padding: 8px 15px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+        .accept-btn { background-color: #4CAF50; color: white; }
+        .reject-btn { background-color: #f44336; color: white; margin-left: 10px; }
+        .alert-box { padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #2196F3; background: rgba(33, 150, 243, 0.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
+            <p>Pending Activation Requests</p>
+        </div>
+
+        <div class="card">
+            <div id="requestsList">
+                <p style="text-align: center; color: #9299b8;">Loading requests...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBaHJbFUUosjXBVG9y-kzC-jGG-66HK-6c",
+          authDomain: "ensen-mining-bd.firebaseapp.com",
+          projectId: "ensen-mining-bd",
+          storageBucket: "ensen-mining-bd.firebasestorage.app",
+          messagingSenderId: "797303836556",
+          appId: "1:797303836556:web:6174cda3444978506a50a9",
+          measurementId: "G-3T4103BBJH"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const requestsList = document.getElementById('requestsList');
+
+        // Listen for real-time updates on activation requests
+        onSnapshot(collection(db, "activation_requests"), (snapshot) => {
+            requestsList.innerHTML = '';
+            if (snapshot.empty) {
+                requestsList.innerHTML = `<p style="text-align: center; color: #9299b8;">No pending requests.</p>`;
+                return;
+            }
+            snapshot.forEach((doc) => {
+                const request = doc.data();
+                const docId = doc.id;
+                const requestItem = document.createElement('div');
+                requestItem.className = 'request-item';
+                requestItem.innerHTML = `
+                    <div class="request-info">
+                        <h4>${request.username} (${request.phoneNumber})</h4>
+                        <p>TrxID: ${request.transactionId}</p>
+                    </div>
+                    <div class="actions">
+                        <button class="accept-btn" onclick="acceptRequest('${docId}', '${request.username}')">Accept</button>
+                        <button class="reject-btn" onclick="rejectRequest('${docId}')">Reject</button>
+                    </div>
+                `;
+                requestsList.appendChild(requestItem);
+            });
+        });
+
+        // Function to accept a request
+        window.acceptRequest = async (requestId, username) => {
+            try {
+                // Update user status to active
+                const userRef = doc(db, "users", username);
+                await updateDoc(userRef, { isActive: true });
+                
+                // Delete the activation request
+                await deleteDoc(doc(db, "activation_requests", requestId));
+                
+                alert(`User ${username} has been activated successfully!`);
+            } catch (e) {
+                console.error("Error accepting request: ", e);
+                alert("An error occurred. Please check the console.");
+            }
+        };
+
+        // Function to reject a request
+        window.rejectRequest = async (requestId) => {
+            try {
+                // You can add additional logic here, like notifying the user
+                await deleteDoc(doc(db, "activation_requests", requestId));
+                alert("Request rejected and removed.");
+            } catch (e) {
+                console.error("Error rejecting request: ", e);
+                alert("An error occurred. Please check the console.");
+            }
+        };
+    </script>
+</body>
+</html>

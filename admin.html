@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #0d120a;
+            color: #fff;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+        h1 {
+            color: #00c853;
+            text-align: center;
+        }
+        .user-list {
+            margin-top: 20px;
+            background-color: #1a2a1a;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .user-card {
+            border-bottom: 1px solid #00c853;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .user-card:last-child {
+            border-bottom: none;
+        }
+        .user-info {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .user-info strong {
+            color: #b0e8b0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Admin Panel</h1>
+    <div class="user-list">
+        <h2>Users</h2>
+        <div id="usersContainer">
+            <p>Loading users...</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script>
+    // আপনার Firebase কনফিগারেশন এখানে
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
+      authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
+      projectId: "ensen-mining-bd-4882b",
+      storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
+      messagingSenderId: "1006758844776",
+      appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
+      measurementId: "G-8YKDVM1W8B"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    async function fetchUsers() {
+        const usersContainer = document.getElementById('usersContainer');
+        usersContainer.innerHTML = 'Loading users...';
+
+        try {
+            const usersSnapshot = await db.collection('users').get();
+            if (usersSnapshot.empty) {
+                usersContainer.innerHTML = '<p>No users found.</p>';
+                return;
+            }
+            
+            usersContainer.innerHTML = '';
+            usersSnapshot.forEach(doc => {
+                const userData = doc.data();
+                const userCard = document.createElement('div');
+                userCard.className = 'user-card';
+                userCard.innerHTML = `
+                    <div class="user-info"><strong>Username:</strong> ${userData.username}</div>
+                    <div class="user-info"><strong>Phone:</strong> ${userData.phone}</div>
+                `;
+                usersContainer.appendChild(userCard);
+            });
+        } catch (error) {
+            console.error("Error fetching users: ", error);
+            usersContainer.innerHTML = `<p>Error loading users. Check the console for details.</p>`;
+        }
+    }
+
+    // Call the function to fetch users when the page loads
+    fetchUsers();
+
+</script>
+
+</body>
+</html>

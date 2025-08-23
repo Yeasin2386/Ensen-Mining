@@ -15,7 +15,7 @@
             --card-color: #1a1e36;
             --text-color: #e0e6f6;
             --secondary-text-color: #9299b8;
-            --accent-color: #4CAF50; /* A vibrant green */
+            --accent-color: #4CAF50;
             --accent-dark: #3e8e41;
             --button-color: linear-gradient(45deg, #4CAF50, #66bb6a);
             --button-shadow: 0 4px 15px rgba(0, 200, 83, 0.4);
@@ -56,7 +56,6 @@
             padding-bottom: 80px;
         }
 
-        /* Header Styles */
         .header {
             text-align: center;
             margin-bottom: 25px;
@@ -91,12 +90,11 @@
             font-size: 1.5em;
         }
 
-        /* Card Styles */
         .card {
             background: var(--card-color);
             padding: 25px;
             border-radius: 16px;
-            margin-bottom: 25px; /* Added spacing */
+            margin-bottom: 25px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--border-color);
         }
@@ -132,12 +130,11 @@
             opacity: 0.5;
         }
 
-        /* Button Styles */
         .button {
             display: block;
             width: 100%;
             padding: 18px;
-            margin-bottom: 25px; /* Added spacing */
+            margin-bottom: 25px;
             background: var(--button-color);
             color: var(--text-color);
             text-decoration: none;
@@ -168,14 +165,13 @@
             background: var(--gradient-2);
         }
         
-        /* Telegram Button Style (Updated) */
         .telegram-link-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 100%;
             padding: 15px;
-            margin-bottom: 25px; /* Added spacing */
+            margin-bottom: 25px;
             background: var(--telegram-color);
             color: #fff;
             text-decoration: none;
@@ -195,7 +191,6 @@
             font-size: 1.2em;
         }
 
-        /* Lottery Button Styles */
         .lottery-button {
             background: linear-gradient(45deg, #FF5722, #FF9800);
             box-shadow: 0 4px 15px rgba(255, 87, 34, 0.4);
@@ -206,7 +201,6 @@
             box-shadow: 0 6px 20px rgba(255, 87, 34, 0.6);
         }
         
-        /* Navigation Bar */
         .nav-bar {
             background: #121528;
             border-top: 1px solid var(--border-color);
@@ -249,7 +243,6 @@
             color: var(--accent-color);
         }
 
-        /* Content Sections */
         .content-section {
             display: none;
             animation: fadeIn 0.6s ease-in-out;
@@ -259,7 +252,6 @@
             display: block;
         }
         
-        /* List Items */
         .list-item, .task-list-item {
             display: flex;
             align-items: center;
@@ -267,7 +259,7 @@
             cursor: pointer;
             background-color: #1a1e36;
             padding: 18px;
-            margin-bottom: 15px; /* Added spacing */
+            margin-bottom: 15px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             text-align: left;
@@ -304,7 +296,6 @@
             margin: 0;
         }
 
-        /* Input Groups */
         .input-group {
             text-align: left;
             margin-bottom: 20px;
@@ -335,7 +326,6 @@
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
 
-        /* Alert Box */
         .alert-box {
             padding: 15px;
             border-radius: 10px;
@@ -375,12 +365,10 @@
             margin: 0;
         }
         
-        /* General Spacing */
         .section-title {
             margin-bottom: 20px;
         }
         
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -421,7 +409,6 @@
             color: var(--accent-color);
         }
         
-        /* New Styles for Lottery and Mail in Lists */
         .list-item.lottery-item i {
             color: #FF5722;
         }
@@ -432,12 +419,11 @@
             color: #2196F3;
         }
 
-        /* Lottery Page specific styles */
         .lottery-winner-card {
             background-color: #21253d;
             border-radius: 12px;
             padding: 20px;
-            margin-bottom: 25px; /* Added spacing */
+            margin-bottom: 25px;
             text-align: center;
             border: 1px solid #444a69;
         }
@@ -465,7 +451,7 @@
 </head>
 <body>
 
-    <div id="registration-screen">
+    <div id="registration-screen" style="display: none;">
         <div class="card">
             <h3>Complete Your Profile <i class="fas fa-user-edit"></i></h3>
             
@@ -841,7 +827,7 @@
                     <div class="list-item" onclick="showSection('change-password-page')">
                         <i class="fas fa-lock"></i>
                         <h4>Change Password</h4>
-                    </div>
+                    </button>
                     
                     <div class="list-item" onclick="showSection('privacy-policy-page')">
                         <i class="fas fa-shield-alt"></i>
@@ -1127,7 +1113,13 @@
         let previousWinnerNumber = "-------";
 
         document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('registration-screen').style.display = 'flex';
+            // Check for a logged-in user on page load
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                checkUserStatusAndLoadApp(loggedInUser);
+            } else {
+                document.getElementById('registration-screen').style.display = 'flex';
+            }
         });
 
         // New function to check if user is active and load data
@@ -1141,6 +1133,7 @@
                     document.getElementById('main-app').style.display = 'block';
                     document.getElementById('registration-screen').style.display = 'none';
                     document.getElementById('activation-screen').style.display = 'none';
+                    localStorage.setItem('loggedInUser', username); // Save to local storage for future visits
                     updateUI(currentUser);
                     showAlert("Logged in successfully.", 'success');
                 } else {
@@ -1150,6 +1143,7 @@
                 }
             } else {
                  showAlert("Username not found. Please register.", 'error');
+                 document.getElementById('registration-screen').style.display = 'flex';
             }
         }
         
@@ -1374,12 +1368,11 @@
         }
 
         function showAd() {
-            // Updated to include pop-up message as requested
             showAlert("অ্যাড দেখার পর ২০ থেকে ৩০ সেকেন্ড অপেক্ষা করুন, না হলে টাকা পাবেন না।");
             window.open(AD_URL, '_blank');
             setTimeout(() => {
                 completeTask('ads');
-            }, 30000); // Wait for 30 seconds
+            }, 30000);
         }
 
         function showSurvey() {
@@ -1402,7 +1395,7 @@
             window.open(url, '_blank');
             setTimeout(() => {
                 completeTask('direct-link');
-            }, 25000); // Wait 25 seconds based on the user's tip
+            }, 25000);
         }
 
         function openFacebook() {
@@ -1491,7 +1484,6 @@
                 return;
             }
 
-            // Update local state and Firebase
             currentUser.balance -= amount;
             currentUser.totalWithdrawn += amount;
             
@@ -1578,7 +1570,6 @@
             return Math.floor(100000 + Math.random() * 900000);
         }
 
-        // Initialize a random previous winner number on app load
         previousWinnerNumber = generateTicketNumber();
 
     </script>

@@ -4,54 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
+        .admin-container {
             padding: 20px;
-            background-color: #0d120a;
-            color: #fff;
-        }
-        .container {
             max-width: 900px;
             margin: auto;
         }
-        h1 {
-            color: #00c853;
+        .admin-header {
+            color: #4CAF50;
             text-align: center;
+            margin-bottom: 20px;
+        }
+        .user-count {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #b0e8b0;
+            margin-bottom: 20px;
         }
         .user-list {
-            margin-top: 20px;
-            background-color: #1a2a1a;
+            background-color: #2a2a2a;
             padding: 20px;
             border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         .user-card {
-            border-bottom: 1px solid #00c853;
-            padding: 10px 0;
+            border-bottom: 1px solid #555;
+            padding: 15px 0;
             display: flex;
             flex-direction: column;
+            animation: fadeIn 0.5s ease-in-out;
         }
         .user-card:last-child {
             border-bottom: none;
         }
         .user-info {
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 5px;
         }
         .user-info strong {
-            color: #b0e8b0;
+            color: #8cc88c;
+        }
+        .no-users {
+            text-align: center;
+            font-style: italic;
+            color: #999;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Admin Panel</h1>
+<div class="admin-container">
+    <h1 class="admin-header">Admin Panel</h1>
+    <p class="user-count">Total Users: <span id="userCount">0</span></p>
     <div class="user-list">
-        <h2>Users</h2>
+        <h2>User Information</h2>
         <div id="usersContainer">
-            <p>Loading users...</p>
+            <p class="no-users">Loading users...</p>
         </div>
     </div>
 </div>
@@ -75,12 +85,17 @@
 
     async function fetchUsers() {
         const usersContainer = document.getElementById('usersContainer');
-        usersContainer.innerHTML = 'Loading users...';
+        const userCountElement = document.getElementById('userCount');
+        
+        usersContainer.innerHTML = '<p class="no-users">Loading users...</p>';
 
         try {
             const usersSnapshot = await db.collection('users').get();
+            const userCount = usersSnapshot.size;
+            userCountElement.textContent = userCount;
+
             if (usersSnapshot.empty) {
-                usersContainer.innerHTML = '<p>No users found.</p>';
+                usersContainer.innerHTML = '<p class="no-users">No users found.</p>';
                 return;
             }
             
@@ -92,16 +107,16 @@
                 userCard.innerHTML = `
                     <div class="user-info"><strong>Username:</strong> ${userData.username}</div>
                     <div class="user-info"><strong>Phone:</strong> ${userData.phone}</div>
+                    <div class="user-info"><strong>Balance:</strong> ${userData.balance.toFixed(2)} BDT</div>
                 `;
                 usersContainer.appendChild(userCard);
             });
         } catch (error) {
             console.error("Error fetching users: ", error);
-            usersContainer.innerHTML = `<p>Error loading users. Check the console for details.</p>`;
+            usersContainer.innerHTML = `<p class="no-users">Error loading users. Check the console for details.</p>`;
         }
     }
 
-    // Call the function to fetch users when the page loads
     fetchUsers();
 
 </script>

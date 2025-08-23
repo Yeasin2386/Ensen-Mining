@@ -4,145 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEW-PKLUCK</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0d120a;
-            color: #fff;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .form-card {
-            background-color: #1a2a1a;
-            padding: 30px 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .logo {
-            margin-bottom: 20px;
-        }
-        .logo img {
-            max-width: 150px;
-            height: auto;
-        }
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #00c853;
-        }
-        .tab-btn {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            color: #9e9e9e;
-            transition: color 0.3s;
-        }
-        .tab-btn.active {
-            color: #00c853;
-            border-bottom: 3px solid #00c853;
-        }
-        .form-group {
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #b0e8b0;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #00c853;
-            border-radius: 5px;
-            background-color: #243e24;
-            color: #fff;
-            box-sizing: border-box;
-        }
-        .form-group .checkbox-group {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-        .form-group .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin-right: 10px;
-            margin-top: 5px;
-        }
-        .form-group .checkbox-group label {
-            font-size: 14px;
-            color: #b0e8b0;
-        }
-        .form-group .terms {
-            font-size: 12px;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .form-group .terms a {
-            color: #00c853;
-            text-decoration: none;
-        }
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background-color: #00c853;
-            border: none;
-            border-radius: 5px;
-            color: #1a2a1a;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .submit-btn:hover {
-            background-color: #009640;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.7);
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #1a2a1a;
-            margin: 5% auto;
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 500px;
-        }
-        .close-btn {
-            color: #fff;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-btn:hover,
-        .close-btn:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -232,7 +94,6 @@
       measurementId: "G-8YKDVM1W8B"
     };
 
-    // Firebase অ্যাপ ইনিশিয়ালাইজ করা
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
@@ -301,15 +162,38 @@
         try {
             await db.collection('users').doc(username).set({
                 username: username,
-                password: password, // নিরাপত্তা কারণে পাসওয়ার্ড এনক্রিপ্ট করা উচিত
+                password: password,
                 phone: phone,
-                transactionPassword: transactionPassword
+                transactionPassword: transactionPassword,
+                balance: 0 // নতুন ব্যবহারকারীর ব্যালেন্স 0 থেকে শুরু হবে
             });
             alert('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
-            // সফল হলে অন্য পেজে নিয়ে যান
-            // window.location.href = "dashboard.html"; 
+            localStorage.setItem('username', username);
+            window.location.href = "dashboard.html";
         } catch (error) {
             alert('অ্যাকাউন্ট তৈরি করতে ব্যর্থ: ' + error.message);
+            console.error(error);
+        }
+    });
+    
+    // লগইন ডেটা চেক
+    document.getElementById('loginBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+
+        try {
+            const userDoc = await db.collection('users').doc(username).get();
+            if (userDoc.exists && userDoc.data().password === password) {
+                alert('লগইন সফল!');
+                localStorage.setItem('username', username);
+                window.location.href = "dashboard.html";
+            } else {
+                alert('ভুল ব্যবহারকারীর নাম বা পাসওয়ার্ড!');
+            }
+        } catch (error) {
+            alert('লগইন ব্যর্থ: ' + error.message);
             console.error(error);
         }
     });

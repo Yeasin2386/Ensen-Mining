@@ -325,6 +325,22 @@
             border-color: var(--accent-color);
             box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-size: 0.9em;
+            color: var(--secondary-text-color);
+        }
 
         .alert-box {
             padding: 15px;
@@ -476,6 +492,16 @@
                 <p style="text-align: left; font-size: 0.8em; color: var(--secondary-text-color); margin-top: 5px;">
                     This password will be used for withdrawals and sensitive actions.
                 </p>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="age-check">
+                <label for="age-check">আমি নিশ্চিত করছি যে আমি ১৮ বছর বা তার বেশি বয়সী।</label>
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="content-check">
+                <label for="content-check">আমি জানি যে এখানে এডাল্ট পোস্ট এবং সেনসিটিভ পোস্ট থাকতে পারে এবং জেনেশুনে কাজ করছি।</label>
             </div>
             
             <button class="button" onclick="showActivationForm()">
@@ -1078,7 +1104,10 @@
     <script type='text/javascript' src='//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js'></script>
     
     <script type="module">
-        // Firebase Configuration (Replace with your actual config)
+        // IMPORTANT: REPLACE WITH YOUR OWN FIREBASE CONFIGURATION
+        // If you don't do this, data will NOT be saved and registration will fail.
+        // Go to your Firebase project settings to get your actual config.
+        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
         import { getFirestore, doc, setDoc, addDoc, collection, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
         
@@ -1153,9 +1182,21 @@
             const regNickname = document.getElementById('reg-nickname').value.trim();
             const regPhone = document.getElementById('reg-phone').value.trim();
             const regPassword = document.getElementById('reg-password').value.trim();
+            const ageChecked = document.getElementById('age-check').checked;
+            const contentChecked = document.getElementById('content-check').checked;
 
             if (!regUsername || !regNickname || !regPhone || !regPassword) {
                 showAlert("Please fill in all the details.", "error");
+                return;
+            }
+            
+            if (!ageChecked) {
+                showAlert("নিবন্ধন করতে হলে আপনাকে অবশ্যই নিশ্চিত করতে হবে যে আপনার বয়স ১৮ বছর বা তার বেশি।", "error");
+                return;
+            }
+
+            if (!contentChecked) {
+                showAlert("আপনাকে অবশ্যই এডাল্ট ও সেনসিটিভ কন্টেন্ট সম্পর্কিত শর্তাবলীতে সম্মতি দিতে হবে।", "error");
                 return;
             }
 

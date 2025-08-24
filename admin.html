@@ -3,122 +3,567 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Ensen Mining BD - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .admin-container {
-            padding: 20px;
-            max-width: 900px;
-            margin: auto;
-        }
-        .admin-header {
-            color: #4CAF50;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .user-count {
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #b0e8b0;
-            margin-bottom: 20px;
-        }
-        .user-list {
-            background-color: #2a2a2a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .user-card {
-            border-bottom: 1px solid #555;
-            padding: 15px 0;
+        /* General Styles */
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0d1a2f; /* Dark Navy Blue */
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            animation: fadeIn 0.5s ease-in-out;
         }
-        .user-card:last-child {
-            border-bottom: none;
+
+        .container {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: auto;
+            width: 100%;
+            box-sizing: border-box;
         }
-        .user-info {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-        .user-info strong {
-            color: #8cc88c;
-        }
-        .no-users {
+
+        /* Header & Navigation */
+        .header {
             text-align: center;
-            font-style: italic;
-            color: #999;
+            padding: 20px;
+            background-color: #1e2a4a;
+            border-bottom: 2px solid #17e6e8;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #17e6e8;
+            font-size: 28px;
+            margin: 0;
+        }
+        
+        .header .logout-btn {
+            background-color: #e53935;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .header .logout-btn:hover {
+            background-color: #c62828;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid #2b3b5e;
+            margin-bottom: 30px;
+        }
+        
+        .nav-tab {
+            background: none;
+            color: #99aab5;
+            padding: 15px 30px;
+            border: none;
+            cursor: pointer;
+            transition: color 0.3s, border-bottom 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .nav-tab.active {
+            color: #17e6e8;
+            border-bottom: 2px solid #17e6e8;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #1e2a4a;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(23, 230, 232, 0.1), 0 4px 15px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-header h3 {
+            margin-top: 0;
+            color: #fff;
+            font-size: 20px;
+            border-bottom: 2px solid #2b3b5e;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #99aab5;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            background-color: #2b3b5e;
+            border: 1px solid #4a5d7c;
+            border-radius: 8px;
+            color: #e0e0e0;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form-btn {
+            background: linear-gradient(90deg, #17e6e8, #00b0b2);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .form-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #2b3b5e;
+        }
+
+        .data-table th {
+            color: #17e6e8;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            color: #ccc;
+        }
+        
+        .data-table .action-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: color 0.2s;
+        }
+
+        .data-table .action-btn:hover {
+            color: #17e6e8;
+        }
+
+        .message-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            background-color: #2b3b5e;
+            border: 1px solid #4a5d7c;
+            border-radius: 8px;
+            color: #e0e0e0;
+            box-sizing: border-box;
+            resize: vertical;
         }
     </style>
 </head>
 <body>
 
-<div class="admin-container">
-    <h1 class="admin-header">Admin Panel</h1>
-    <p class="user-count">Total Users: <span id="userCount">0</span></p>
-    <div class="user-list">
-        <h2>User Information</h2>
-        <div id="usersContainer">
-            <p class="no-users">Loading users...</p>
+<div class="header">
+    <h1>অ্যাডমিন প্যানেল</h1>
+    <button class="logout-btn" id="logoutBtn">লগআউট</button>
+</div>
+
+<div class="container">
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="dashboard">ড্যাশবোর্ড</button>
+        <button class="nav-tab" data-tab="user-management">ব্যবহারকারী নিয়ন্ত্রণ</button>
+        <button class="nav-tab" data-tab="earning-links">আয়ের লিংক</button>
+        <button class="nav-tab" data-tab="message-broadcast">মেসেজ ব্রডকাস্ট</button>
+    </div>
+
+    <div id="dashboard" class="tab-content active">
+        <div class="card">
+            <div class="card-header">
+                <h3>সাধারণ তথ্য</h3>
+            </div>
+            <p>মোট ব্যবহারকারী: <span id="totalUsersCount">...</span></p>
         </div>
     </div>
+    
+    <div id="user-management" class="tab-content" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <h3>ব্যবহারকারী নিয়ন্ত্রণ</h3>
+            </div>
+            <form id="userSearchForm">
+                <div class="form-group">
+                    <input type="text" id="userUsername" placeholder="ব্যবহারকারীর নাম" required>
+                </div>
+                <button type="submit" class="form-btn">তথ্য লোড করুন</button>
+            </form>
+            <div id="userData" style="margin-top: 20px;">
+                <p>ইউজার: <span id="displayUsername">...</span></p>
+                <p>বর্তমান ব্যালেন্স: <span id="currentBalance">...</span> BDT</p>
+
+                <div style="margin-top: 20px;">
+                    <h4>ব্যালেন্স পরিবর্তন</h4>
+                    <form id="balanceForm">
+                        <div class="form-group">
+                            <input type="number" id="balanceAmount" placeholder="পরিমাণ" required>
+                        </div>
+                        <button type="submit" class="form-btn" id="addBalanceBtn">যোগ করুন</button>
+                        <button type="submit" class="form-btn" id="subtractBalanceBtn">বাদ দিন</button>
+                    </form>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h4>পাসওয়ার্ড রিসেট</h4>
+                    <form id="passwordResetForm">
+                        <div class="form-group">
+                            <input type="password" id="newPassword" placeholder="নতুন পাসওয়ার্ড" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="newTransPassword" placeholder="নতুন ট্রানজেকশন পাসওয়ার্ড" required>
+                        </div>
+                        <button type="submit" class="form-btn">রিসেট করুন</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="earning-links" class="tab-content" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <h3>আয়ের লিংক ম্যানেজমেন্ট</h3>
+            </div>
+            <form id="linkForm">
+                <input type="hidden" id="linkId">
+                <div class="form-group">
+                    <label for="linkName">নাম</label>
+                    <input type="text" id="linkName" placeholder="যেমন: ফেসবুক ভিজিট" required>
+                </div>
+                <div class="form-group">
+                    <label for="linkUrl">URL</label>
+                    <input type="url" id="linkUrl" placeholder="http://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="linkType">প্রকার</label>
+                    <select id="linkType" required>
+                        <option value="adsterra">Adsterra Direct Link</option>
+                        <option value="monetag">Monetag Video Ad</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="linkAmount">টাকার পরিমাণ</label>
+                    <input type="number" id="linkAmount" step="0.01" placeholder="যেমন: 5.00" required>
+                </div>
+                <button type="submit" class="form-btn" id="saveLinkBtn">যোগ করুন</button>
+            </form>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <div class="card-header">
+                <h3>সকল লিংক</h3>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>নাম</th>
+                        <th>টাকা</th>
+                        <th>প্রকার</th>
+                        <th>অ্যাকশন</th>
+                    </tr>
+                </thead>
+                <tbody id="linksTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="message-broadcast" class="tab-content" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <h3>সকল ব্যবহারকারীকে মেসেজ</h3>
+            </div>
+            <form id="broadcastForm">
+                <div class="form-group">
+                    <label for="broadcastMessage">মেসেজ লিখুন</label>
+                    <textarea id="broadcastMessage" required></textarea>
+                </div>
+                <button type="submit" class="form-btn">মেসেজ পাঠান</button>
+            </form>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <div class="card-header">
+                <h3>নির্দিষ্ট ব্যবহারকারীকে মেসেজ</h3>
+            </div>
+            <form id="privateMessageForm">
+                <div class="form-group">
+                    <label for="privateMessageUsername">ব্যবহারকারীর নাম</label>
+                    <input type="text" id="privateMessageUsername" required>
+                </div>
+                <div class="form-group">
+                    <label for="privateMessageContent">মেসেজ লিখুন</label>
+                    <textarea id="privateMessageContent" required></textarea>
+                </div>
+                <button type="submit" class="form-btn">মেসেজ পাঠান</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 <script>
-    // আপনার Firebase কনফিগারেশন এখানে
+    // Firebase Configuration - REPLACE WITH YOURS
     const firebaseConfig = {
-      apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
-      authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
-      projectId: "ensen-mining-bd-4882b",
-      storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
-      messagingSenderId: "1006758844776",
-      appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
-      measurementId: "G-8YKDVM1W8B"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    async function fetchUsers() {
-        const usersContainer = document.getElementById('usersContainer');
-        const userCountElement = document.getElementById('userCount');
-        
-        usersContainer.innerHTML = '<p class="no-users">Loading users...</p>';
+    const adminPassword = "adminpassword123"; // CHANGE THIS PASSWORD
 
-        try {
-            const usersSnapshot = await db.collection('users').get();
-            const userCount = usersSnapshot.size;
-            userCountElement.textContent = userCount;
-
-            if (usersSnapshot.empty) {
-                usersContainer.innerHTML = '<p class="no-users">No users found.</p>';
-                return;
-            }
-            
-            usersContainer.innerHTML = '';
-            usersSnapshot.forEach(doc => {
-                const userData = doc.data();
-                const userCard = document.createElement('div');
-                userCard.className = 'user-card';
-                userCard.innerHTML = `
-                    <div class="user-info"><strong>Username:</strong> ${userData.username}</div>
-                    <div class="user-info"><strong>Phone:</strong> ${userData.phone}</div>
-                    <div class="user-info"><strong>Balance:</strong> ${userData.balance.toFixed(2)} BDT</div>
-                `;
-                usersContainer.appendChild(userCard);
-            });
-        } catch (error) {
-            console.error("Error fetching users: ", error);
-            usersContainer.innerHTML = `<p class="no-users">Error loading users. Check the console for details.</p>`;
+    function checkAdminAuth() {
+        const password = prompt("অ্যাডমিন পাসওয়ার্ড দিন:");
+        if (password === adminPassword) {
+            document.body.style.display = 'block';
+            loadData();
+            loadLinks();
+        } else {
+            alert("ভুল পাসওয়ার্ড!");
+            window.location.href = 'index.html';
         }
     }
 
-    fetchUsers();
+    // Tab Navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab).style.display = 'block';
+        });
+    });
 
+    async function loadData() {
+        // Load Total Users
+        const usersSnapshot = await db.collection('users').get();
+        document.getElementById('totalUsersCount').textContent = usersSnapshot.size;
+    }
+
+    // User Management
+    document.getElementById('userSearchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('userUsername').value;
+        const userDoc = await db.collection('users').doc(username).get();
+        if (userDoc.exists) {
+            const userData = userDoc.data();
+            document.getElementById('displayUsername').textContent = userData.username;
+            document.getElementById('currentBalance').textContent = userData.balance.toFixed(2);
+            document.getElementById('userData').style.display = 'block';
+        } else {
+            alert('ব্যবহারকারী খুঁজে পাওয়া যায়নি!');
+            document.getElementById('userData').style.display = 'none';
+        }
+    });
+
+    document.getElementById('balanceForm').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('userUsername').value;
+        const amount = parseFloat(document.getElementById('balanceAmount').value);
+        if (isNaN(amount)) { return; }
+
+        const userRef = db.collection('users').doc(username);
+        let incrementValue = 0;
+        if (e.target.id === 'addBalanceBtn') {
+            incrementValue = amount;
+        } else if (e.target.id === 'subtractBalanceBtn') {
+            incrementValue = -amount;
+        } else {
+            return;
+        }
+
+        try {
+            await userRef.update({
+                balance: firebase.firestore.FieldValue.increment(incrementValue)
+            });
+            alert('ব্যালেন্স সফলভাবে আপডেট করা হয়েছে!');
+            document.getElementById('userSearchForm').dispatchEvent(new Event('submit'));
+        } catch (error) {
+            alert('ব্যালেন্স আপডেট ব্যর্থ: ' + error.message);
+        }
+    });
+    
+    document.getElementById('passwordResetForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('userUsername').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const newTransPassword = document.getElementById('newTransPassword').value;
+
+        if (!newPassword || !newTransPassword) {
+            alert('নতুন পাসওয়ার্ড এবং ট্রানজেকশন পাসওয়ার্ড লিখুন।');
+            return;
+        }
+        if (newTransPassword.length !== 4) {
+            alert('নতুন ট্রানজেকশন পাসওয়ার্ড ৪ অক্ষরের হতে হবে।');
+            return;
+        }
+
+        const userRef = db.collection('users').doc(username);
+        try {
+            await userRef.update({
+                password: newPassword,
+                transactionPassword: newTransPassword
+            });
+            alert('পাসওয়ার্ড সফলভাবে রিসেট করা হয়েছে!');
+        } catch (error) {
+            alert('পাসওয়ার্ড রিসেট ব্যর্থ: ' + error.message);
+        }
+    });
+
+    // Earning Links Management
+    async function loadLinks() {
+        const linksTableBody = document.getElementById('linksTableBody');
+        linksTableBody.innerHTML = '';
+        const linksSnapshot = await db.collection('earning_links').get();
+        linksSnapshot.forEach(doc => {
+            const link = doc.data();
+            const row = `
+                <tr>
+                    <td>${link.name}</td>
+                    <td>${link.amount} BDT</td>
+                    <td>${link.type}</td>
+                    <td>
+                        <button class="action-btn" onclick="editLink('${doc.id}', '${link.name}', '${link.url}', '${link.type}', ${link.amount})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn" onclick="deleteLink('${doc.id}')">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+            linksTableBody.innerHTML += row;
+        });
+    }
+
+    async function editLink(id, name, url, type, amount) {
+        document.getElementById('linkId').value = id;
+        document.getElementById('linkName').value = name;
+        document.getElementById('linkUrl').value = url;
+        document.getElementById('linkType').value = type;
+        document.getElementById('linkAmount').value = amount;
+        document.getElementById('saveLinkBtn').textContent = 'আপডেট করুন';
+    }
+
+    async function deleteLink(id) {
+        if (confirm("আপনি কি নিশ্চিত এই লিংকটি ডিলিট করতে চান?")) {
+            await db.collection('earning_links').doc(id).delete();
+            alert('লিংক ডিলিট করা হয়েছে!');
+            loadLinks();
+        }
+    }
+
+    document.getElementById('linkForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const linkId = document.getElementById('linkId').value;
+        const name = document.getElementById('linkName').value;
+        const url = document.getElementById('linkUrl').value;
+        const type = document.getElementById('linkType').value;
+        const amount = parseFloat(document.getElementById('linkAmount').value);
+
+        const linkData = { name, url, type, amount };
+
+        if (linkId) {
+            await db.collection('earning_links').doc(linkId).update(linkData);
+            alert('লিংক সফলভাবে আপডেট করা হয়েছে!');
+            document.getElementById('saveLinkBtn').textContent = 'যোগ করুন';
+        } else {
+            await db.collection('earning_links').add(linkData);
+            alert('নতুন লিংক সফলভাবে যোগ করা হয়েছে!');
+        }
+        
+        document.getElementById('linkForm').reset();
+        document.getElementById('linkId').value = '';
+        loadLinks();
+    });
+
+
+    // Message Broadcast
+    document.getElementById('broadcastForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const message = document.getElementById('broadcastMessage').value;
+        
+        const usersSnapshot = await db.collection('users').get();
+        const batch = db.batch();
+
+        usersSnapshot.forEach(userDoc => {
+            const userRef = db.collection('users').doc(userDoc.id);
+            const inboxRef = userRef.collection('inbox').doc();
+            batch.set(inboxRef, { message, timestamp: firebase.firestore.FieldValue.serverTimestamp(), read: false, sender: 'admin' });
+        });
+
+        await batch.commit();
+        alert('মেসেজ সকল ব্যবহারকারীকে পাঠানো হয়েছে!');
+        document.getElementById('broadcastForm').reset();
+    });
+
+    document.getElementById('privateMessageForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('privateMessageUsername').value;
+        const message = document.getElementById('privateMessageContent').value;
+        
+        const userRef = db.collection('users').doc(username);
+        const inboxRef = userRef.collection('inbox').doc();
+
+        try {
+            await inboxRef.set({ message, timestamp: firebase.firestore.FieldValue.serverTimestamp(), read: false, sender: 'admin' });
+            alert(`মেসেজ ${username} কে পাঠানো হয়েছে!`);
+        } catch (error) {
+            alert('মেসেজ পাঠাতে ব্যর্থ: ' + error.message);
+        }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+        alert('সফলভাবে লগআউট করা হয়েছে।');
+        window.location.href = 'index.html';
+    });
+    
+    // Initial check
+    document.body.style.display = 'none'; // Hide body until authenticated
+    checkAdminAuth();
 </script>
 
 </body>

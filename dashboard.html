@@ -7,22 +7,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-purple: #7B1FA2;
-            --dark-purple: #4A148C;
-            --secondary-purple: #B39DDB;
-            --text-color: #f0f0f0;
-            --bg-color: #212121;
-            --card-bg: #333;
-            --claim-green: #4CAF50;
-            --claim-disabled: #81C784;
-            --accent-color: #61DAFB;
+            --primary-color: #6a1b9a; /* Deep Purple */
+            --secondary-color: #f3e5f5; /* Light Purple */
+            --text-color: #424242;
+            --white-text: #fff;
+            --card-bg: #fff;
+            --task-bg: #f5f5f5;
+            --shadow: 0 4px 15px rgba(0,0,0,0.1);
+            --border-radius: 12px;
+            --claim-color: #4caf50;
+            --claim-done-color: #388e3c;
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
+            background: linear-gradient(135deg, var(--secondary-color), #e1bee7);
             color: var(--text-color);
             margin: 0;
             padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
         }
         .header {
             display: flex;
@@ -33,53 +38,110 @@
         .header h1 {
             font-size: 24px;
             font-weight: 700;
+            margin: 0;
+            color: var(--primary-color);
         }
-        .balance {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--accent-color);
+        .notification-icon {
+            position: relative;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
         }
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        .notification-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #e53935;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: bold;
         }
-        .card h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
+        .notification-list {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 250px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
         }
-        .task {
-            display: flex;
-            align-items: center;
+        .notification-list.active {
+            display: block;
+        }
+        .notification-item {
             padding: 15px;
-            border-bottom: 1px solid #444;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            color: #555;
         }
-        .task:last-child {
-            border-bottom: none;
+        .balance-card {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
         }
-        .task .emoji {
-            font-size: 30px;
-            margin-right: 15px;
-        }
-        .task-info {
-            flex-grow: 1;
-        }
-        .task-info h3 {
+        .balance-card h3 {
             margin: 0;
             font-size: 16px;
             font-weight: 500;
         }
-        .task-info p {
+        .balance-card h2 {
+            margin: 5px 0 0 0;
+            font-size: 36px;
+            font-weight: 700;
+        }
+        .section-heading {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: var(--task-bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .task-info {
+            display: flex;
+            align-items: center;
+        }
+        .task-icon {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        .task-details h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .task-details p {
             margin: 0;
             font-size: 12px;
-            color: #bbb;
+            color: #757575;
         }
         .claim-btn {
-            background-color: var(--primary-purple);
-            color: white;
+            background-color: var(--claim-color);
+            color: var(--white-text);
             padding: 10px 20px;
             border: none;
             border-radius: 50px;
@@ -88,19 +150,19 @@
             transition: all 0.3s ease;
         }
         .claim-btn.claimed {
-            background-color: var(--claim-green);
+            background-color: var(--claim-done-color);
         }
         .footer-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #111;
+            background-color: var(--card-bg);
             display: flex;
             justify-content: space-around;
             padding: 10px 0;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid #444;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #eee;
         }
         .footer-nav a {
             display: flex;
@@ -115,87 +177,172 @@
             margin-bottom: 5px;
         }
         .footer-nav a.active {
-            color: var(--accent-color);
+            color: var(--primary-color);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .withdraw-form input, .withdraw-form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+        .withdraw-form button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .settings-list {
+            list-style: none;
+            padding: 0;
+        }
+        .settings-list li {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .settings-list a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 16px;
+            display: block;
+        }
+        .settings-list a:hover {
+            color: var(--primary-color);
+        }
+        .logout-btn {
+            background-color: #e53935;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-weight: 600;
+        }
+        .profile-info p {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .tips-text {
+            font-size: 12px;
+            color: #757575;
+            margin-top: 15px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 id="welcome-text"></h1>
-        <div class="balance">
-            Balance: <span id="balance-amount">$0</span>
+    <div class="container">
+        <div id="homeSection" class="content-section active">
+            <div class="header">
+                <h1 id="welcome-text"></h1>
+                <div class="notification-icon">
+                    <i class="fas fa-bell" onclick="toggleNotifications()"></i>
+                    <span id="notificationCount" class="notification-count" style="display: none;">0</span>
+                    <div id="notificationList" class="notification-list"></div>
+                </div>
+            </div>
+            <div class="balance-card">
+                <h3>Current Balance</h3>
+                <h2 id="balance-amount">0.00 BDT</h2>
+            </div>
+            <div class="card">
+                <h2 class="section-heading">Daily Tasks</h2>
+                <div id="dailyTasks">
+                    </div>
+            </div>
+        </div>
+        
+        <div id="allTasksSection" class="content-section">
+            <div class="card">
+                <h2 class="section-heading">All Available Tasks</h2>
+                <div id="allTasks">
+                    </div>
+            </div>
+        </div>
+
+        <div id="withdrawSection" class="content-section">
+            <div class="card">
+                <h2 class="section-heading">Withdraw Funds</h2>
+                <form class="withdraw-form" onsubmit="handleWithdraw(event)">
+                    <input type="number" id="withdrawAmount" placeholder="Amount" required min="1">
+                    <select id="paymentMethod" required>
+                        <option value="">Select Method</option>
+                        <option value="bKash">bKash</option>
+                        <option value="Binance">Binance</option>
+                    </select>
+                    <input type="text" id="paymentDetails" placeholder="bKash Number / Binance ID" required>
+                    <input type="password" id="transPassword" placeholder="Transaction Password" required>
+                    <button type="submit">Withdraw Now</button>
+                </form>
+                <p class="tips-text">Security Tip: Minimum withdrawal amount is 100 BDT and maximum is 10,000 BDT. Withdrawals are processed within 24 hours.</p>
+            </div>
+        </div>
+        
+        <div id="settingsSection" class="content-section">
+            <div class="card">
+                <h2 class="section-heading">Settings</h2>
+                <ul class="settings-list">
+                    <li><a href="#" onclick="showProfile()">My Profile</a></li>
+                    <li><a href="https://t.me/yourtelegramchannel" target="_blank">Join Telegram Channel</a></li>
+                    <li><a href="#" onclick="changePassword('trans')">Change Transaction Password</a></li>
+                    <li><a href="#" onclick="changePassword('login')">Change Login Password</a></li>
+                </ul>
+                <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+            </div>
         </div>
     </div>
     
-    <div class="card">
-        <h2>Tasks</h2>
-        <div class="task">
-            <span class="emoji">😎</span>
-            <div class="task-info">
-                <h3>Watch short ads</h3>
-                <p>Rewarded Interstitial</p>
-            </div>
-            <button class="claim-btn" id="claimAdBtn" onclick="claimReward('ad', 0.5)">Claim</button>
-        </div>
-        <div class="task">
-            <span class="emoji">👀</span>
-            <div class="task-info">
-                <h3>Click to get reward</h3>
-                <p>Rewarded Popup</p>
-            </div>
-            <button class="claim-btn" id="claimClickBtn" onclick="claimReward('click', 0.2)">Claim</button>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Daily</h2>
-        <div class="task">
-            <span class="emoji">🤑</span>
-            <div class="task-info">
-                <h3>Watch video</h3>
-                <p>In-App Interstitial</p>
-            </div>
-            <i class="fas fa-clock" style="font-size: 20px; color: #999;"></i>
-        </div>
-    </div>
-
     <div class="footer-nav">
-        <a href="#" class="active"><i class="fas fa-home"></i>Home</a>
-        <a href="#"><i class="fas fa-tasks"></i>Tasks</a>
-        <a href="#"><i class="fas fa-money-bill-wave"></i>Withdraw</a>
-        <a href="#"><i class="fas fa-cogs"></i>Settings</a>
+        <a href="#" class="nav-item active" data-target="homeSection"><i class="fas fa-home"></i>Home</a>
+        <a href="#" class="nav-item" data-target="allTasksSection"><i class="fas fa-tasks"></i>All Tasks</a>
+        <a href="#" class="nav-item" data-target="withdrawSection"><i class="fas fa-money-bill-wave"></i>Withdraw</a>
+        <a href="#" class="nav-item" data-target="settingsSection"><i class="fas fa-cogs"></i>Settings</a>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script>
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
-  authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
-  projectId: "ensen-mining-bd-4882b",
-  storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
-  messagingSenderId: "1006758844776",
-  appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
-  measurementId: "G-8YKDVM1W8B"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
+            authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
+            projectId: "ensen-mining-bd-4882b",
+            storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
+            messagingSenderId: "1006758844776",
+            appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
+            measurementId: "G-8YKDVM1W8B"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
         let currentUser = null;
-        let currentBalance = 0;
+        let userData = null;
 
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
                 const userDoc = await db.collection("users").doc(currentUser.uid).get();
                 if (userDoc.exists) {
-                    const userData = userDoc.data();
+                    userData = userDoc.data();
                     document.getElementById('welcome-text').textContent = `Welcome, ${userData.username}`;
-                    currentBalance = userData.balance;
-                    document.getElementById('balance-amount').textContent = `$${currentBalance}`;
+                    document.getElementById('balance-amount').textContent = `${userData.balance.toFixed(2)} BDT`;
+                    loadTasks();
+                    loadNotifications();
                 } else {
                     console.error("No user data found in Firestore.");
                     auth.signOut();
@@ -205,30 +352,142 @@ const firebaseConfig = {
             }
         });
 
-        async function claimReward(task, rewardAmount) {
-            const claimButton = document.getElementById(`claim${task === 'ad' ? 'Ad' : 'Click'}Btn`);
-            claimButton.disabled = true;
-            claimButton.textContent = 'Watching Ad...';
-
-            await new Promise(resolve => setTimeout(resolve, 3000));
-
-            claimButton.textContent = 'Claim Now';
-            claimButton.classList.add('claimed');
-            claimButton.disabled = false;
-
-            claimButton.onclick = async () => {
-                await db.collection("users").doc(currentUser.uid).update({
-                    balance: firebase.firestore.FieldValue.increment(rewardAmount)
-                });
-                
-                currentBalance += rewardAmount;
-                document.getElementById('balance-amount').textContent = `$${currentBalance}`;
-                
-                alert(`You have claimed $${rewardAmount}!`);
-                claimButton.textContent = 'Claimed!';
-                claimButton.disabled = true;
-            };
+        async function loadTasks() {
+            const dailyTasksContainer = document.getElementById('dailyTasks');
+            const allTasksContainer = document.getElementById('allTasks');
+            dailyTasksContainer.innerHTML = '';
+            allTasksContainer.innerHTML = '';
+            const tasksSnapshot = await db.collection("tasks").get();
+            tasksSnapshot.forEach((doc) => {
+                const task = doc.data();
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `
+                    <div class="task-info">
+                        <span class="task-icon">${task.icon}</span>
+                        <div class="task-details">
+                            <h4>${task.name}</h4>
+                            <p>Earn ${task.amount.toFixed(2)} BDT</p>
+                        </div>
+                    </div>
+                    <button class="claim-btn" id="claimBtn-${doc.id}" onclick="claimReward('${doc.id}', ${task.amount})">${task.buttonText}</button>
+                `;
+                dailyTasksContainer.appendChild(taskItem.cloneNode(true));
+                allTasksContainer.appendChild(taskItem);
+            });
         }
+        
+        async function loadNotifications() {
+            const notifList = document.getElementById('notificationList');
+            const notifCount = document.getElementById('notificationCount');
+            const messagesRef = db.collection("messages").orderBy("timestamp", "desc");
+            messagesRef.onSnapshot((snapshot) => {
+                let count = 0;
+                notifList.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    const msgItem = document.createElement('div');
+                    msgItem.className = 'notification-item';
+                    msgItem.textContent = message.text;
+                    notifList.appendChild(msgItem);
+                    count++;
+                });
+                notifCount.textContent = count;
+                notifCount.style.display = count > 0 ? 'block' : 'none';
+            });
+        }
+        
+        function toggleNotifications() {
+            document.getElementById('notificationList').classList.toggle('active');
+        }
+
+        async function claimReward(taskId, rewardAmount) {
+            const claimButton = document.getElementById(`claimBtn-${taskId}`);
+            claimButton.textContent = 'Watching Ad...';
+            claimButton.disabled = true;
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            await db.collection("users").doc(currentUser.uid).update({
+                balance: firebase.firestore.FieldValue.increment(rewardAmount)
+            });
+            const userDoc = await db.collection("users").doc(currentUser.uid).get();
+            const updatedBalance = userDoc.data().balance;
+            document.getElementById('balance-amount').textContent = `${updatedBalance.toFixed(2)} BDT`;
+            alert(`You have claimed ${rewardAmount.toFixed(2)} BDT!`);
+            claimButton.textContent = 'Claimed!';
+            claimButton.disabled = true;
+        }
+
+        async function handleWithdraw(event) {
+            event.preventDefault();
+            const amount = document.getElementById('withdrawAmount').value;
+            const method = document.getElementById('paymentMethod').value;
+            const details = document.getElementById('paymentDetails').value;
+            const transPassword = document.getElementById('transPassword').value;
+
+            if (transPassword !== userData.transPassword) {
+                alert("Incorrect transaction password!");
+                return;
+            }
+            if (parseFloat(amount) > userData.balance) {
+                alert("Insufficient balance!");
+                return;
+            }
+            if (parseFloat(amount) < 100 || parseFloat(amount) > 10000) {
+                alert("Withdrawal amount must be between 100 and 10,000 BDT.");
+                return;
+            }
+            // Add withdrawal request to a new Firestore collection for admin review
+            await db.collection("withdrawals").add({
+                userId: currentUser.uid,
+                username: userData.username,
+                amount: parseFloat(amount),
+                method: method,
+                details: details,
+                status: 'pending',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert(`Withdrawal request sent: Amount: ${amount} BDT, Method: ${method}, Details: ${details}`);
+            document.getElementById('withdrawAmount').value = '';
+            document.getElementById('paymentDetails').value = '';
+            document.getElementById('transPassword').value = '';
+        }
+        
+        async function showProfile() {
+            if (!userData) {
+                const userDoc = await db.collection("users").doc(currentUser.uid).get();
+                userData = userDoc.data();
+            }
+            alert(`Profile\nUsername: ${userData.username}\nMobile: ${userData.mobile}`);
+        }
+
+        function changePassword(type) {
+            const newPass = prompt(`Enter new ${type} password:`);
+            if (newPass) {
+                alert(`Password change request for ${type} password received. This needs to be implemented on the backend.`);
+            }
+        }
+
+        function handleLogout() {
+            auth.signOut().then(() => {
+                window.location.href = "index.html";
+            }).catch((error) => {
+                console.error("Error signing out:", error);
+            });
+        }
+        
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(nav => nav.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
     </script>
 </body>
-              </html>
+</html>

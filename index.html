@@ -1,1909 +1,344 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ensen Mining BD - Make Money Online</title>
+    <title>Ensen-Mining BD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
     <style>
-    /* General Styles */
-    body {
-        font-family: 'Poppins', Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #0d1a2f; /* Dark Navy Blue */
-        color: #e0e0e0;
-        line-height: 1.6;
-        position: relative;
-        overflow-x: hidden;
-        min-height: 100vh;
-    }
-
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: radial-gradient(circle at center, rgba(30, 60, 90, 0.1) 1px, transparent 1px);
-        background-size: 20px 20px;
-        z-index: -1;
-        opacity: 0.8;
-        animation: backgroundPulse 15s infinite ease-in-out;
-    }
-
-    @keyframes backgroundPulse {
-        0% { transform: scale(1); opacity: 0.8; }
-        50% { transform: scale(1.1); opacity: 1; }
-        100% { transform: scale(1); opacity: 0.8; }
-    }
-
-    .container {
-        padding: 30px 20px 100px; /* Added bottom padding for navbar */
-        min-height: calc(100vh - 80px);
-        box-sizing: border-box;
-        overflow-y: auto;
-        max-height: 100vh;
-    }
-
-    /* Form Styles */
-    .form-card {
-        background: #1e2a4a; /* Slightly lighter Navy Blue */
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        padding: 40px;
-        box-shadow: 0 0 30px rgba(23, 230, 232, 0.2), 0 10px 40px rgba(0, 0, 0, 0.6);
-        max-width: 450px;
-        margin: 20px auto;
-        animation: slideIn 1s ease-out;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.3s ease-in-out;
-    }
-    .form-card:hover {
-        transform: translateY(-5px);
-    }
-
-    .tabs {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 30px;
-        border-bottom: 2px solid #283759; /* Darker border */
-    }
-
-    .tab-btn {
-        background: none;
-        color: #99aab5;
-        padding: 15px 30px;
-        border: none;
-        border-bottom: 2px solid transparent;
-        cursor: pointer;
-        transition: color 0.3s, border-bottom 0.3s;
-        font-size: 16px;
-        font-weight: 600;
-    }
-
-    .tab-btn.active {
-        color: #17e6e8; /* Vibrant Cyan */
-        border-bottom: 2px solid #17e6e8;
-    }
-
-    .form-group {
-        margin-bottom: 25px;
-        position: relative;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 18px;
-        background-color: #2b3b5e;
-        border: 1px solid #4a5d7c;
-        border-radius: 12px;
-        color: #e0e0e0;
-        box-sizing: border-box;
-        font-size: 16px;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .form-group input:focus {
-        outline: none;
-        border-color: #17e6e8;
-        box-shadow: 0 0 0 3px rgba(23, 230, 232, 0.4);
-    }
-
-    .submit-btn {
-        width: 100%;
-        padding: 18px;
-        background: linear-gradient(90deg, #17e6e8, #00b0b2);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        font-size: 18px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .submit-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    }
-    
-    .registration-form-section {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .form-title {
-        text-align: center;
-        font-size: 28px;
-        margin-bottom: 20px;
-        color: #fff;
-    }
-
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        gap: 10px;
-    }
-
-    .checkbox-group input[type="checkbox"] {
-        width: 20px;
-        height: 20px;
-        accent-color: #17e6e8;
-        cursor: pointer;
-    }
-    
-    .terms {
-        text-align: center;
-    }
-    .terms a {
-        color: #17e6e8;
-        text-decoration: none;
-        font-weight: bold;
-    }
-    .terms a:hover {
-        text-decoration: underline;
-    }
-
-    /* Dashboard Styles */
-    .page {
-        display: none;
-    }
-
-    .active-page {
-        display: block;
-    }
-
-    .dashboard-header, .page-header {
-        text-align: center;
-        margin-bottom: 30px;
-        color: #fff;
-        position: relative;
-    }
-    .page-header .back-btn {
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 24px;
-        color: #fff;
-        cursor: pointer;
-    }
-    
-    .dashboard-header .welcome-text {
-        font-size: 30px;
-        font-weight: 700;
-        margin-bottom: 5px;
-        color: #fff;
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff;
-    }
-    .dashboard-header .welcome-text span {
-        color: #fff;
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff;
-    }
-    .dashboard-header .hand-icon {
-        font-size: 24px;
-        margin-left: 5px;
-        animation: wave 1.5s infinite;
-        display: inline-block;
-    }
-
-    @keyframes wave {
-        0% { transform: rotate(0deg); }
-        10% { transform: rotate(14deg); }
-        20% { transform: rotate(-8deg); }
-        30% { transform: rotate(14deg); }
-        40% { transform: rotate(-4deg); }
-        50% { transform: rotate(10deg); }
-        60% { transform: rotate(0deg); }
-        100% { transform: rotate(0deg); }
-    }
-
-    .card {
-        background-color: #1e2a4a;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(23, 230, 232, 0.1), 0 4px 15px rgba(0, 0, 0, 0.3);
-        margin-bottom: 25px;
-        position: relative;
-        transition: transform 0.3s ease-in-out;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-
-    .card-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-    .card-header .icon {
-        width: 45px;
-        height: 45px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #2b3b5e;
-        border-radius: 12px;
-        margin-right: 15px;
-    }
-    .card-header .icon i {
-        color: #fff;
-        font-size: 22px;
-    }
-    .card-header h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-    }
-    .card-body p {
-        margin: 0;
-        color: #aaa;
-        font-size: 14px;
-    }
-    
-    .balance-card {
-        background: linear-gradient(135deg, #1f2d5a, #0c1a2f);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
-    }
-    .balance-card .balance-label {
-        font-size: 16px;
-        color: #99aab5;
-        margin-bottom: 5px;
-    }
-    .balance-card .balance-amount {
-        font-size: 48px;
-        font-weight: 700;
-        color: #17e6e8;
-        text-shadow: 0 0 10px rgba(23, 230, 232, 0.5);
-        display: block;
-        transition: transform 0.3s ease;
-    }
-    .balance-card:hover .balance-amount {
-        transform: scale(1.05);
-    }
-    .balance-card .balance-unit {
-        font-size: 20px;
-        color: #fff;
-        margin-left: 5px;
-    }
-    .balance-card .wallet-icon {
-        position: absolute;
-        top: 25px;
-        right: 25px;
-        font-size: 50px;
-        color: #4a5d7c;
-        opacity: 0.5;
-    }
-
-    .winner-card {
-        background-color: #2b3b5e;
-        text-align: center;
-        color: #fff;
-    }
-    .winner-card .trophy-icon {
-        font-size: 24px;
-        color: #ffc107;
-        margin-right: 5px;
-    }
-    .winner-card h3 {
-        font-size: 18px;
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-    .winner-card .winner-number {
-        font-size: 40px;
-        font-weight: 700;
-        margin: 0;
-        color: #ffc107;
-    }
-    .winner-card .lottery-text {
-        font-size: 14px;
-        color: #aaa;
-        margin-top: 5px;
-    }
-
-    .action-button {
-        width: 100%;
-        padding: 18px;
-        border: none;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-bottom: 15px;
-        transition: transform 0.2s;
-    }
-    .action-button:hover {
-        transform: translateY(-2px);
-    }
-
-    .telegram-btn {
-        background-color: #0077b5;
-        color: #fff;
-        box-shadow: 0 0 10px #0077b5, 0 0 20px #0077b5;
-        transition: box-shadow 0.3s, transform 0.2s;
-    }
-    .telegram-btn:hover {
-        box-shadow: 0 0 20px #0077b5, 0 0 40px #0077b5;
-    }
-
-    .check-in-btn {
-        background-color: #28a745;
-        color: #fff;
-        box-shadow: 0 0 10px #28a745, 0 0 20px #28a745;
-        transition: box-shadow 0.3s, transform 0.2s;
-    }
-    .check-in-btn:hover {
-        box-shadow: 0 0 20px #28a745, 0 0 40px #28a745;
-    }
-    .lottery-buy-btn {
-        background: linear-gradient(90deg, #ff8c00, #ff4500);
-        color: #fff;
-    }
-    .watch-btn, .start-btn, .smartlink-btn {
-        padding: 12px 25px;
-        border-radius: 10px;
-        font-weight: bold;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    .watch-btn, .start-btn {
-        background: linear-gradient(90deg, #17e6e8, #00b0b2);
-    }
-    .smartlink-btn {
-        background: linear-gradient(90deg, #17e6e8, #00b0b2);
-        width: auto;
-        flex: 1;
-        padding: 15px;
-        margin: 5px;
-    }
-    
-    .smartlink-card {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #2b3b5e;
-        padding: 15px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-    }
-    .smartlink-info {
-        flex-grow: 1;
-    }
-    .smartlink-info h4 {
-        margin: 0;
-        font-size: 16px;
-    }
-    .smartlink-info p {
-        margin: 0;
-        font-size: 14px;
-        color: #ccc;
-    }
-
-    /* Navigation */
-    .navbar {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: #1e2a4a;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        padding: 12px 0;
-        border-top: 1px solid #222;
-        animation: slideUp 0.8s ease-out;
-        z-index: 10;
-    }
-    .nav-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #99aab5;
-        text-decoration: none;
-        font-size: 12px;
-        transition: color 0.3s, transform 0.3s;
-        position: relative;
-    }
-    .nav-item i {
-        font-size: 24px;
-        margin-bottom: 5px;
-    }
-    .nav-item.active,
-    .nav-item:hover {
-        color: #17e6e8;
-        transform: translateY(-3px);
-    }
-    .nav-item.active i,
-    .nav-item.active span {
-        color: #17e6e8;
-    }
-    
-    .nav-item .notification-badge {
-        position: absolute;
-        top: 0;
-        right: 15px;
-        background-color: #e53935;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 10px;
-        font-weight: bold;
-    }
-
-    /* Modal Styles */
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 100;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.8);
-        padding-top: 60px;
-        animation: fadeIn 0.5s;
-    }
-    .modal-content {
-        background-color: #1e2a4a;
-        margin: 15% auto;
-        padding: 20px;
-        border-radius: 15px;
-        max-width: 80%;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        animation: zoomIn 0.5s;
-        text-align: center;
-    }
-    .modal-content.blue {
-        background-color: #0c1a2f;
-        border: 2px solid #17e6e8;
-        box-shadow: 0 0 20px rgba(23, 230, 232, 0.5);
-    }
-    .close-btn {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .close-btn:hover,
-    .close-btn:focus {
-        color: #fff;
-        text-decoration: none;
-    }
-    .logout-btn {
-        background-color: #e53935;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-top: 20px;
-    }
-    .logout-btn:hover {
-        background-color: #c62828;
-    }
-
-    .popup-message {
-        background-color: #2b3b5e;
-        color: #e0e0e0;
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-    }
-    
-    /* Floating Help Button */
-    .help-btn {
-        position: fixed;
-        right: 20px;
-        bottom: 90px;
-        background-color: #007bff;
-        color: #fff;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 24px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        z-index: 5;
-        cursor: pointer;
-        animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-        from { transform: translateY(20px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes slideUp {
-        from { transform: translateY(100%); }
-        to { transform: translateY(0); }
-    }
-
-    @keyframes zoomIn {
-        from { transform: scale(0.9); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
-
-    /* Adsterra container styles */
-    .ad-container {
-        text-align: center;
-        margin: 20px 0;
-    }
-
-    .referral-card .referral-link-container {
-        display: flex;
-        align-items: center;
-        background-color: #2b3b5e;
-        border-radius: 10px;
-        padding: 10px;
-        margin-bottom: 10px;
-    }
-    .referral-card .referral-link {
-        font-size: 16px;
-        color: #17e6e8;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        flex-grow: 1;
-        margin-right: 10px;
-    }
-    .referral-card .copy-btn {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        cursor: pointer;
-    }
-
-    .referral-card .referral-info p {
-        margin: 5px 0;
-    }
-
-    /* Extra Earnings Page specific styles */
-    .smartlink-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .smartlink-btn {
-        background: linear-gradient(90deg, #17e6e8, #00b0b2);
-        text-align: center;
-        padding: 15px;
-        font-size: 16px;
-        transition: transform 0.2s;
-    }
-    .smartlink-btn:hover {
-        transform: scale(1.05);
-    }
-    
-    .smartlink-card {
-        transition: transform 0.3s ease-in-out;
-    }
-    .smartlink-card:hover {
-        transform: translateY(-5px);
-    }
-    .smartlink-card .rate {
-        color: #e53935;
-        font-weight: bold;
-        text-shadow: 0 0 5px rgba(229, 57, 53, 0.5);
-    }
-
-    /* Settings page styles */
-    .settings-option {
-        background-color: #1e2a4a;
-        padding: 20px;
-        border-radius: 15px;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        cursor: pointer;
-        transition: background-color 0.2s, transform 0.2s;
-    }
-
-    .settings-option:hover {
-        background-color: #2e3d5a;
-        transform: translateY(-2px);
-    }
-
-    .settings-option .icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #2b3b5e;
-    }
-    
-    .settings-option .icon i {
-        font-size: 20px;
-    }
-    
-    .settings-option span {
-        font-size: 16px;
-        font-weight: 500;
-    }
-
-    .withdraw-form input, .withdraw-form button, .settings-form input, .settings-form button {
-        width: 100%;
-        padding: 18px;
-        margin-bottom: 25px; /* Added spacing */
-        border-radius: 12px; /* Made larger */
-        border: 1px solid #444;
-        background-color: #2b3b5e;
-        color: #fff;
-        box-sizing: border-box;
-        font-size: 16px;
-    }
-    .withdraw-form button, .settings-form button {
-        background: linear-gradient(90deg, #17e6e8, #00b0b2);
-        cursor: pointer;
-        font-weight: bold;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-    }
-    .withdraw-form button:hover, .settings-form button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    }
-
-    .withdraw-note {
-        font-size: 12px;
-        color: #99aab5;
-        margin-top: -10px;
-        margin-bottom: 15px;
-    }
-    
-    .page-content-wrapper {
-        padding-bottom: 80px; /* Add space for navbar */
-    }
-    
-    .notification-badge-inbox {
-        background-color: #e53935;
-        color: white;
-        border-radius: 50%;
-        width: 15px;
-        height: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 10px;
-        font-weight: bold;
-    }
-</style>
-    
+        :root {
+            --primary-green: #4CAF50;
+            --dark-green: #388E3C;
+            --light-green: #E8F5E9;
+            --text-color: #333;
+            --white-text: #fff;
+            --form-bg: rgba(255, 255, 255, 0.9);
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://source.unsplash.com/1600x900/?leaf,green,pattern') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            position: relative;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            background: var(--form-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+            padding: 40px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .auth-forms {
+            width: 100%;
+        }
+        .form-container {
+            width: 100%;
+            transition: opacity 0.5s ease;
+        }
+        .form-container h2 {
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark-green);
+        }
+        .form-container .slogan {
+            font-size: 14px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background: #f9f9f9;
+            transition: all 0.3s ease;
+        }
+        .form-container input:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            outline: none;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            background-color: var(--primary-green);
+            color: var(--white-text);
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container button:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+        }
+        .form-container button:hover {
+            background-color: var(--dark-green);
+        }
+        .toggle-form {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        .toggle-form a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .toggle-form a:hover {
+            text-decoration: underline;
+        }
+        .username-suggestion {
+            margin: -15px 0 20px 0;
+            color: #888;
+            font-size: 14px;
+            text-align: left;
+            padding-left: 5px;
+        }
+        .username-suggestion .clickable {
+            color: var(--primary-green);
+            cursor: pointer;
+            text-decoration: underline;
+            margin-right: 5px;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background: var(--form-bg);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 550px;
+            color: var(--text-color);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        }
+        .popup-content h3 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .popup-content .condition {
+            text-align: left;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        .popup-content .condition input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+            accent-color: var(--primary-green);
+        }
+        .popup-content button {
+            background-color: #28a745;
+            color: var(--white-text);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .popup-content button:hover {
+            background-color: #218838;
+        }
+        .popup-content button:disabled {
+            background-color: #a5d6a7;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
 
-<div id="authPage" class="container page active-page">
-    <div class="form-card">
-        <div class="tabs">
-            <div class="tab-btn active" id="loginTab">লগইন</div>
-            <div class="tab-btn" id="registerTab">অ্যাকাউন্ট তৈরি করুন</div>
-        </div>
-
-        <div id="loginForm">
-            <form>
-                <div class="form-group">
-                    <input type="text" id="loginUsername" placeholder="ব্যবহারকারীর নাম" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" required>
-                </div>
-                <button type="submit" class="submit-btn" id="loginBtn">লগইন</button>
-            </form>
-        </div>
-
-        <div id="registerForm" style="display:none;">
-            <form class="registration-form-section">
-                <div class="form-group">
-                    <input type="text" id="regUsername" placeholder="ব্যবহারকারীর নাম (যেমন: user23)" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="regPassword" placeholder="পাসওয়ার্ড (৬-৮ অক্ষর)" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="regConfirmPassword" placeholder="পাসওয়ার্ড নিশ্চিত করুন" required>
-                </div>
-                <div class="form-group">
-                    <input type="tel" id="regPhone" placeholder="মোবাইল নম্বর (যেমন: 01712345678)" required>
-                </div>
-                <div class="form-group">
-                    <input type="password" id="regTransactionPassword" placeholder="ট্রানজেকশন পাসওয়ার্ড (৪ অক্ষর)" required>
-                </div>
-                <div class="form-group">
-                    <input type="text" id="regReferralCode" placeholder="রেফারেল কোড (ঐচ্ছিক)">
-                </div>
-                <div class="form-group">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="ageCheckbox" required>
-                        <label for="ageCheckbox">আমি ১৮ বছর পূর্ণ এবং গ্রহণ করতে সম্মত</label>
-                    </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="adultContentCheckbox" required>
-                        <label for="adultContentCheckbox">এখানে এডাল্ট পোস্ট আসতে পারে, আপনি কি জেনে শুনে কাজ করছেন?</label>
-                    </div>
-                    <div class="terms">
-                        <a href="#" id="termsLink">শর্তাবলী</a>
-                    </div>
-                </div>
-                <button type="submit" class="submit-btn" id="registerBtn">নিবন্ধন</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div id="dashboardPage" class="container page">
-    <div class="dashboard-header">
-        <div class="welcome-text">
-            <span id="welcomeMessage"></span>
-        </div>
-    </div>
-    
-    <div class="ad-container">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '3e8de08585fbff771f13f27096f68fa0',
-                'format' : 'iframe',
-                'height' : 50,
-                'width' : 320,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
-    </div>
-
-    <div class="card balance-card">
-        <div class="balance-label">Your Current Balance</div>
-        <div class="balance-amount">
-            <span id="userBalance">0.00</span>
-            <span class="balance-unit">BDT</span>
-        </div>
-        <i class="fas fa-wallet wallet-icon"></i>
-    </div>
-    
-    <div class="card winner-card">
-        <h3>
-            <i class="fas fa-trophy trophy-icon"></i>
-            আগেরবারের বিজয়ী
-        </h3>
-        <p class="winner-number">606142</p>
-        <p class="lottery-text">লটারি ড্র হয় প্রতি শুক্রবার</p>
-    </div>
-
-    <button class="action-button telegram-btn" onclick="window.open('https://t.me/your-telegram-channel', '_blank')">
-        Join Our Telegram Channel
-    </button>
-    <button class="action-button check-in-btn" id="dailyCheckInBtn">
-        Daily Check-in
-    </button>
-    
-    <div class="ad-container">
-        <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
-    </div>
-</div>
-
-<div id="tasksPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>Available Tasks</h2>
-    </div>
-    <div class="card task-card" id="lotteryTask">
-        <div class="card-header">
-            <div class="icon">
-                <i class="fas fa-ticket-alt"></i>
+    <div id="welcomePopup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Earn Money with Us</h3>
+            <p>Here you can earn money by watching videos, viewing ads, visiting websites, and completing small tasks. Please agree to the conditions below to continue.</p>
+            <div class="condition">
+                <input type="checkbox" id="ageCheck">
+                <label for="ageCheck">Are you 18 years old?</label>
             </div>
-            <h3>লটারি খেলুন</h3>
-        </div>
-        <div class="card-body">
-            <p>10 টাকা দিয়ে লটারি জিতলে 1000 টাকা জেতার সুযোগ আছে</p>
-        </div>
-    </div>
-    <div class="card task-card" id="adsTask">
-        <div class="card-header">
-            <div class="icon">
-                <i class="fas fa-ad"></i>
+            <div class="condition">
+                <input type="checkbox" id="adultContentCheck">
+                <label for="adultContentCheck">Are you aware that this site may contain adult or sensitive content?</label>
             </div>
-            <h3>Watch Video Ad</h3>
-        </div>
-        <div class="card-body">
-            <p><span class="rate">প্রতি ভিজিটে ১ BDT</span></p>
-        </div>
-        <button class="action-button watch-btn" id="watchAdBtn">Watch Ad</button>
-    </div>
-    <div id="websiteVisitTasks">
-        </div>
-    <div class="ad-container">
-        <script type="text/javascript">
-            atOptions = {
-                'key' : '46272549345a79336d26e76ff1c1d24b',
-                'format' : 'iframe',
-                'height' : 250,
-                'width' : 300,
-                'params' : {}
-            };
-        </script>
-        <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
-    </div>
-</div>
-
-<div id="lotteryPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>লটারি</h2>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-ticket-alt"></i>
-            <h3>আপনার টিকিটগুলো</h3>
-        </div>
-        <div class="card-body">
-            <p id="myLotteryTickets">আপনার কেনা টিকিট এখানে দেখা যাবে।</p>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <i class="fas fa-shopping-cart"></i>
-            <h3>টিকিট কিনুন</h3>
-        </div>
-        <div class="card-body">
-            <p>প্রতিটি টিকিট: 10 BDT</p>
-            <button class="action-button lottery-buy-btn" id="buyLotteryBtn">
-                <i class="fas fa-ticket-alt"></i>
-                লটারি টিকিট কিনুন
-            </button>
-        </div>
-    </div>
-    <div class="card" style="background-color: #1a1a38; border-color: #282845;">
-        <div class="card-header">
-            <i class="fas fa-info-circle" style="color: #007bff;"></i>
-            <h3>গুরুত্বপূর্ণ তথ্য</h3>
-        </div>
-        <div class="card-body">
-            <p>শুক্রবার লটারির বিজয়ী ঘোষণা করা হবে। আপনার টিকিট নাম্বারটি মিলে গেলে আপনি 1000 BDT পুরস্কার পাবেন। একজন ব্যবহারকারী সর্বনিম্ন ১টি এবং সর্বোচ্চ ১০টি টিকিট কিনতে পারবেন।</p>
+            <div class="condition">
+                <input type="checkbox" id="rulesCheck">
+                <label for="rulesCheck">Have you read and agreed to all our rules?</label>
+            </div>
+            <button id="popup-agree-btn" onclick="hidePopup()" disabled>I Agree</button>
         </div>
     </div>
 
-    <div class="ad-container">
-        <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
-    </div>
-</div>
+    <div class="container">
+        <div class="auth-forms">
+            <div id="loginForm" class="form-container">
+                <h2>Welcome Back</h2>
+                <div class="slogan">Login to your account</div>
+                <form onsubmit="handleLogin(event)">
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                    <input type="password" id="loginPassword" placeholder="Password (6-8 chars)" required minlength="6" maxlength="8">
+                    <button type="submit">Log In</button>
+                </form>
+                <div class="toggle-form">
+                    Don't have an account? <a href="#" onclick="showRegistration()">Sign Up</a>
+                </div>
+            </div>
 
-<div id="extraPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>Extra Earnings</h2>
-    </div>
-    <div id="dynamicExtraEarningLinks">
-        </div>
-</div>
-
-<div id="referralPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>রেফার করুন</h2>
-    </div>
-    <div class="card referral-card">
-        <div class="card-header">
-            <div class="icon"><i class="fas fa-link"></i></div>
-            <h3>আপনার রেফারেল লিংক</h3>
-        </div>
-        <div class="card-body">
-            <p>বন্ধুদের আমন্ত্রণ জানান এবং প্রতিটি সফল রেফারেলের জন্য ১০ টাকা করে আয় করুন।</p>
-            <div class="referral-link-container">
-                <span class="referral-link" id="referralLink">Loading...</span>
-                <button class="copy-btn" onclick="copyReferralLink()">কপি করুন</button>
+            <div id="registrationForm" class="form-container" style="display:none;">
+                <h2>Create New Account</h2>
+                <div class="slogan">Join our community today!</div>
+                <form onsubmit="handleRegistration(event)">
+                    <input type="text" id="regUsername" placeholder="Username" required>
+                    <div id="username-suggestion" class="username-suggestion"></div>
+                    <input type="password" id="regPassword" placeholder="Password (6-8 chars)" required minlength="6" maxlength="8">
+                    <input type="tel" id="regMobile" placeholder="018xxxxxxx" required pattern="01[0-9]{9}" maxlength="11">
+                    <input type="password" id="regTransPassword" placeholder="Transaction Password (4-6 chars)" required minlength="4" maxlength="6">
+                    <button type="submit">Sign Up</button>
+                </form>
+                <div class="toggle-form">
+                    Already have an account? <a href="#" onclick="showLogin()">Log In</a>
+                </div>
             </div>
         </div>
     </div>
-    <div class="card referral-card">
-        <div class="card-header">
-            <div class="icon"><i class="fas fa-percentage"></i></div>
-            <h3>আয় করুন 7% কমিশন</h3>
-        </div>
-        <div class="card-body">
-            <p>আপনার রেফার করা বন্ধুরা যখন উইথড্র করবে, তখন আপনি তাদের উইথড্র অ্যামাউন্টের 7% পাবেন।</p>
-        </div>
-    </div>
-    <div class="card referral-card">
-        <div class="card-header">
-            <div class="icon"><i class="fas fa-users"></i></div>
-            <h3>আপনার রেফারেল</h3>
-        </div>
-        <div class="card-body">
-            <p>মোট রেফারেল: <span id="totalReferrals">0</span> জন</p>
-            <p>মোট কমিশন আয়: <span id="referralCommission">0.00</span> BDT</p>
-        </div>
-    </div>
-</div>
 
-<div id="settingsPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>সেটিংস</h2>
-    </div>
-    <div class="settings-option" onclick="showInboxPage()">
-        <div class="icon"><i class="fas fa-envelope"></i></div>
-        <span>ইনবক্স</span><span id="inboxNotification" class="notification-badge-inbox" style="display:none;">1</span>
-    </div>
-    <div class="settings-option" onclick="showProfilePage()">
-        <div class="icon"><i class="fas fa-user"></i></div>
-        <span>প্রোফাইল</span>
-    </div>
-    <div class="settings-option" onclick="showWithdrawPage()">
-        <div class="icon"><i class="fas fa-wallet"></i></div>
-        <span>উইথড্র</span>
-    </div>
-    <div class="settings-option" onclick="showWithdrawHistoryPage()">
-        <div class="icon"><i class="fas fa-history"></i></div>
-        <span>উইথড্র হিস্টরি</span>
-    </div>
-    <div class="settings-option" onclick="showEarningReportPage()">
-        <div class="icon"><i class="fas fa-chart-line"></i></div>
-        <span>আর্নিং রিপোর্ট</span>
-    </div>
-    <div class="settings-option" onclick="showChangePasswordPage()">
-        <div class="icon"><i class="fas fa-key"></i></div>
-        <span>পাসওয়ার্ড পরিবর্তন</span>
-    </div>
-    <div class="settings-option" onclick="showChangeTransPasswordPage()">
-        <div class="icon"><i class="fas fa-lock"></i></div>
-        <span>ট্রানজেকশন পাসওয়ার্ড পরিবর্তন</span>
-    </div>
-    <div class="settings-option" onclick="showPrivacyPolicyPage()">
-        <div class="icon"><i class="fas fa-shield-alt"></i></div>
-        <span>প্রাইভেসি পলিসি</span>
-    </div>
-    <div class="settings-option" onclick="showRulesPage()">
-        <div class="icon"><i class="fas fa-book"></i></div>
-        <span>নিয়মাবলী</span>
-    </div>
-    <div class="settings-option" id="logoutBtn">
-        <div class="icon" style="background-color: #e53935;"><i class="fas fa-sign-out-alt"></i></div>
-        <span>লগআউট</span>
-    </div>
-</div>
-
-<div id="withdrawPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>উইথড্র</h2>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <div class="icon"><i class="fas fa-wallet"></i></div>
-            <h3>উইথড্র করুন</h3>
-        </div>
-        <div class="card-body">
-            <p>সর্বনিম্ন উইথড্র পরিমাণ: ১০০ টাকা</p>
-            <p>চার্জ: ৮ টাকা</p>
-            <p>শুধুমাত্র বিকাশ মাধ্যমে উইথড্র করা যাবে।</p>
-            <form class="withdraw-form" id="withdrawForm">
-                <input type="number" id="withdrawAmount" placeholder="উইথড্র পরিমাণ" required>
-                <input type="tel" id="withdrawNumber" placeholder="আপনার বিকাশ নম্বর" required>
-                <input type="password" id="withdrawTransPassword" placeholder="আপনার ট্রানজেকশন পাসওয়ার্ড" required>
-                <button type="submit">উইথড্র অনুরোধ জমা দিন</button>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div id="changePasswordPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>পাসওয়ার্ড পরিবর্তন</h2>
-    </div>
-    <div class="card">
-        <form class="settings-form" id="changePasswordForm">
-            <input type="password" id="currentPassword" placeholder="বর্তমান পাসওয়ার্ড" required>
-            <input type="password" id="newPassword" placeholder="নতুন পাসওয়ার্ড (৬-৮ অক্ষর)" required>
-            <input type="password" id="confirmNewPassword" placeholder="নতুন পাসওয়ার্ড নিশ্চিত করুন" required>
-            <button type="submit">পাসওয়ার্ড পরিবর্তন করুন</button>
-        </form>
-    </div>
-</div>
-
-<div id="changeTransPasswordPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>ট্রানজেকশন পাসওয়ার্ড পরিবর্তন</h2>
-    </div>
-    <div class="card">
-        <form class="settings-form" id="changeTransPasswordForm">
-            <input type="password" id="currentTransPassword" placeholder="বর্তমান ট্রানজেকশন পাসওয়ার্ড" required>
-            <input type="password" id="newTransPassword" placeholder="নতুন ট্রানজেকশন পাসওয়ার্ড (৪ অক্ষর)" required>
-            <input type="password" id="confirmNewTransPassword" placeholder="নতুন ট্রানজেকশন পাসওয়ার্ড নিশ্চিত করুন" required>
-            <button type="submit">ট্রানজেকশন পাসওয়ার্ড পরিবর্তন করুন</button>
-        </form>
-    </div>
-</div>
-
-<div id="inboxPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>ইনবক্স</h2>
-    </div>
-    <div id="inboxMessages">
-        </div>
-</div>
-
-<div id="profilePage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>প্রোফাইল</h2>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <p>আপনার প্রোফাইল তথ্য এখানে দেখা যাবে।</p>
-        </div>
-    </div>
-</div>
-
-<div id="withdrawHistoryPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>উইথড্র হিস্টরি</h2>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <p>আপনার সকল উইথড্র অনুরোধের ইতিহাস এখানে থাকবে।</p>
-        </div>
-    </div>
-</div>
-
-<div id="earningReportPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>আর্নিং রিপোর্ট</h2>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <p>আপনার আয়ের বিস্তারিত রিপোর্ট এখানে দেখতে পাবেন।</p>
-        </div>
-    </div>
-</div>
-
-<div id="privacyPolicyPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>প্রাইভেসি পলিসি</h2>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h3>আমাদের প্রাইভেসি পলিসি</h3>
-            <p>আমরা আপনার গোপনীয়তাকে মূল্য দিই। আপনি আমাদের অ্যাপ ব্যবহার করার সময় আমরা যে তথ্য সংগ্রহ করি, কীভাবে তা ব্যবহার করি এবং আপনার অধিকার সম্পর্কে নিচে বিস্তারিত জানানো হলো।</p>
-            <h4>তথ্য সংগ্রহ</h4>
-            <p>আমরা আপনার অ্যাকাউন্ট তৈরি ও পরিচালনার জন্য প্রয়োজনীয় কিছু তথ্য সংগ্রহ করি, যেমন: ব্যবহারকারীর নাম, ইমেল ঠিকানা, ফোন নম্বর এবং পাসওয়ার্ড। লেনদেনের জন্য আপনার ট্রানজেকশন পাসওয়ার্ডও আমরা এনক্রিপ্ট করে সংরক্ষণ করি।</p>
-            <h4>তথ্যের ব্যবহার</h4>
-            <p>আপনার সংগৃহীত তথ্য শুধুমাত্র নিম্নলিখিত উদ্দেশ্যে ব্যবহার করা হয়:</p>
-            <ul>
-                <li>আপনার অ্যাকাউন্ট পরিচালনা এবং পরিষেবা প্রদান করা।</li>
-                <li>আপনার লেনদেন প্রক্রিয়া করা এবং উইথড্র অনুরোধ সম্পন্ন করা।</li>
-                <li>আপনার অনুরোধের জবাব দেওয়া এবং আপনাকে সহায়তা প্রদান করা।</li>
-                <li>আমাদের পরিষেবা উন্নত করা এবং নতুন ফিচার যোগ করা।</li>
-            </ul>
-            <h4>তথ্যের নিরাপত্তা</h4>
-            <p>আমরা আপনার তথ্য সুরক্ষিত রাখতে সব ধরনের নিরাপত্তা ব্যবস্থা গ্রহণ করি। আপনার পাসওয়ার্ড এবং ট্রানজেকশন পাসওয়ার্ড এনক্রিপ্ট করা হয় যাতে কেউ তা দেখতে না পারে।</p>
-            <p>কোনো তৃতীয় পক্ষের কাছে আপনার ব্যক্তিগত তথ্য বিক্রি, ভাড়া বা বিনিময় করা হবে না, যদি না আইনগতভাবে তা প্রয়োজন হয়।</p>
-            <h4>যোগাযোগ</h4>
-            <p>আমাদের প্রাইভেসি পলিসি সম্পর্কে আপনার কোনো প্রশ্ন থাকলে আমাদের সাথে যোগাযোগ করতে পারেন।</p>
-        </div>
-    </div>
-</div>
-
-<div id="rulesPage" class="container page">
-    <div class="page-header">
-        <i class="fas fa-arrow-left back-btn"></i>
-        <h2>নিয়মাবলী</h2>
-    </div>
-    <div class="card">
-        <div class="card-body">
-            <h3>আমাদের ব্যবহারের শর্তাবলী</h3>
-            <p>আমাদের প্ল্যাটফর্ম ব্যবহার করার আগে অনুগ্রহ করে নিম্নলিখিত নিয়মাবলী মনোযোগ সহকারে পড়ুন। আমাদের পরিষেবা ব্যবহার করে, আপনি এই শর্তাবলীতে সম্মত হচ্ছেন।</p>
-            <p>১. **অ্যাকাউন্ট ব্যবহার:** আপনি আপনার অ্যাকাউন্টের তথ্যের গোপনীয়তা বজায় রাখার জন্য সম্পূর্ণরূপে দায়ী। আপনার অ্যাকাউন্টের মাধ্যমে সংঘটিত যেকোনো কার্যকলাপের জন্য আপনি দায়ী থাকবেন।</p>
-            <p>২. **অনুমোদিত কার্যকলাপ:** প্ল্যাটফর্মের কোনো ধরনের জালিয়াতি, প্রতারণা বা অবৈধ কার্যকলাপ কঠোরভাবে নিষিদ্ধ। যদি এমন কোনো কার্যকলাপ ধরা পড়ে, তাহলে আপনার অ্যাকাউন্ট স্থায়ীভাবে বন্ধ করে দেওয়া হবে এবং আপনার ব্যালেন্স বাজেয়াপ্ত করা হবে।</p>
-            <p>৩. **আয়ের নিয়ম:** আমাদের প্ল্যাটফর্মে আয়ের পদ্ধতিগুলো (যেমন অ্যাড দেখা, টাস্ক সম্পন্ন করা) স্পষ্ট এবং স্বচ্ছ। কোনো ধরনের অসাধু উপায়ে আয় করার চেষ্টা করলে তা গ্রহণযোগ্য হবে না।</p>
-            <p>৪. **উইথড্র:** উইথড্র করার জন্য প্ল্যাটফর্মের নির্ধারিত সর্বনিম্ন পরিমাণ এবং চার্জ প্রযোজ্য হবে। উইথড্র প্রক্রিয়া সম্পন্ন করার জন্য সঠিক তথ্য প্রদান করা বাধ্যতামূলক।</p>
-            <p>৫. **দায়বদ্ধতা:** আমরা আমাদের পরিষেবাগুলো "যেমন আছে" ভিত্তিতে প্রদান করি। আমরা কোনো প্রকার গ্যারান্টি বা ওয়ারেন্টি প্রদান করি না। আমাদের প্ল্যাটফর্ম ব্যবহার করার ফলে কোনো ক্ষতির জন্য আমরা দায়ী থাকব না।</p>
-            <p>৬. **পরিবর্তন:** আমরা যেকোনো সময় এই শর্তাবলী পরিবর্তন করার অধিকার রাখি।</p>
-        </div>
-    </div>
-</div>
-
-<div class="help-btn">
-    <i class="fas fa-question"></i>
-</div>
-
-<nav class="navbar">
-    <a href="#dashboard" class="nav-item active" data-page="dashboardPage">
-        <i class="fas fa-home"></i>
-        <span>হোম</span>
-    </a>
-    <a href="#tasks" class="nav-item" data-page="tasksPage">
-        <i class="fas fa-tasks"></i>
-        <span>টাস্ক</span>
-    </a>
-    <a href="#extra" class="nav-item" data-page="extraPage">
-        <i class="fas fa-coins"></i>
-        <span>আর্নিং</span>
-    </a>
-    <a href="#referral" class="nav-item" data-page="referralPage">
-        <i class="fas fa-users"></i>
-        <span>রেফারেল</span>
-    </a>
-    <a href="#settings" class="nav-item" data-page="settingsPage">
-        <i class="fas fa-cog"></i>
-        <span>সেটিংস</span>
-    </a>
-</nav>
-
-<div id="termsModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>শর্তাবলী</h2>
-        <p>আমাদের প্ল্যাটফর্মে নিবন্ধন করার আগে অনুগ্রহ করে নিচের শর্তগুলো মনোযোগ সহকারে পড়ুন।</p>
-        <p>১. আপনাকে অবশ্যই ১৮ বছর বা তার বেশি বয়সী হতে হবে।</p>
-        <p>২. এখানে প্রাপ্তবয়স্ক (Adult) কনটেন্ট থাকতে পারে। আপনি এই বিষয়ে অবগত থেকে এবং নিজের দায়িত্বে কাজ করছেন।</p>
-        <p>৩. আপনার প্রদান করা সকল তথ্য (ব্যবহারকারীর নাম, পাসওয়ার্ড, ফোন নম্বর ইত্যাদি) অবশ্যই সঠিক হতে হবে।</p>
-        <p>৪. কোনো ধরনের জালিয়াতি বা প্রতারণামূলক কার্যকলাপ কঠোরভাবে নিষিদ্ধ। ধরা পড়লে আপনার অ্যাকাউন্ট স্থায়ীভাবে বন্ধ করে দেওয়া হবে।</p>
-        <p>৫. লেনদেনের জন্য ট্রানজেকশন পাসওয়ার্ডটি গোপন রাখতে হবে। কোনো ক্ষতির জন্য প্ল্যাটফর্ম দায়ী থাকবে না।</p>
-        <p>৬. প্ল্যাটফর্মের নিয়মাবলী যেকোনো সময় পরিবর্তন হতে পারে।</p>
-    </div>
-</div>
-
-<div id="visitConfirmModal" class="modal">
-    <div class="modal-content blue">
-        <span class="close-btn">&times;</span>
-        <h2>গুরুত্বপূর্ণ!</h2>
-        <p style="color: #fff; text-shadow: 0 0 5px #fff;">ভিডিওটি ১৫ থেকে ২০ সেকেন্ড পর্যন্ত থাকবেন না হলে টাকা দিব না।</p>
-        <button id="visitConfirmBtn" class="submit-btn" style="background: #17e6e8; color: #0c1a2f;">ভিডিও দেখা শুরু করুন</button>
-    </div>
-</div>
-
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-<script>
-    // আপনার Firebase কনফিগারেশন এখানে
-    const firebaseConfig = {
-      apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
-      authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
-      projectId: "ensen-mining-bd-4882b",
-      storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
-      messagingSenderId: "1006758844776",
-      appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
-      measurementId: "G-8YKDVM1W8B"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    // DOM Elements
-    const authPage = document.getElementById('authPage');
-    const dashboardPage = document.getElementById('dashboardPage');
-    const tasksPage = document.getElementById('tasksPage');
-    const lotteryPage = document.getElementById('lotteryPage');
-    const extraPage = document.getElementById('extraPage');
-    const referralPage = document.getElementById('referralPage'); 
-    const settingsPage = document.getElementById('settingsPage'); 
-    const withdrawPage = document.getElementById('withdrawPage');
-    const changePasswordPage = document.getElementById('changePasswordPage');
-    const changeTransPasswordPage = document.getElementById('changeTransPasswordPage');
-    const inboxPage = document.getElementById('inboxPage');
-    const profilePage = document.getElementById('profilePage');
-    const withdrawHistoryPage = document.getElementById('withdrawHistoryPage');
-    const earningReportPage = document.getElementById('earningReportPage');
-    const privacyPolicyPage = document.getElementById('privacyPolicyPage');
-    const rulesPage = document.getElementById('rulesPage');
-
-    const loginTab = document.getElementById('loginTab');
-    const registerTab = document.getElementById('registerTab');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const termsModal = document.getElementById('termsModal');
-    const termsLink = document.getElementById('termsLink');
-    const dailyCheckInBtn = document.getElementById('dailyCheckInBtn');
-    const lotteryTask = document.getElementById('lotteryTask');
-    const buyLotteryBtn = document.getElementById('buyLotteryBtn');
-    const myLotteryTickets = document.getElementById('myLotteryTickets');
-    const adsTask = document.getElementById('adsTask');
-    const allPages = document.querySelectorAll('.page');
-    const navItems = document.querySelectorAll('.nav-item');
-    const backButtons = document.querySelectorAll('.back-btn');
-    const referralLinkDisplay = document.getElementById('referralLink');
-    const totalReferralsDisplay = document.getElementById('totalReferrals'); 
-    const referralCommissionDisplay = document.getElementById('referralCommission'); 
-    const logoutBtn = document.getElementById('logoutBtn');
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    const watchAdBtn = document.getElementById('watchAdBtn');
-    const websiteVisitTasksContainer = document.getElementById('websiteVisitTasks');
-    const dynamicExtraEarningLinksContainer = document.getElementById('dynamicExtraEarningLinks');
-    const inboxMessagesContainer = document.getElementById('inboxMessages');
-    const inboxNotification = document.getElementById('inboxNotification');
-
-
-    // Visit Confirmation Modal Elements
-    const visitConfirmModal = document.getElementById('visitConfirmModal');
-    const visitConfirmBtn = document.getElementById('visitConfirmBtn');
-    let smartlinkTargetUrl = '';
-
-
-    // Show a specific page
-    function showPage(pageId) {
-        allPages.forEach(page => {
-            page.classList.remove('active-page');
-            page.style.display = 'none';
-        });
-        document.getElementById(pageId).classList.add('active-page');
-        document.getElementById(pageId).style.display = 'block';
-        window.scrollTo(0, 0); // Scroll to top of the page
-    }
-
-    // Function to check login status
-    async function checkLoginStatus() {
-        const username = localStorage.getItem('username');
-        if (username) {
-            authPage.style.display = 'none';
-            document.querySelector('.navbar').style.display = 'flex';
-            showPage('dashboardPage');
-            await loadDashboard(username);
-            checkUnreadMessages(username);
-        } else {
-            showPage('authPage');
-            document.querySelector('.navbar').style.display = 'none';
-        }
-    }
-
-    // Load Dashboard Data
-    async function loadDashboard(username) {
-        welcomeMessage.innerHTML = `Welcome, <span>${username}</span>`;
-        
-        const userDoc = await db.collection('users').doc(username).get();
-        if (userDoc.exists) {
-            const userData = userDoc.data();
-            document.getElementById('userBalance').textContent = userData.balance.toFixed(2);
-
-            // Load lottery tickets
-            if (userData.lotteryTickets && userData.lotteryTickets.length > 0) {
-                myLotteryTickets.textContent = 'টিকিট নম্বর: ' + userData.lotteryTickets.join(', ');
-            } else {
-                myLotteryTickets.textContent = 'আপনার কেনা টিকিট এখানে দেখা যাবে।';
-            }
-        } else {
-            localStorage.removeItem('username');
-            checkLoginStatus();
-        }
-    }
-    
-    // Load dynamic earning links
-    async function loadEarningLinks() {
-        websiteVisitTasksContainer.innerHTML = '';
-        dynamicExtraEarningLinksContainer.innerHTML = '';
-
-        const linksSnapshot = await db.collection('earning_links').get();
-
-        linksSnapshot.forEach(doc => {
-            const link = doc.data();
-            const linkCardHTML = `
-                <div class="card task-card">
-                    <div class="card-header">
-                        <div class="icon">
-                            <i class="fas fa-link"></i>
-                        </div>
-                        <h3>${link.name}</h3>
-                    </div>
-                    <div class="card-body">
-                        <p><span class="rate">প্রতি ভিজিটে ${link.amount} BDT</span></p>
-                    </div>
-                    <button class="action-button start-btn" onclick="openEarningLink('${link.url}', ${link.amount})">${link.name}</button>
-                </div>
-            `;
-            if (link.type === 'adsterra') {
-                websiteVisitTasksContainer.innerHTML += linkCardHTML;
-                dynamicExtraEarningLinksContainer.innerHTML += linkCardHTML;
-            } else if (link.type === 'monetag') {
-                // This is for future use in case we add more monetag tasks.
-                // For now, monetag is handled by the dedicated watchAdBtn
-            }
-        });
-    }
-
-    function openEarningLink(url, amount) {
-        window.open(url, '_blank');
-        const username = localStorage.getItem('username');
-        if (!username) return alert('লগইন করুন!');
-        
-        // This is a dummy reward logic. For a real app, this should be server-side.
-        const userRef = db.collection('users').doc(username);
-        userRef.update({
-            balance: firebase.firestore.FieldValue.increment(amount)
-        }).then(() => {
-            alert(`সফল! আপনার অ্যাকাউন্টে ${amount} BDT যোগ করা হয়েছে।`);
-            loadDashboard(username);
-        }).catch(error => {
-            console.error("Error rewarding user:", error);
-            alert("টাকা যোগ করতে ব্যর্থ হয়েছে।");
-        });
-    }
-
-
-    // Event Listeners for tabs
-    loginTab.addEventListener('click', () => {
-        loginTab.classList.add('active');
-        registerTab.classList.remove('active');
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-    });
-
-    registerTab.addEventListener('click', () => {
-        registerTab.classList.add('active');
-        loginTab.classList.remove('active');
-        registerForm.style.display = 'block';
-        loginForm.style.display = 'none';
-    });
-
-    // Event Listeners for forms
-    document.getElementById('registerBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('regUsername').value;
-        const password = document.getElementById('regPassword').value;
-        const confirmPassword = document.getElementById('regConfirmPassword').value;
-        const phone = document.getElementById('regPhone').value;
-        const transactionPassword = document.getElementById('regTransactionPassword').value;
-        const ageCheckbox = document.getElementById('ageCheckbox').checked;
-        const adultContentCheckbox = document.getElementById('adultContentCheckbox').checked;
-        const referrerUsername = document.getElementById('regReferralCode').value;
-
-        if (password.length < 6 || password.length > 8) {
-            alert('পাসওয়ার্ড সর্বনিম্ন ৬ অক্ষর এবং সর্বোচ্চ ৮ অক্ষর হতে হবে।');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            alert('পাসওয়ার্ড দুটি মিলছে না!');
-            return;
-        }
-
-        if (phone.length !== 11) {
-            alert('মোবাইল নম্বর ১১ অক্ষরের হতে হবে।');
-            return;
-        }
-
-        if (transactionPassword.length !== 4) {
-            alert('ট্রানজেকশন পাসওয়ার্ড ৪ অক্ষরের হতে হবে।');
-            return;
-        }
-
-        if (!ageCheckbox || !adultContentCheckbox) {
-            alert('অনুগ্রহ করে দুটি শর্তে টিক দিন।');
-            return;
-        }
-
-        try {
-            await db.collection('users').doc(username).set({
-                username: username,
-                password: password,
-                phone: phone,
-                transactionPassword: transactionPassword,
-                balance: 0,
-                lotteryTickets: [],
-                referredBy: referrerUsername || null,
-                referrals: [],
-                referralCommission: 0
-            });
-            alert('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
-
-            if (referrerUsername) {
-                const referrerRef = db.collection('users').doc(referrerUsername);
-                const referrerDoc = await referrerRef.get();
-                if (referrerDoc.exists) {
-                    await referrerRef.update({
-                        balance: firebase.firestore.FieldValue.increment(10),
-                        referrals: firebase.firestore.FieldValue.arrayUnion(username)
-                    });
-                    alert(`রেফারেল সফল! আপনার বন্ধু ${referrerUsername} এর অ্যাকাউন্টে ১০ টাকা যোগ হয়েছে।`);
-                }
-            }
-
-            localStorage.setItem('username', username);
-            checkLoginStatus();
-        } catch (error) {
-            alert('অ্যাকাউন্ট তৈরি করতে ব্যর্থ: ' + error.message);
-            console.error(error);
-        }
-    });
-    
-    document.getElementById('loginBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('loginUsername').value;
-        const password = document.getElementById('loginPassword').value;
-
-        try {
-            const userDoc = await db.collection('users').doc(username).get();
-            if (userDoc.exists && userDoc.data().password === password) {
-                alert('লগইন সফল!');
-                localStorage.setItem('username', username);
-                checkLoginStatus();
-            } else {
-                alert('ভুল ব্যবহারকারীর নাম বা পাসওয়ার্ড!');
-            }
-        } catch (error) {
-            alert('লগইন ব্যর্থ: ' + error.message);
-            console.error(error);
-        }
-    });
-
-    // Daily Check-in functionality
-    dailyCheckInBtn.addEventListener('click', async () => {
-        const username = localStorage.getItem('username');
-        if (!username) {
-            alert('লগইন করুন!');
-            return;
-        }
-
-        const today = new Date().toDateString();
-        const lastCheckIn = localStorage.getItem(`checkIn_${username}`);
-        
-        if (lastCheckIn === today) {
-            alert('আপনি আজ ইতিমধ্যে চেক-ইন করেছেন!');
-            return;
-        }
-
-        try {
-            const userRef = db.collection('users').doc(username);
-            await userRef.update({
-                balance: firebase.firestore.FieldValue.increment(5)
-            });
-            
-            localStorage.setItem(`checkIn_${username}`, today);
-            alert('দৈনিক চেক-ইন সফল! আপনার অ্যাকাউন্টে ৫ BDT যোগ করা হয়েছে।');
-            loadDashboard(username);
-        } catch (error) {
-            alert('চেক-ইন ব্যর্থ: ' + error.message);
-            console.error(error);
-        }
-    });
-
-    // Video Ad logic using Monetag
-    watchAdBtn.addEventListener('click', async () => {
-        const username = localStorage.getItem('username');
-        if (!username) {
-            alert('লগইন করুন!');
-            return;
-        }
-        
-        // Fetch the rate for the video ad from Firestore
-        const videoAdRateDoc = await db.collection('earning_rates').doc('videoAd').get();
-        const rate = videoAdRateDoc.exists ? videoAdRateDoc.data().amount : 1; // Default to 1 BDT
-
-        visitConfirmModal.style.display = 'block';
-        // Dynamically update the rate in the modal message
-        document.querySelector('.modal-content.blue p').textContent = `ভিডিওটি ১৫ থেকে ২০ সেকেন্ড পর্যন্ত থাকবেন না হলে টাকা দিব না। প্রতি ভিজিটে ${rate} BDT।`;
-
-        // Monetag Rewarded interstitial
-        if (typeof show_9716498 === 'function') {
-            show_9716498().then(() => {
-                const userRef = db.collection('users').doc(username);
-                userRef.update({
-                    balance: firebase.firestore.FieldValue.increment(rate)
-                }).then(() => {
-                    alert(`ভিডিও দেখা সফল! আপনার অ্যাকাউন্টে ${rate} BDT যোগ করা হয়েছে।`);
-                    loadDashboard(username);
-                }).catch(error => {
-                    console.error("Error rewarding user:", error);
-                    alert("টাকা যোগ করতে ব্যর্থ হয়েছে।");
-                });
-            }).catch(e => {
-                console.error("Error during ad playback:", e);
-                alert("বিজ্ঞাপন লোড করতে সমস্যা হয়েছে।");
-            });
-        } else {
-            alert("বিজ্ঞাপনের কোড লোড হয়নি।");
-        }
-    });
-    
-    // visitConfirmBtn is now only for Monetag ad, so its logic is integrated into watchAdBtn's listener
-
-    // Navigation logic
-    navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const username = localStorage.getItem('username');
-            if (!username) {
-                alert('অনুগ্রহ করে এই পেজে যেতে প্রথমে লগইন করুন।');
-                showPage('authPage');
-                return;
-            }
-            
-            const pageId = item.dataset.page;
-            if (pageId) {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-                showPage(pageId);
-                // Load data for the specific page if needed
-                if (pageId === 'referralPage') {
-                    loadReferralInfo();
-                } else if (pageId === 'tasksPage' || pageId === 'extraPage') {
-                    loadEarningLinks();
-                }
-            }
-        });
-    });
-
-    // Back button functionality
-    backButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const activePage = document.querySelector('.active-page');
-            if (activePage.id !== 'dashboardPage') {
-                showPage('dashboardPage');
-                navItems.forEach(nav => nav.classList.remove('active'));
-                document.querySelector('[data-page="dashboardPage"]').classList.add('active');
-            } else {
-                history.back();
-            }
-        });
-    });
-
-    // Lottery ticket purchase logic
-    lotteryTask.addEventListener('click', () => {
-        const username = localStorage.getItem('username');
-        if (!username) {
-            alert('লগইন করুন!');
-            return;
-        }
-        showPage('lotteryPage');
-        loadDashboard(username);
-    });
-
-    buyLotteryBtn.addEventListener('click', async () => {
-        const username = localStorage.getItem('username');
-        if (!username) {
-            alert('লগইন করুন!');
-            return;
-        }
-
-        const userRef = db.collection('users').doc(username);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-
-        if (userData.balance < 10) {
-            alert('আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!');
-            return;
-        }
-
-        if (userData.lotteryTickets.length >= 10) {
-            alert('আপনি সর্বোচ্চ ১০টি টিকিট কিনতে পারবেন।');
-            return;
-        }
-
-        // Generate a random 6-digit ticket number
-        const newTicket = Math.floor(100000 + Math.random() * 900000);
-
-        try {
-            await userRef.update({
-                balance: firebase.firestore.FieldValue.increment(-10),
-                lotteryTickets: firebase.firestore.FieldValue.arrayUnion(newTicket)
-            });
-            alert('আপনি একটি লটারি টিকিট কিনেছেন! আপনার টিকিট নম্বর: ' + newTicket);
-            loadDashboard(username); // Update balance and ticket list
-        } catch (error) {
-            alert('টিকিট কিনতে ব্যর্থ: ' + error.message);
-            console.error(error);
-        }
-    });
-
-    // Referral page specific logic
-    function loadReferralInfo() {
-        const username = localStorage.getItem('username');
-        if (username) {
-            const referralLink = `https://ensenminingbd.com/refer/${username}`;
-            referralLinkDisplay.textContent = referralLink;
-
-            db.collection('users').doc(username).get().then(doc => {
-                const userData = doc.data();
-                if (userData) {
-                    totalReferralsDisplay.textContent = userData.referrals ? userData.referrals.length : 0;
-                    referralCommissionDisplay.textContent = userData.referralCommission ? userData.referralCommission.toFixed(2) : '0.00';
-                }
-            });
-        }
-    }
-
-    // Function to copy referral link
-    function copyReferralLink() {
-        const referralLink = referralLinkDisplay.textContent;
-        navigator.clipboard.writeText(referralLink).then(() => {
-            alert('রেফারেল লিঙ্ক কপি করা হয়েছে!');
-        }).catch(err => {
-            console.error('কপি করতে ব্যর্থ:', err);
-        });
-    }
-
-    // Withdraw page logic
-    function showWithdrawPage() { showPage('withdrawPage'); }
-    async function showInboxPage() { 
-        showPage('inboxPage'); 
-        await loadInboxMessages();
-    }
-    function showProfilePage() { showPage('profilePage'); }
-    function showWithdrawHistoryPage() { showPage('withdrawHistoryPage'); }
-    function showEarningReportPage() { showPage('earningReportPage'); }
-    function showPrivacyPolicyPage() { showPage('privacyPolicyPage'); }
-    function showRulesPage() { showPage('rulesPage'); }
-    
-    // Load Inbox Messages
-    async function loadInboxMessages() {
-        const username = localStorage.getItem('username');
-        if (!username) return;
-
-        inboxMessagesContainer.innerHTML = '';
-        const inboxSnapshot = await db.collection('users').doc(username).collection('inbox').orderBy('timestamp', 'desc').get();
-        if (inboxSnapshot.empty) {
-            inboxMessagesContainer.innerHTML = '<div class="card"><div class="card-body"><p>আপনার ইনবক্স খালি।</p></div></div>';
-        } else {
-            inboxSnapshot.forEach(doc => {
-                const message = doc.data();
-                const messageCard = `
-                    <div class="card" style="${message.read ? 'opacity: 0.7;' : ''}">
-                        <div class="card-body">
-                            <p>${message.message}</p>
-                            <small style="color: #99aab5;">${new Date(message.timestamp.toDate()).toLocaleString()}</small>
-                        </div>
-                    </div>
-                `;
-                inboxMessagesContainer.innerHTML += messageCard;
-            });
-        }
-        
-        // Mark messages as read
-        const batch = db.batch();
-        inboxSnapshot.forEach(doc => {
-            if (!doc.data().read) {
-                batch.update(doc.ref, { read: true });
-            }
-        });
-        await batch.commit();
-        checkUnreadMessages(username);
-    }
-    
-    // Check for unread messages
-    async function checkUnreadMessages(username) {
-        if (!username) return;
-        const unreadSnapshot = await db.collection('users').doc(username).collection('inbox').where('read', '==', false).get();
-        if (!unreadSnapshot.empty) {
-            inboxNotification.style.display = 'flex';
-        } else {
-            inboxNotification.style.display = 'none';
-        }
-    }
-
-
-    document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = localStorage.getItem('username');
-        if (!username) return alert('লগইন করুন!');
-
-        const amount = parseFloat(document.getElementById('withdrawAmount').value);
-        const transPassword = document.getElementById('withdrawTransPassword').value;
-
-        if (amount < 100) {
-            return alert('সর্বনিম্ন উইথড্র পরিমাণ ১০০ টাকা।');
-        }
-
-        try {
-            const userRef = db.collection('users').doc(username);
-            const userDoc = await userRef.get();
-            const userData = userDoc.data();
-
-            if (userData.transactionPassword !== transPassword) {
-                return alert('ট্রানজেকশন পাসওয়ার্ড ভুল!');
-            }
-
-            if (userData.balance < amount) {
-                return alert('আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!');
-            }
-            
-            const finalAmount = amount - 8;
-            await userRef.update({
-                balance: firebase.firestore.FieldValue.increment(-amount),
-            });
-            // Add withdrawal request to a "withdrawRequests" collection for admin panel
-            await db.collection('withdrawRequests').add({
-                username: username,
-                amount: amount,
-                phone: document.getElementById('withdrawNumber').value,
-                status: 'pending',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert(`উইথড্র সফল! ${finalAmount} টাকা আপনার বিকাশ নম্বরে পাঠানো হবে।`);
-
-            loadDashboard(username);
-        } catch (error) {
-            alert('উইথড্র ব্যর্থ: ' + error.message);
-            console.error(error);
-        }
-    });
-
-    // Change Password Logic
-    function showChangePasswordPage() {
-        showPage('changePasswordPage');
-    }
-
-    document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = localStorage.getItem('username');
-        const currentPassword = document.getElementById('currentPassword').value;
-        const newPassword = document.getElementById('newPassword').value;
-        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
-        if (newPassword !== confirmNewPassword) {
-            return alert('নতুন পাসওয়ার্ড দুটি মিলছে না!');
-        }
-        if (newPassword.length < 6 || newPassword.length > 8) {
-            return alert('নতুন পাসওয়ার্ড ৬ থেকে ৮ অক্ষরের হতে হবে।');
-        }
-        
-        const userRef = db.collection('users').doc(username);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-
-        if (userData.password !== currentPassword) {
-            return alert('বর্তমান পাসওয়ার্ড ভুল!');
-        }
-
-        try {
-            await userRef.update({
-                password: newPassword
-            });
-            alert('পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!');
-            showPage('settingsPage');
-        } catch (error) {
-            alert('পাসওয়ার্ড পরিবর্তন ব্যর্থ: ' + error.message);
-        }
-    });
-
-    // Change Transaction Password Logic
-    function showChangeTransPasswordPage() {
-        showPage('changeTransPasswordPage');
-    }
-
-    document.getElementById('changeTransPasswordForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = localStorage.getItem('username');
-        const currentTransPassword = document.getElementById('currentTransPassword').value;
-        const newTransPassword = document.getElementById('newTransPassword').value;
-        const confirmNewTransPassword = document.getElementById('confirmNewTransPassword').value;
-        
-        if (newTransPassword.length !== 4) {
-            return alert('নতুন ট্রানজেকশন পাসওয়ার্ড ৪ অক্ষরের হতে হবে।');
-        }
-        if (newTransPassword !== confirmNewTransPassword) {
-            return alert('ট্রানজেকশন পাসওয়ার্ড দুটি মিলছে না!');
-        }
-
-        const userRef = db.collection('users').doc(username);
-        const userDoc = await userRef.get();
-        const userData = userDoc.data();
-
-        if (userData.transactionPassword !== currentTransPassword) {
-            return alert('বর্তমান ট্রানজেকশন পাসওয়ার্ড ভুল!');
-        }
-
-        try {
-            await userRef.update({
-                transactionPassword: newTransPassword
-            });
-            alert('ট্রানজেকশন পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!');
-            showPage('settingsPage');
-        } catch (error) {
-            alert('ট্রানজেকশন পাসওয়ার্ড পরিবর্তন ব্যর্থ: ' + error.message);
-        }
-    });
-
-
-    // Terms & Conditions Modal
-    termsLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        termsModal.style.display = 'block';
-    });
-
-    document.querySelectorAll('.close-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            termsModal.style.display = 'none';
-            visitConfirmModal.style.display = 'none';
-        });
-    });
-
-    // Logout function
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        localStorage.removeItem('username');
-        checkLoginStatus();
-    });
-
-    window.addEventListener('click', (e) => {
-        if (e.target == termsModal || e.target == visitConfirmModal) {
-            termsModal.style.display = 'none';
-            visitConfirmModal.style.display = 'none';
-        }
-    });
-
-    // Popunder and Social Bar codes
-    document.addEventListener('DOMContentLoaded', () => {
-        // Popunder
-        const popunderScript = document.createElement('script');
-        popunderScript.type = 'text/javascript';
-        popunderScript.src = '//viaanswerwillow.com/c2/2f/5a/c22f5a51bee05171649c6b1194870f89.js';
-        document.body.appendChild(popunderScript);
-
-        // Social Bar
-        const socialBarScript = document.createElement('script');
-        socialBarScript.type = 'text/javascript';
-        socialBarScript.src = '//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js';
-        document.body.appendChild(socialBarScript);
-        
-        // Anti-block code
-        const antiBlockScript = document.createElement('script');
-        antiBlockScript.async = true;
-        antiBlockScript.dataset.cfasync = 'false';
-        antiBlockScript.src = '//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js';
-        document.body.appendChild(antiBlockScript);
-    });
-    
-    // Initial check on page load
-    checkLoginStatus();
-</script>
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script>
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
+  authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
+  projectId: "ensen-mining-bd-4882b",
+  storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
+  messagingSenderId: "1006758844776",
+  appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
+  measurementId: "G-8YKDVM1W8B"
+};
+      firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      // Pop-up logic (unchanged)
+      const popupCheckboxes = document.querySelectorAll('#welcomePopup input[type="checkbox"]');
+      const popupAgreeBtn = document.getElementById('popup-agree-btn');
+      function checkPopupConditions() {
+          const allChecked = Array.from(popupCheckboxes).every(checkbox => checkbox.checked);
+          popupAgreeBtn.disabled = !allChecked;
+      }
+      popupCheckboxes.forEach(checkbox => { checkbox.addEventListener('change', checkPopupConditions); });
+      function hidePopup() { document.getElementById('welcomePopup').style.display = 'none'; }
+
+      // Form toggle functions
+      function showRegistration() {
+          document.getElementById('loginForm').style.display = 'none';
+          document.getElementById('registrationForm').style.display = 'block';
+      }
+      function showLogin() {
+          document.getElementById('loginForm').style.display = 'block';
+          document.getElementById('registrationForm').style.display = 'none';
+      }
+      const regUsernameInput = document.getElementById('regUsername');
+      const usernameSuggestionDiv = document.getElementById('username-suggestion');
+      regUsernameInput.addEventListener('input', async (event) => {
+          const username = event.target.value;
+          usernameSuggestionDiv.innerHTML = '';
+          if (username.length > 3) {
+              const usersRef = db.collection('users');
+              const snapshot = await usersRef.where('username', '==', username).get();
+              if (!snapshot.empty) {
+                  const suggestions = [username + '123', username + '8806'];
+                  let suggestionHTML = 'Suggestion: ';
+                  suggestions.forEach(s => {
+                      suggestionHTML += `<span class="clickable" onclick="selectSuggestion('${s}')">${s}</span> `;
+                  });
+                  usernameSuggestionDiv.innerHTML = suggestionHTML;
+              }
+          }
+      });
+      function selectSuggestion(suggestion) {
+          regUsernameInput.value = suggestion;
+          usernameSuggestionDiv.innerHTML = '';
+      }
+
+      // Handle Firebase Registration
+      async function handleRegistration(event) {
+          event.preventDefault();
+          const username = document.getElementById('regUsername').value;
+          const password = document.getElementById('regPassword').value;
+          const mobile = document.getElementById('regMobile').value;
+          const transPassword = document.getElementById('regTransPassword').value;
+
+          try {
+              const email = username + '@ensen.com';
+              const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+              const user = userCredential.user;
+
+              await db.collection("users").doc(user.uid).set({
+                  username: username,
+                  mobile: mobile,
+                  transPassword: transPassword,
+                  balance: 0,
+                  uid: user.uid
+              });
+
+              alert("Registration successful! You can now log in.");
+              showLogin();
+          } catch (error) {
+              alert("Registration failed: " + error.message);
+              console.error("Error during registration:", error);
+          }
+      }
+
+      // Handle Firebase Login
+      async function handleLogin(event) {
+          event.preventDefault();
+          const username = document.getElementById('loginUsername').value;
+          const password = document.getElementById('loginPassword').value;
+
+          try {
+              const email = username + '@ensen.com';
+              await auth.signInWithEmailAndPassword(email, password);
+              window.location.href = "dashboard.html";
+          } catch (error) {
+              alert("Login failed: " + error.message);
+              console.error("Error during login:", error);
+          }
+      }
+    </script>
 </body>
 </html>

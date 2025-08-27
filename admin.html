@@ -7,232 +7,765 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-blue: #2196F3;
-            --dark-blue: #1976D2;
-            --light-bg: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-color: #333;
+            --primary-color: #6a1b9a;
+            --secondary-color: #e1bee7;
+            --text-color: #424242;
+            --white-text: #fff;
+            --card-bg: #fff;
+            --shadow: 0 8px 30px rgba(0,0,0,0.1);
+            --border-radius: 12px;
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
+            background: linear-gradient(135deg, var(--secondary-color), #f3e5f5);
             color: var(--text-color);
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            padding-bottom: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         }
-        h1, h2 {
-            color: var(--dark-blue);
-            text-align: center;
-        }
-        .stats {
-            text-align: center;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
         }
-        .user-list {
-            margin-top: 20px;
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--primary-color);
         }
-        .user-item {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            cursor: pointer;
-            transition: background 0.3s;
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background-color: var(--card-bg);
+            overflow-x: auto;
         }
-        .user-item:hover {
-            background: #f0f0f0;
+        .section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+        .dashboard-stats {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            padding: 20px;
+            border-radius: 10px;
+            width: 30%;
+            min-width: 150px;
+            box-shadow: var(--shadow);
+            margin-bottom: 15px;
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 14px;
+        }
+        .stat-card p {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0 0;
         }
         .search-container {
             margin-bottom: 20px;
-            display: flex;
         }
         .search-container input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-        .search-container button {
-            padding: 10px 15px;
-            border: none;
-            background-color: var(--primary-blue);
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .details-section {
-            display: none;
-            margin-top: 20px;
-            border-top: 2px solid var(--primary-blue);
-            padding-top: 20px;
-        }
-        .details-section input {
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
         }
-        .details-section button {
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            white-space: nowrap;
+        }
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        th {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+        }
+        .action-button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: var(--white-text);
+            margin-bottom: 5px;
+            white-space: nowrap;
+        }
+        .approve { background-color: #4caf50; }
+        .reject { background-color: #e53935; }
+        .edit { background-color: #2196f3; }
+        .delete { background-color: #e53935; }
+        .change-pass { background-color: #ff9800; }
+        .task-form-container input, .task-form-container button, .task-form-container select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .task-form-container button {
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            border: none;
+        }
+        .task-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+            border-top: 1px solid #eee;
+        }
+        .footer-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 12px;
+        }
+        .footer-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .footer-nav a.active {
+            color: var(--primary-color);
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+        }
+        .modal-content button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: var(--white-text);
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover, .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+        }
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h2 {
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-size: 28px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .input-group .icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        .login-button {
             width: 100%;
             padding: 12px;
-            background-color: var(--dark-blue);
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--white-text);
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-button:hover {
+            background-color: #4a148c;
         }
     </style>
 </head>
 <body>
-
-    <div class="container" id="admin-login-page">
-        <h2>Admin Login</h2>
-        <form id="admin-login-form">
-            <input type="password" id="adminPassword" placeholder="Admin Password" required>
-            <button type="submit">Log In</button>
-        </form>
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-envelope icon"></i>
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock icon"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
     </div>
-
-    <div class="container" id="admin-panel" style="display:none;">
-        <h1>Admin Dashboard</h1>
-        <div class="stats">
-            Total Users: <span id="user-count">0</span>
+    
+    <div id="mainPanel" class="container" style="display: none;">
+        <div id="homeSection" class="content-section active">
+            <div class="header">
+                <h1>Admin Panel</h1>
+            </div>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p id="userCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Withdrawals</h3>
+                    <p id="pendingWithdrawalsCount">0</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Tasks</h3>
+                    <p id="totalTasksCount">0</p>
+                </div>
+            </div>
+            <div class="section">
+                <h2>Daily Tasks</h2>
+                <div id="dailyTasks">
+                    </div>
+            </div>
+            <div class="section">
+                <h2>All Tasks</h2>
+                <div id="allTasks">
+                    </div>
+            </div>
         </div>
         
-        <div class="search-container">
-            <input type="text" id="userSearch" placeholder="Search by username...">
-            <button onclick="searchUser()">Search</button>
+        <div id="usersSection" class="content-section">
+            <div class="section">
+                <h2>User List</h2>
+                <div class="search-container">
+                    <input type="text" id="userSearch" placeholder="Search by username or mobile number...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Mobile</th>
+                            <th>Balance (BDT)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userList">
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div id="user-details" class="details-section">
-            <h3>User Details</h3>
-            <p>Username: <strong id="detail-username"></strong></p>
-            <p>Mobile: <strong id="detail-mobile"></strong></p>
-            <p>Balance: <strong id="detail-balance"></strong></p>
-            
-            <h4>Change Passwords</h4>
-            <input type="password" id="newLoginPassword" placeholder="New Login Password (6-8 chars)">
-            <input type="password" id="newTransPassword" placeholder="New Transaction Password (4-6 chars)">
-            <button onclick="updatePasswords()">Update Passwords</button>
+        <div id="withdrawalsSection" class="content-section">
+            <div class="section">
+                <h2>Withdrawal Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Amount (BDT)</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalList">
+                    </tbody>
+                </table>
+            </div>
         </div>
 
-        <div class="user-list">
-            <h2>All Users</h2>
-            <ul id="user-list"></ul>
+        <div id="tasksSection" class="content-section">
+            <div class="section">
+                <h2>Add / Edit Task</h2>
+                <form id="taskForm" class="task-form-container">
+                    <input type="hidden" id="taskId">
+                    <select id="taskType">
+                        <option value="daily">Daily Task</option>
+                        <option value="all">All Task</option>
+                    </select>
+                    <input type="text" id="taskName" placeholder="Task Name" required>
+                    <input type="number" id="taskAmount" placeholder="Amount (e.g., 0.50)" step="0.01" required>
+                    <input type="text" id="taskButton" placeholder="Button Name" required>
+                    <input type="text" id="taskIcon" placeholder="Icon (e.g., fas fa-play)" required>
+                    <button type="submit" id="taskAddBtn">Add Task</button>
+                </form>
+            </div>
+            <div class="section">
+                <h2>Current Tasks</h2>
+                <div id="taskList">
+                </div>
+            </div>
+        </div>
+        
+        <div id="messagingSection" class="content-section">
+            <div class="section">
+                <h2>Broadcast Message</h2>
+                <form id="broadcastForm">
+                    <textarea id="broadcastMessage" rows="3" placeholder="Type your broadcast message here..." required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+            <div class="section">
+                <h2>Message a Specific User</h2>
+                <form id="userMessageForm">
+                    <input type="text" id="userMessageId" placeholder="User ID" required>
+                    <textarea id="userMessageText" rows="3" placeholder="Type your message here..." required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footerNav" class="footer-nav" style="display: none;">
+        <a href="#" class="nav-item active" data-target="homeSection"><i class="fas fa-home"></i>Dashboard</a>
+        <a href="#" class="nav-item" data-target="usersSection"><i class="fas fa-users"></i>Users</a>
+        <a href="#" class="nav-item" data-target="withdrawalsSection"><i class="fas fa-money-bill-wave"></i>Withdrawals</a>
+        <a href="#" class="nav-item" data-target="tasksSection"><i class="fas fa-tasks"></i>Tasks</a>
+        <a href="#" class="nav-item" data-target="messagingSection"><i class="fas fa-paper-plane"></i>Messages</a>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Edit User Details</h2>
+            <form id="editUserForm">
+                <input type="hidden" id="modalUserId">
+                <label for="newBalance">New Balance (BDT)</label>
+                <input type="number" id="newBalance" placeholder="Enter new balance" step="0.01">
+                <label for="newPassword">New Login Password</label>
+                <input type="password" id="newPassword" placeholder="Enter new password">
+                <label for="newTransactionPassword">New Transaction Password</label>
+                <input type="password" id="newTransactionPassword" placeholder="Enter new transaction password">
+                <button type="submit">Update User</button>
+            </form>
         </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script>
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
-  authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
-  projectId: "ensen-mining-bd-4882b",
-  storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
-  messagingSenderId: "1006758844776",
-  appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
-  measurementId: "G-8YKDVM1W8B"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
+            authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
+            projectId: "ensen-mining-bd-4882b",
+            storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
+            messagingSenderId: "1006758844776",
+            appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
+            measurementId: "G-8YKDVM1W8B"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
-        const ADMIN_PASSWORD = "Yeasin2386"; // Change this!
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const mainPanel = document.getElementById('mainPanel');
+        const footerNav = document.getElementById('footerNav');
+        const loginForm = document.getElementById('loginForm');
+        
+        const userCountSpan = document.getElementById('userCount');
+        const pendingWithdrawalsCountSpan = document.getElementById('pendingWithdrawalsCount');
+        const totalTasksCountSpan = document.getElementById('totalTasksCount');
+        const dailyTasksDiv = document.getElementById('dailyTasks');
+        const allTasksDiv = document.getElementById('allTasks');
+        const userListTable = document.getElementById('userList');
+        const userSearchInput = document.getElementById('userSearch');
+        const withdrawalListTbody = document.getElementById('withdrawalList');
+        const taskListDiv = document.getElementById('taskList');
+        const taskForm = document.getElementById('taskForm');
+        const userModal = document.getElementById('userModal');
+        const editUserForm = document.getElementById('editUserForm');
+        
+        let allUsersData = [];
 
-        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('admin-login-page').style.display = 'none';
-                document.getElementById('admin-panel').style.display = 'block';
-                loadUsers();
+        // Check login status on page load
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in, show main panel
+                loginPage.style.display = "none";
+                mainPanel.style.display = "block";
+                footerNav.style.display = "flex";
+                // Load data for the main panel
+                loadAllData();
             } else {
-                alert("Incorrect password.");
+                // No user is signed in, show login page
+                loginPage.style.display = "flex";
+                mainPanel.style.display = "none";
+                footerNav.style.display = "none";
             }
         });
 
-        let currentSelectedUser = null;
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = loginEmail.value;
+            const password = loginPassword.value;
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                alert("Login Successful!");
+            } catch (error) {
+                alert("Login Failed: " + error.message);
+            }
+        });
+        
+        // Navigation functionality
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navItems.forEach(nav => nav.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
 
+        // Data Loading Functions
+        async function loadAllData() {
+            await loadStats();
+            await loadDashboardTasks();
+            await loadUsers();
+            await loadWithdrawals();
+            await loadTasks();
+        }
+        
+        async function loadStats() {
+            const usersSnapshot = await db.collection("users").get();
+            userCountSpan.textContent = usersSnapshot.size;
+            const tasksSnapshot = await db.collection("tasks").get();
+            totalTasksCountSpan.textContent = tasksSnapshot.size;
+            const withdrawalsSnapshot = await db.collection("withdrawals").where("status", "==", "pending").get();
+            pendingWithdrawalsCountSpan.textContent = withdrawalsSnapshot.size;
+        }
+        
+        async function loadDashboardTasks() {
+            dailyTasksDiv.innerHTML = '';
+            allTasksDiv.innerHTML = '';
+            const tasksSnapshot = await db.collection("tasks").get();
+            
+            tasksSnapshot.forEach((doc) => {
+                const task = doc.data();
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-list-item';
+                taskItem.innerHTML = `
+                    <span>
+                        <i class="${task.icon}"></i> <strong>${task.name}</strong> - ${task.amount.toFixed(2)} BDT
+                    </span>
+                `;
+                
+                if (task.type === 'daily') {
+                    dailyTasksDiv.appendChild(taskItem);
+                } else if (task.type === 'all') {
+                    allTasksDiv.appendChild(taskItem);
+                }
+            });
+        }
+        
         async function loadUsers() {
-            const usersRef = db.collection('users');
-            const snapshot = await usersRef.get();
-            const userCount = document.getElementById('user-count');
-            const userList = document.getElementById('user-list');
-            
-            userCount.textContent = snapshot.size;
-            userList.innerHTML = '';
-            
-            snapshot.forEach(doc => {
-                const userData = doc.data();
-                const li = document.createElement('li');
-                li.className = 'user-item';
-                li.textContent = userData.username;
-                li.onclick = () => showUserDetails(userData);
-                userList.appendChild(li);
+            userListTable.innerHTML = '';
+            const snapshot = await db.collection("users").get();
+            allUsersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderUsers(allUsersData);
+        }
+
+        function renderUsers(users) {
+            userListTable.innerHTML = '';
+            users.forEach((user) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.username}</td>
+                    <td>${user.mobile}</td>
+                    <td>${user.balance.toFixed(2)}</td>
+                    <td>
+                        <button class="action-button edit" onclick="openEditUserModal('${user.id}', '${user.username}', ${user.balance})">Edit</button>
+                    </td>
+                `;
+                userListTable.appendChild(row);
             });
         }
 
-        async function searchUser() {
-            const username = document.getElementById('userSearch').value;
-            if (!username) return;
+        userSearchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredUsers = allUsersData.filter(user => 
+                user.username.toLowerCase().includes(searchTerm) || 
+                user.mobile.includes(searchTerm)
+            );
+            renderUsers(filteredUsers);
+        });
+
+        async function loadWithdrawals() {
+            withdrawalListTbody.innerHTML = '';
+            const snapshot = await db.collection("withdrawals").get();
+            snapshot.forEach(doc => {
+                const withdrawal = doc.data();
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${withdrawal.username}</td>
+                    <td>${withdrawal.amount.toFixed(2)}</td>
+                    <td>${withdrawal.method}</td>
+                    <td>${withdrawal.status}</td>
+                    <td>
+                        <button class="action-button approve" onclick="approveWithdrawal('${doc.id}')">Approve</button>
+                        <button class="action-button reject" onclick="rejectWithdrawal('${doc.id}')">Reject</button>
+                    </td>
+                `;
+                withdrawalListTbody.appendChild(row);
+            });
+        }
+
+        async function loadTasks() {
+            taskListDiv.innerHTML = '';
+            const snapshot = await db.collection("tasks").get();
+            snapshot.forEach((doc) => {
+                const task = doc.data();
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-list-item';
+                taskItem.innerHTML = `
+                    <span>
+                        <i class="${task.icon}"></i> <strong>${task.name}</strong> - ${task.amount.toFixed(2)} BDT (${task.type})
+                    </span>
+                    <div class="task-actions">
+                        <button class="action-button edit" onclick="editTask('${doc.id}', '${task.name}', ${task.amount}, '${task.buttonText}', '${task.icon}', '${task.type}')">Edit</button>
+                        <button class="action-button delete" onclick="deleteTask('${doc.id}')">Delete</button>
+                    </div>
+                `;
+                taskListDiv.appendChild(taskItem);
+            });
+        }
+
+        // Action Functions
+        function openEditUserModal(userId, username, currentBalance) {
+            userModal.style.display = "block";
+            document.getElementById('modalUserId').value = userId;
+            document.getElementById('newBalance').value = currentBalance;
+            document.getElementById('newPassword').value = '';
+            document.getElementById('newTransactionPassword').value = '';
+        }
+
+        function closeModal() {
+            userModal.style.display = "none";
+        }
+
+        editUserForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('modalUserId').value;
+            const newBalance = document.getElementById('newBalance').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const newTransactionPassword = document.getElementById('newTransactionPassword').value;
             
-            const usersRef = db.collection('users');
-            const snapshot = await usersRef.where('username', '==', username).get();
-            
-            if (snapshot.empty) {
-                alert("User not found!");
+            const updates = {};
+            if (newBalance !== '') {
+                updates.balance = parseFloat(newBalance);
+            }
+            if (newPassword !== '') {
+                updates.password = newPassword;
+            }
+            if (newTransactionPassword !== '') {
+                updates.transactionPassword = newTransactionPassword;
+            }
+
+            if (Object.keys(updates).length > 0) {
+                await db.collection("users").doc(userId).update(updates);
+                alert("User details updated successfully!");
+                closeModal();
+                loadUsers();
+                loadStats();
             } else {
-                snapshot.forEach(doc => {
-                    showUserDetails(doc.data());
+                alert("No changes were made.");
+            }
+        });
+        
+        async function approveWithdrawal(id) {
+            await db.collection("withdrawals").doc(id).update({ status: 'approved' });
+            alert("Withdrawal approved!");
+            loadWithdrawals();
+            loadStats();
+        }
+
+        async function rejectWithdrawal(id) {
+            await db.collection("withdrawals").doc(id).update({ status: 'rejected' });
+            alert("Withdrawal rejected!");
+            loadWithdrawals();
+            loadStats();
+        }
+
+        taskForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const taskId = document.getElementById('taskId').value;
+            const taskType = document.getElementById('taskType').value;
+            const taskName = document.getElementById('taskName').value;
+            const taskAmount = parseFloat(document.getElementById('taskAmount').value);
+            const taskButton = document.getElementById('taskButton').value;
+            const taskIcon = document.getElementById('taskIcon').value;
+            
+            if (taskId) {
+                await db.collection("tasks").doc(taskId).update({ 
+                    name: taskName, 
+                    amount: taskAmount, 
+                    buttonText: taskButton, 
+                    icon: taskIcon,
+                    type: taskType
+                });
+            } else {
+                await db.collection("tasks").add({ 
+                    name: taskName, 
+                    amount: taskAmount, 
+                    buttonText: taskButton, 
+                    icon: taskIcon,
+                    type: taskType
                 });
             }
+            taskForm.reset();
+            document.getElementById('taskId').value = '';
+            document.getElementById('taskAddBtn').textContent = 'Add Task';
+            loadTasks();
+            loadStats();
+            loadDashboardTasks();
+        });
+
+        function editTask(id, name, amount, buttonText, icon, type) {
+            document.getElementById('taskId').value = id;
+            document.getElementById('taskType').value = type;
+            document.getElementById('taskName').value = name;
+            document.getElementById('taskAmount').value = amount;
+            document.getElementById('taskButton').value = buttonText;
+            document.getElementById('taskIcon').value = icon;
+            document.getElementById('taskAddBtn').textContent = 'Update Task';
         }
 
-        function showUserDetails(userData) {
-            currentSelectedUser = userData;
-            document.getElementById('detail-username').textContent = userData.username;
-            document.getElementById('detail-mobile').textContent = userData.mobile;
-            document.getElementById('detail-balance').textContent = `$${userData.balance}`;
-            document.getElementById('newLoginPassword').value = '';
-            document.getElementById('newTransPassword').value = userData.transPassword; // For demo purposes only
-            document.getElementById('user-details').style.display = 'block';
-        }
-
-        async function updatePasswords() {
-            if (!currentSelectedUser) return;
-            
-            const newLoginPassword = document.getElementById('newLoginPassword').value;
-            const newTransPassword = document.getElementById('newTransPassword').value;
-            
-            if (newLoginPassword && (newLoginPassword.length < 6 || newLoginPassword.length > 8)) {
-                alert('Login password must be 6-8 characters long.');
-                return;
-            }
-            if (newTransPassword && (newTransPassword.length < 4 || newTransPassword.length > 6)) {
-                alert('Transaction password must be 4-6 characters long.');
-                return;
-            }
-
-            try {
-                // Update login password (requires Firebase Admin SDK or Cloud Function for security)
-                // For this simple demo, we will only update transPassword in Firestore
-                await db.collection("users").doc(currentSelectedUser.uid).update({
-                    transPassword: newTransPassword
-                });
-
-                alert("User passwords updated successfully.");
-            } catch (error) {
-                alert("Failed to update passwords: " + error.message);
+        async function deleteTask(id) {
+            if (confirm("Are you sure you want to delete this task?")) {
+                await db.collection("tasks").doc(id).delete();
+                loadTasks();
+                loadStats();
+                loadDashboardTasks();
             }
         }
+
+        document.getElementById('broadcastForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const messageText = document.getElementById('broadcastMessage').value;
+            await db.collection("messages").add({ text: messageText, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            alert("Broadcast message sent!");
+            document.getElementById('broadcastMessage').value = '';
+        });
+
+        document.getElementById('userMessageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userId = document.getElementById('userMessageId').value;
+            const messageText = document.getElementById('userMessageText').value;
+            await db.collection("users").doc(userId).collection("messages").add({ text: messageText, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            alert("Message sent to user!");
+            document.getElementById('userMessageId').value = '';
+            document.getElementById('userMessageText').value = '';
+        });
+
     </script>
 </body>
 </html>

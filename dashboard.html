@@ -1,1 +1,234 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-purple: #7B1FA2;
+            --dark-purple: #4A148C;
+            --secondary-purple: #B39DDB;
+            --text-color: #f0f0f0;
+            --bg-color: #212121;
+            --card-bg: #333;
+            --claim-green: #4CAF50;
+            --claim-disabled: #81C784;
+            --accent-color: #61DAFB;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .balance {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .card h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .task {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #444;
+        }
+        .task:last-child {
+            border-bottom: none;
+        }
+        .task .emoji {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+        .task-info {
+            flex-grow: 1;
+        }
+        .task-info h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .task-info p {
+            margin: 0;
+            font-size: 12px;
+            color: #bbb;
+        }
+        .claim-btn {
+            background-color: var(--primary-purple);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .claim-btn.claimed {
+            background-color: var(--claim-green);
+        }
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #111;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
+            border-top: 1px solid #444;
+        }
+        .footer-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #999;
+            font-size: 12px;
+        }
+        .footer-nav a i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .footer-nav a.active {
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 id="welcome-text"></h1>
+        <div class="balance">
+            Balance: <span id="balance-amount">$0</span>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h2>Tasks</h2>
+        <div class="task">
+            <span class="emoji">😎</span>
+            <div class="task-info">
+                <h3>Watch short ads</h3>
+                <p>Rewarded Interstitial</p>
+            </div>
+            <button class="claim-btn" id="claimAdBtn" onclick="claimReward('ad', 0.5)">Claim</button>
+        </div>
+        <div class="task">
+            <span class="emoji">👀</span>
+            <div class="task-info">
+                <h3>Click to get reward</h3>
+                <p>Rewarded Popup</p>
+            </div>
+            <button class="claim-btn" id="claimClickBtn" onclick="claimReward('click', 0.2)">Claim</button>
+        </div>
+    </div>
 
+    <div class="card">
+        <h2>Daily</h2>
+        <div class="task">
+            <span class="emoji">🤑</span>
+            <div class="task-info">
+                <h3>Watch video</h3>
+                <p>In-App Interstitial</p>
+            </div>
+            <i class="fas fa-clock" style="font-size: 20px; color: #999;"></i>
+        </div>
+    </div>
+
+    <div class="footer-nav">
+        <a href="#" class="active"><i class="fas fa-home"></i>Home</a>
+        <a href="#"><i class="fas fa-tasks"></i>Tasks</a>
+        <a href="#"><i class="fas fa-money-bill-wave"></i>Withdraw</a>
+        <a href="#"><i class="fas fa-cogs"></i>Settings</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script>
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
+  authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
+  projectId: "ensen-mining-bd-4882b",
+  storageBucket: "ensen-mining-bd-4882b.firebasestorage.app",
+  messagingSenderId: "1006758844776",
+  appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
+  measurementId: "G-8YKDVM1W8B"
+};
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentUser = null;
+        let currentBalance = 0;
+
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                const userDoc = await db.collection("users").doc(currentUser.uid).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    document.getElementById('welcome-text').textContent = `Welcome, ${userData.username}`;
+                    currentBalance = userData.balance;
+                    document.getElementById('balance-amount').textContent = `$${currentBalance}`;
+                } else {
+                    console.error("No user data found in Firestore.");
+                    auth.signOut();
+                }
+            } else {
+                window.location.href = "index.html";
+            }
+        });
+
+        async function claimReward(task, rewardAmount) {
+            const claimButton = document.getElementById(`claim${task === 'ad' ? 'Ad' : 'Click'}Btn`);
+            claimButton.disabled = true;
+            claimButton.textContent = 'Watching Ad...';
+
+            await new Promise(resolve => setTimeout(resolve, 3000));
+
+            claimButton.textContent = 'Claim Now';
+            claimButton.classList.add('claimed');
+            claimButton.disabled = false;
+
+            claimButton.onclick = async () => {
+                await db.collection("users").doc(currentUser.uid).update({
+                    balance: firebase.firestore.FieldValue.increment(rewardAmount)
+                });
+                
+                currentBalance += rewardAmount;
+                document.getElementById('balance-amount').textContent = `$${currentBalance}`;
+                
+                alert(`You have claimed $${rewardAmount}!`);
+                claimButton.textContent = 'Claimed!';
+                claimButton.disabled = true;
+            };
+        }
+    </script>
+</body>
+              </html>

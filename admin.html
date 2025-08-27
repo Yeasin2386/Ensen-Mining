@@ -1,173 +1,135 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Dashboard</title>
+    <title>Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-purple: #7B1FA2;
-            --dark-purple: #4A148C;
-            --secondary-purple: #B39DDB;
-            --text-color: #f0f0f0;
-            --bg-color: #212121;
-            --card-bg: #333;
-            --claim-green: #4CAF50;
-            --claim-disabled: #81C784;
-            --accent-color: #61DAFB;
+            --primary-blue: #2196F3;
+            --dark-blue: #1976D2;
+            --light-bg: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-color: #333;
         }
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--light-bg);
             color: var(--text-color);
-            margin: 0;
             padding: 20px;
         }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: var(--dark-blue);
+            text-align: center;
+        }
+        .stats {
+            text-align: center;
             margin-bottom: 20px;
         }
-        .header h1 {
-            font-size: 24px;
-            font-weight: 700;
+        .user-list {
+            margin-top: 20px;
         }
-        .balance {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--accent-color);
-        }
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-        .card h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        .task {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #444;
-        }
-        .task:last-child {
-            border-bottom: none;
-        }
-        .task .emoji {
-            font-size: 30px;
-            margin-right: 15px;
-        }
-        .task-info {
-            flex-grow: 1;
-        }
-        .task-info h3 {
-            margin: 0;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .task-info p {
-            margin: 0;
-            font-size: 12px;
-            color: #bbb;
-        }
-        .claim-btn {
-            background-color: var(--primary-purple);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
+        .user-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            transition: background 0.3s;
         }
-        .claim-btn.claimed {
-            background-color: var(--claim-green);
+        .user-item:hover {
+            background: #f0f0f0;
         }
-        .footer-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        .search-container input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .search-container button {
+            padding: 10px 15px;
+            border: none;
+            background-color: var(--primary-blue);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .details-section {
+            display: none;
+            margin-top: 20px;
+            border-top: 2px solid var(--primary-blue);
+            padding-top: 20px;
+        }
+        .details-section input {
             width: 100%;
-            background-color: #111;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.3);
-            border-top: 1px solid #444;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
-        .footer-nav a {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #999;
-            font-size: 12px;
-        }
-        .footer-nav a i {
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
-        .footer-nav a.active {
-            color: var(--accent-color);
+        .details-section button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--dark-blue);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1 id="welcome-text"></h1>
-        <div class="balance">
-            Balance: <span id="balance-amount">$0</span>
-        </div>
-    </div>
-    
-    <div class="card">
-        <h2>Tasks</h2>
-        <div class="task">
-            <span class="emoji">😎</span>
-            <div class="task-info">
-                <h3>Watch short ads</h3>
-                <p>Rewarded Interstitial</p>
-            </div>
-            <button class="claim-btn" id="claimAdBtn" onclick="claimReward('ad', 0.5)">Claim</button>
-        </div>
-        <div class="task">
-            <span class="emoji">👀</span>
-            <div class="task-info">
-                <h3>Click to get reward</h3>
-                <p>Rewarded Popup</p>
-            </div>
-            <button class="claim-btn" id="claimClickBtn" onclick="claimReward('click', 0.2)">Claim</button>
-        </div>
+
+    <div class="container" id="admin-login-page">
+        <h2>Admin Login</h2>
+        <form id="admin-login-form">
+            <input type="password" id="adminPassword" placeholder="Admin Password" required>
+            <button type="submit">Log In</button>
+        </form>
     </div>
 
-    <div class="card">
-        <h2>Daily</h2>
-        <div class="task">
-            <span class="emoji">🤑</span>
-            <div class="task-info">
-                <h3>Watch video</h3>
-                <p>In-App Interstitial</p>
-            </div>
-            <i class="fas fa-clock" style="font-size: 20px; color: #999;"></i>
+    <div class="container" id="admin-panel" style="display:none;">
+        <h1>Admin Dashboard</h1>
+        <div class="stats">
+            Total Users: <span id="user-count">0</span>
         </div>
-    </div>
+        
+        <div class="search-container">
+            <input type="text" id="userSearch" placeholder="Search by username...">
+            <button onclick="searchUser()">Search</button>
+        </div>
 
-    <div class="footer-nav">
-        <a href="#" class="active"><i class="fas fa-home"></i>Home</a>
-        <a href="#"><i class="fas fa-tasks"></i>Tasks</a>
-        <a href="#"><i class="fas fa-money-bill-wave"></i>Withdraw</a>
-        <a href="#"><i class="fas fa-cogs"></i>Settings</a>
+        <div id="user-details" class="details-section">
+            <h3>User Details</h3>
+            <p>Username: <strong id="detail-username"></strong></p>
+            <p>Mobile: <strong id="detail-mobile"></strong></p>
+            <p>Balance: <strong id="detail-balance"></strong></p>
+            
+            <h4>Change Passwords</h4>
+            <input type="password" id="newLoginPassword" placeholder="New Login Password (6-8 chars)">
+            <input type="password" id="newTransPassword" placeholder="New Transaction Password (4-6 chars)">
+            <button onclick="updatePasswords()">Update Passwords</button>
+        </div>
+
+        <div class="user-list">
+            <h2>All Users</h2>
+            <ul id="user-list"></ul>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script>
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -181,53 +143,95 @@ const firebaseConfig = {
   measurementId: "G-8YKDVM1W8B"
 };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let currentUser = null;
-        let currentBalance = 0;
+        const ADMIN_PASSWORD = "Yeasin2386"; // Change this!
 
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                currentUser = user;
-                const userDoc = await db.collection("users").doc(currentUser.uid).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    document.getElementById('welcome-text').textContent = `Welcome, ${userData.username}`;
-                    currentBalance = userData.balance;
-                    document.getElementById('balance-amount').textContent = `$${currentBalance}`;
-                } else {
-                    console.error("No user data found in Firestore.");
-                    auth.signOut();
-                }
+        document.getElementById('admin-login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-login-page').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadUsers();
             } else {
-                window.location.href = "index.html";
+                alert("Incorrect password.");
             }
         });
 
-        async function claimReward(task, rewardAmount) {
-            const claimButton = document.getElementById(`claim${task === 'ad' ? 'Ad' : 'Click'}Btn`);
-            claimButton.disabled = true;
-            claimButton.textContent = 'Watching Ad...';
+        let currentSelectedUser = null;
 
-            await new Promise(resolve => setTimeout(resolve, 3000));
+        async function loadUsers() {
+            const usersRef = db.collection('users');
+            const snapshot = await usersRef.get();
+            const userCount = document.getElementById('user-count');
+            const userList = document.getElementById('user-list');
+            
+            userCount.textContent = snapshot.size;
+            userList.innerHTML = '';
+            
+            snapshot.forEach(doc => {
+                const userData = doc.data();
+                const li = document.createElement('li');
+                li.className = 'user-item';
+                li.textContent = userData.username;
+                li.onclick = () => showUserDetails(userData);
+                userList.appendChild(li);
+            });
+        }
 
-            claimButton.textContent = 'Claim Now';
-            claimButton.classList.add('claimed');
-            claimButton.disabled = false;
-
-            claimButton.onclick = async () => {
-                await db.collection("users").doc(currentUser.uid).update({
-                    balance: firebase.firestore.FieldValue.increment(rewardAmount)
+        async function searchUser() {
+            const username = document.getElementById('userSearch').value;
+            if (!username) return;
+            
+            const usersRef = db.collection('users');
+            const snapshot = await usersRef.where('username', '==', username).get();
+            
+            if (snapshot.empty) {
+                alert("User not found!");
+            } else {
+                snapshot.forEach(doc => {
+                    showUserDetails(doc.data());
                 });
-                
-                currentBalance += rewardAmount;
-                document.getElementById('balance-amount').textContent = `$${currentBalance}`;
-                
-                alert(`You have claimed $${rewardAmount}!`);
-                claimButton.textContent = 'Claimed!';
-                claimButton.disabled = true;
-            };
+            }
+        }
+
+        function showUserDetails(userData) {
+            currentSelectedUser = userData;
+            document.getElementById('detail-username').textContent = userData.username;
+            document.getElementById('detail-mobile').textContent = userData.mobile;
+            document.getElementById('detail-balance').textContent = `$${userData.balance}`;
+            document.getElementById('newLoginPassword').value = '';
+            document.getElementById('newTransPassword').value = userData.transPassword; // For demo purposes only
+            document.getElementById('user-details').style.display = 'block';
+        }
+
+        async function updatePasswords() {
+            if (!currentSelectedUser) return;
+            
+            const newLoginPassword = document.getElementById('newLoginPassword').value;
+            const newTransPassword = document.getElementById('newTransPassword').value;
+            
+            if (newLoginPassword && (newLoginPassword.length < 6 || newLoginPassword.length > 8)) {
+                alert('Login password must be 6-8 characters long.');
+                return;
+            }
+            if (newTransPassword && (newTransPassword.length < 4 || newTransPassword.length > 6)) {
+                alert('Transaction password must be 4-6 characters long.');
+                return;
+            }
+
+            try {
+                // Update login password (requires Firebase Admin SDK or Cloud Function for security)
+                // For this simple demo, we will only update transPassword in Firestore
+                await db.collection("users").doc(currentSelectedUser.uid).update({
+                    transPassword: newTransPassword
+                });
+
+                alert("User passwords updated successfully.");
+            } catch (error) {
+                alert("Failed to update passwords: " + error.message);
+            }
         }
     </script>
 </body>

@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6a1b9a; /* Deep Purple */
-            --secondary-color: #f3e5f5; /* Light Purple */
+            --primary-color: #6a1b9a;
+            --secondary-color: #f3e5f5;
             --text-color: #424242;
             --white-text: #fff;
             --card-bg: #fff;
@@ -17,6 +17,8 @@
             --border-radius: 12px;
             --claim-color: #4caf50;
             --claim-done-color: #388e3c;
+            --popup-bg: rgba(0, 0, 0, 0.5);
+            --popup-card-bg: #fff;
         }
         body {
             font-family: 'Poppins', sans-serif;
@@ -24,10 +26,17 @@
             color: var(--text-color);
             margin: 0;
             padding: 20px;
+            min-height: 100vh;
+            position: relative;
         }
         .container {
             max-width: 600px;
             margin: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .container.loaded {
+            opacity: 1;
         }
         .header {
             display: flex;
@@ -35,50 +44,22 @@
             align-items: center;
             margin-bottom: 20px;
         }
+        .header .title {
+            flex-grow: 1;
+            text-align: center;
+        }
+        .header .icon-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
         .header h1 {
             font-size: 24px;
             font-weight: 700;
             margin: 0;
             color: var(--primary-color);
-        }
-        .notification-icon {
-            position: relative;
-            font-size: 24px;
-            color: var(--primary-color);
-            cursor: pointer;
-        }
-        .notification-count {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: #e53935;
-            color: white;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 10px;
-            font-weight: bold;
-        }
-        .notification-list {
-            position: absolute;
-            top: 40px;
-            right: 0;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 250px;
-            max-height: 300px;
-            overflow-y: auto;
-            display: none;
-            z-index: 100;
-        }
-        .notification-list.active {
-            display: block;
-        }
-        .notification-item {
-            padding: 15px;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 14px;
-            color: #555;
         }
         .balance-card {
             background-color: var(--primary-color);
@@ -181,20 +162,28 @@
         }
         .content-section {
             display: none;
+            padding-bottom: 80px;
         }
         .content-section.active {
             display: block;
         }
-        .withdraw-form input, .withdraw-form select {
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .input-group input, .input-group select {
             width: 100%;
             padding: 12px;
-            margin-bottom: 15px;
             border-radius: var(--border-radius);
             border: 1px solid #ddd;
             background-color: #fff;
             box-sizing: border-box;
         }
-        .withdraw-form button {
+        .main-btn {
             width: 100%;
             padding: 15px;
             border: none;
@@ -203,23 +192,43 @@
             border-radius: var(--border-radius);
             font-weight: 600;
             cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .main-btn:hover {
+            background-color: #5c148a;
         }
         .settings-list {
             list-style: none;
             padding: 0;
         }
         .settings-list li {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            background-color: var(--task-bg);
+            margin-bottom: 10px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
         }
-        .settings-list a {
+        .settings-list li a {
             text-decoration: none;
             color: var(--text-color);
             font-size: 16px;
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
         }
-        .settings-list a:hover {
-            color: var(--primary-color);
+        .settings-list li:hover {
+            background-color: #e0e0e0;
+        }
+        .settings-list a i {
+            margin-right: 15px;
+            font-size: 20px;
+        }
+        .settings-list a span {
+            flex-grow: 1;
+        }
+        .settings-list .arrow {
+            font-size: 18px;
+            color: #999;
         }
         .logout-btn {
             background-color: #e53935;
@@ -231,6 +240,23 @@
             margin-top: 20px;
             width: 100%;
             font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .hidden-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .back-btn {
+            background-color: #757575;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-bottom: 15px;
         }
         .profile-info p {
             font-size: 16px;
@@ -242,81 +268,410 @@
             margin-top: 15px;
             text-align: center;
         }
+        .referral-info {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .referral-info .link-box {
+            background-color: var(--task-bg);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        .highlighted-text {
+            background-color: #ffeb3b;
+            color: #c0870c;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 500;
+            text-align: center;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--popup-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        .popup-card {
+            background-color: var(--popup-card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            max-width: 300px;
+        }
+        .popup-card .icon {
+            font-size: 50px;
+            color: var(--claim-color);
+            margin-bottom: 15px;
+        }
+        .popup-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+        }
+        .popup-card p {
+            margin: 0;
+            font-size: 16px;
+        }
+        .popup-card .close-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .message-box {
+            background-color: #e3f2fd;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .loading-spinner {
+            border: 8px solid var(--primary-color);
+            border-top: 8px solid var(--white-text);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+    </div>
+    
     <div class="container">
+        <div class="header">
+            <h1 class="title" id="welcome-text"></h1>
+            <button class="icon-btn" onclick="showSection('mailSection')"><i class="fas fa-envelope"></i></button>
+        </div>
+
         <div id="homeSection" class="content-section active">
-            <div class="header">
-                <h1 id="welcome-text"></h1>
-                <div class="notification-icon">
-                    <i class="fas fa-bell" onclick="toggleNotifications()"></i>
-                    <span id="notificationCount" class="notification-count" style="display: none;">0</span>
-                    <div id="notificationList" class="notification-list"></div>
-                </div>
-            </div>
             <div class="balance-card">
                 <h3>Current Balance</h3>
                 <h2 id="balance-amount">0.00 BDT</h2>
             </div>
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3e8de08585fbff771f13f27096f68fa0',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
+
             <div class="card">
                 <h2 class="section-heading">Daily Tasks</h2>
-                <div id="dailyTasks">
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">🎬</span>
+                        <div class="task-details">
+                            <h4>Watch a Video (Monetag)</h4>
+                            <p>Earn 0.50 BDT</p>
+                        </div>
                     </div>
+                    <button class="claim-btn" id="claimVideoDailyBtn" onclick="monetagRewardedInterstitial(0.50, 'claimVideoDailyBtn')">Claim</button>
+                </div>
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">🌐</span>
+                        <div class="task-details">
+                            <h4>Adsterra Smartlink</h4>
+                            <p>Earn 0.60 BDT</p>
+                        </div>
+                    </div>
+                    <button class="claim-btn" id="claimSmartlinkDailyBtn" onclick="adsterraSmartlink(0.60, 'claimSmartlinkDailyBtn')">Claim</button>
+                </div>
             </div>
         </div>
         
         <div id="allTasksSection" class="content-section">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3e8de08585fbff771f13f27096f68fa0',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
             <div class="card">
                 <h2 class="section-heading">All Available Tasks</h2>
-                <div id="allTasks">
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">🎬</span>
+                        <div class="task-details">
+                            <h4>Watch a Video (Monetag)</h4>
+                            <p>Earn 0.10 BDT</p>
+                        </div>
                     </div>
+                    <button class="claim-btn" id="claimVideoAllBtn" onclick="monetagRewardedInterstitial(0.10, 'claimVideoAllBtn')">Claim</button>
+                </div>
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-icon">🌐</span>
+                        <div class="task-details">
+                            <h4>Adsterra Smartlink</h4>
+                            <p>Earn 0.15 BDT</p>
+                        </div>
+                    </div>
+                    <button class="claim-btn" id="claimSmartlinkAllBtn" onclick="adsterraSmartlink(0.15, 'claimSmartlinkAllBtn')">Claim</button>
+                </div>
+                <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
+                <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
+                <div class="message-box">
+                    <p>টাস্কগুলো শেষ করতে কোন সমস্যা হলে, আপনি আমাদের সাপোর্ট টিমের সাথে যোগাযোগ করতে পারেন।</p>
+                </div>
             </div>
         </div>
 
-        <div id="withdrawSection" class="content-section">
+        <div id="referSection" class="content-section">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3e8de08585fbff771f13f27096f68fa0',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
+            
             <div class="card">
-                <h2 class="section-heading">Withdraw Funds</h2>
-                <form class="withdraw-form" onsubmit="handleWithdraw(event)">
-                    <input type="number" id="withdrawAmount" placeholder="Amount" required min="1">
-                    <select id="paymentMethod" required>
-                        <option value="">Select Method</option>
-                        <option value="bKash">bKash</option>
-                        <option value="Binance">Binance</option>
-                    </select>
-                    <input type="text" id="paymentDetails" placeholder="bKash Number / Binance ID" required>
-                    <input type="password" id="transPassword" placeholder="Transaction Password" required>
-                    <button type="submit">Withdraw Now</button>
-                </form>
-                <p class="tips-text">Security Tip: Minimum withdrawal amount is 100 BDT and maximum is 10,000 BDT. Withdrawals are processed within 24 hours.</p>
+                <h2 class="section-heading">Refer & Earn</h2>
+                <p style="text-align: center;">Share your unique referral link with friends and earn 10% commission when they make a withdrawal.</p>
+                <div class="referral-info">
+                    <p style="font-weight: 600;">Your Referral Link:</p>
+                    <div class="link-box" id="referralLink">https://yourwebsite.com/refer/USER_ID_HERE</div>
+                </div>
+                <div class="highlighted-text">
+                    Example: If your friend withdraws 100 BDT, you will get 10 BDT as a bonus.
+                </div>
+                <div class="message-box">
+                    <p>আপনার রেফার লিংকটি বন্ধুদের সাথে শেয়ার করুন এবং তাদের আয়ের ১০% পর্যন্ত কমিশন জিতে নিন।</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsSection" class="content-section">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '3e8de08585fbff771f13f27096f68fa0',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
+
+            <div class="card">
+                <h2 class="section-heading">Settings</h2>
+                <div id="mainSettings">
+                    <ul class="settings-list">
+                        <li onclick="showForm('profileForm')"><a href="#">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                            <span class="arrow">&gt;</span>
+                        </a></li>
+                        <li onclick="showForm('withdrawForm')"><a href="#">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Withdraw Funds</span>
+                            <span class="arrow">&gt;</span>
+                        </a></li>
+                        <li onclick="showForm('transPasswordForm')"><a href="#">
+                            <i class="fas fa-lock"></i>
+                            <span>Change Transaction Password</span>
+                            <span class="arrow">&gt;</span>
+                        </a></li>
+                        <li onclick="showForm('loginPasswordForm')"><a href="#">
+                            <i class="fas fa-key"></i>
+                            <span>Change Login Password</span>
+                            <span class="arrow">&gt;</span>
+                        </a></li>
+                        <li onclick="showForm('helpForm')"><a href="#">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Help & Support</span>
+                            <span class="arrow">&gt;</span>
+                        </a></li>
+                    </ul>
+                    <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+                </div>
+
+                <div id="profileForm" class="hidden-form card">
+                    <button class="back-btn" onclick="showMainSettings()">Back</button>
+                    <h2 class="section-heading">My Profile</h2>
+                    <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+                    <p><strong>Mobile:</strong> <span id="profileMobile"></span></p>
+                    <p><strong>Transaction Password:</strong> <span id="profileTransPassword"></span></p>
+                </div>
+
+                <div id="withdrawForm" class="hidden-form card">
+                    <button class="back-btn" onclick="showMainSettings()">Back</button>
+                    <h2 class="section-heading">Withdraw Funds</h2>
+                    <form class="withdraw-form" onsubmit="handleWithdraw(event)">
+                        <div class="input-group">
+                            <label for="withdrawAmount">Amount</label>
+                            <input type="number" id="withdrawAmount" placeholder="Enter amount" required min="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select id="paymentMethod" required>
+                                <option value="">Select Method</option>
+                                <option value="bKash">bKash</option>
+                                <option value="Binance">Binance</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="paymentDetails">Account Details</label>
+                            <input type="text" id="paymentDetails" placeholder="bKash Number / Binance ID" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="transPassword">Transaction Password</label>
+                            <input type="password" id="transPassword" placeholder="Enter transaction password" required>
+                        </div>
+                        <button type="submit" class="main-btn">Withdraw Now</button>
+                    </form>
+                </div>
+
+                <div id="transPasswordForm" class="hidden-form card">
+                    <button class="back-btn" onclick="showMainSettings()">Back</button>
+                    <h2 class="section-heading">Change Transaction Password</h2>
+                    <div class="input-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentTransPassword" placeholder="Current Transaction Password">
+                    </div>
+                    <div class="input-group">
+                        <label>New Password</label>
+                        <input type="password" id="newTransPassword" placeholder="New Transaction Password">
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmNewTransPassword" placeholder="Confirm New Password">
+                    </div>
+                    <button onclick="changePassword('trans')" class="main-btn">Change Password</button>
+                </div>
+
+                <div id="loginPasswordForm" class="hidden-form card">
+                    <button class="back-btn" onclick="showMainSettings()">Back</button>
+                    <h2 class="section-heading">Change Login Password</h2>
+                    <div class="input-group">
+                        <label>Current Password</label>
+                        <input type="password" id="currentLoginPassword" placeholder="Current Login Password">
+                    </div>
+                    <div class="input-group">
+                        <label>New Password</label>
+                        <input type="password" id="newLoginPassword" placeholder="New Login Password">
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="confirmNewLoginPassword" placeholder="Confirm New Password">
+                    </div>
+                    <button onclick="changePassword('login')" class="main-btn">Change Password</button>
+                </div>
+
+                <div id="helpForm" class="hidden-form card">
+                    <button class="back-btn" onclick="showMainSettings()">Back</button>
+                    <h2 class="section-heading">Help & Support</h2>
+                    <p>For any assistance or support, please contact us on:</p>
+                    <a href="https://t.me/yourtelegramchannel" target="_blank" class="main-btn" style="background-color:#0088cc;">
+                        <i class="fab fa-telegram-plane"></i> Join Telegram Channel
+                    </a>
+                    <p class="tips-text">Our team is available 24/7 to help you.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="mailSection" class="content-section">
+            <div class="card">
+                <h2 class="section-heading">Notifications & Messages</h2>
+                <p>Welcome to your inbox! Any important announcements will appear here.</p>
+                <div class="tips-text">This is a demo page.</div>
             </div>
         </div>
         
-        <div id="settingsSection" class="content-section">
-            <div class="card">
-                <h2 class="section-heading">Settings</h2>
-                <ul class="settings-list">
-                    <li><a href="#" onclick="showProfile()">My Profile</a></li>
-                    <li><a href="https://t.me/yourtelegramchannel" target="_blank">Join Telegram Channel</a></li>
-                    <li><a href="#" onclick="changePassword('trans')">Change Transaction Password</a></li>
-                    <li><a href="#" onclick="changePassword('login')">Change Login Password</a></li>
-                </ul>
-                <button class="logout-btn" onclick="handleLogout()">Log Out</button>
-            </div>
-        </div>
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '46272549345a79336d26e76ff1c1d24b',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
     </div>
     
     <div class="footer-nav">
         <a href="#" class="nav-item active" data-target="homeSection"><i class="fas fa-home"></i>Home</a>
-        <a href="#" class="nav-item" data-target="allTasksSection"><i class="fas fa-tasks"></i>All Tasks</a>
-        <a href="#" class="nav-item" data-target="withdrawSection"><i class="fas fa-money-bill-wave"></i>Withdraw</a>
+        <a href="#" class="nav-item" data-target="allTasksSection"><i class="fas fa-tasks"></i>Tasks</a>
+        <a href="#" class="nav-item" data-target="referSection"><i class="fas fa-user-plus"></i>Refer</a>
         <a href="#" class="nav-item" data-target="settingsSection"><i class="fas fa-cogs"></i>Settings</a>
+    </div>
+
+    <div id="rewardPopup" class="popup-overlay">
+        <div class="popup-card">
+            <div class="icon">🎉</div>
+            <h3 id="popup-title">Success!</h3>
+            <p id="popup-message"></p>
+            <button class="close-btn" onclick="hidePopup()">Close</button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
+    <script type='text/javascript' src='//viaanswerwillow.com/c2/2f/5a/c22f5a51bee05171649c6b1194870f89.js'></script>
+    <script type='text/javascript' src='//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js'></script>
+
+
     <script>
+        window.addEventListener('load', function() {
+            document.getElementById('loadingScreen').classList.add('hidden');
+            document.querySelector('.container').classList.add('loaded');
+        });
+        
         const firebaseConfig = {
             apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
             authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
@@ -333,94 +688,162 @@
         let currentUser = null;
         let userData = null;
 
+        // Handle auth state changes and fetch user data
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
-                const userDoc = await db.collection("users").doc(currentUser.uid).get();
-                if (userDoc.exists) {
-                    userData = userDoc.data();
-                    document.getElementById('welcome-text').textContent = `Welcome, ${userData.username}`;
-                    document.getElementById('balance-amount').textContent = `${userData.balance.toFixed(2)} BDT`;
-                    loadTasks();
-                    loadNotifications();
-                } else {
-                    console.error("No user data found in Firestore.");
-                    auth.signOut();
+                try {
+                    const userDoc = await db.collection("users").doc(currentUser.uid).get();
+                    if (userDoc.exists) {
+                        userData = userDoc.data();
+                        updateUI();
+                        checkDailyTasks();
+                    } else {
+                        console.error("No user data found in Firestore.");
+                        auth.signOut();
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
                 }
             } else {
                 window.location.href = "index.html";
             }
         });
-
-        async function loadTasks() {
-            const dailyTasksContainer = document.getElementById('dailyTasks');
-            const allTasksContainer = document.getElementById('allTasks');
-            dailyTasksContainer.innerHTML = '';
-            allTasksContainer.innerHTML = '';
-            const tasksSnapshot = await db.collection("tasks").get();
-            tasksSnapshot.forEach((doc) => {
-                const task = doc.data();
-                const taskItem = document.createElement('div');
-                taskItem.className = 'task-item';
-                taskItem.innerHTML = `
-                    <div class="task-info">
-                        <span class="task-icon">${task.icon}</span>
-                        <div class="task-details">
-                            <h4>${task.name}</h4>
-                            <p>Earn ${task.amount.toFixed(2)} BDT</p>
-                        </div>
-                    </div>
-                    <button class="claim-btn" id="claimBtn-${doc.id}" onclick="claimReward('${doc.id}', ${task.amount})">${task.buttonText}</button>
-                `;
-                dailyTasksContainer.appendChild(taskItem.cloneNode(true));
-                allTasksContainer.appendChild(taskItem);
-            });
-        }
         
-        async function loadNotifications() {
-            const notifList = document.getElementById('notificationList');
-            const notifCount = document.getElementById('notificationCount');
-            const messagesRef = db.collection("messages").orderBy("timestamp", "desc");
-            messagesRef.onSnapshot((snapshot) => {
-                let count = 0;
-                notifList.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const message = doc.data();
-                    const msgItem = document.createElement('div');
-                    msgItem.className = 'notification-item';
-                    msgItem.textContent = message.text;
-                    notifList.appendChild(msgItem);
-                    count++;
-                });
-                notifCount.textContent = count;
-                notifCount.style.display = count > 0 ? 'block' : 'none';
-            });
-        }
-        
-        function toggleNotifications() {
-            document.getElementById('notificationList').classList.toggle('active');
+        function updateUI() {
+            if (userData) {
+                document.getElementById('welcome-text').textContent = `Welcome, ${userData.username}`;
+                document.getElementById('balance-amount').textContent = `${(userData.balance || 0).toFixed(2)} BDT`;
+                document.getElementById('profileUsername').textContent = userData.username;
+                document.getElementById('profileMobile').textContent = userData.mobile;
+                document.getElementById('profileTransPassword').textContent = userData.transPassword;
+                document.getElementById('referralLink').textContent = `https://yourwebsite.com/refer/${userData.username}`;
+            }
         }
 
-        async function claimReward(taskId, rewardAmount) {
-            const claimButton = document.getElementById(`claimBtn-${taskId}`);
-            claimButton.textContent = 'Watching Ad...';
-            claimButton.disabled = true;
-            await new Promise(resolve => setTimeout(resolve, 3000));
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        async function checkDailyTasks() {
+            if (!userData) return;
+            const dailyTaskIds = ['claimVideoDailyBtn', 'claimSmartlinkDailyBtn', 'claimVideoAllBtn', 'claimSmartlinkAllBtn'];
+            const tasks = userData.tasks || {};
             
-            await db.collection("users").doc(currentUser.uid).update({
-                balance: firebase.firestore.FieldValue.increment(rewardAmount)
+            for (const taskId of dailyTaskIds) {
+                const claimButton = document.getElementById(taskId);
+                if (tasks[taskId] && (Date.now() - tasks[taskId]) < oneDay) {
+                    claimButton.textContent = 'Claimed!';
+                    claimButton.classList.add('claimed');
+                    claimButton.disabled = true;
+                } else {
+                    claimButton.textContent = 'Claim';
+                    claimButton.classList.remove('claimed');
+                    claimButton.disabled = false;
+                }
+            }
+        }
+        
+        async function claimReward(taskName, rewardAmount, buttonId) {
+            const claimButton = document.getElementById(buttonId);
+            
+            if (userData.tasks[buttonId] && (Date.now() - userData.tasks[buttonId]) < oneDay) {
+                showPopup('Already Claimed!', 'You have already claimed this reward for today. Please check back tomorrow.');
+                return;
+            }
+
+            try {
+                const taskUpdate = {};
+                taskUpdate[`tasks.${buttonId}`] = Date.now();
+                
+                await db.collection("users").doc(currentUser.uid).update({
+                    balance: firebase.firestore.FieldValue.increment(rewardAmount),
+                    ...taskUpdate
+                });
+                
+                const userDoc = await db.collection("users").doc(currentUser.uid).get();
+                userData = userDoc.data();
+                updateUI();
+                showPopup('Success!', `You have claimed ${rewardAmount.toFixed(2)} BDT! 🎉`);
+                checkDailyTasks();
+            } catch (error) {
+                console.error("Error claiming reward:", error);
+                alert("An error occurred. Please try again.");
+            }
+        }
+
+        function monetagRewardedInterstitial(rewardAmount, buttonId) {
+            const lastClaimKey = `tasks.${buttonId}`;
+            if (userData.tasks[buttonId] && (Date.now() - userData.tasks[buttonId]) < oneDay) {
+                showPopup('Already Claimed!', 'You have already claimed this reward for today. Please check back tomorrow.');
+                return;
+            }
+            
+            show_9716498().then(() => {
+                claimReward('monetagVideo', rewardAmount, buttonId);
+            }).catch(e => {
+                showPopup('Ad Error', 'Failed to load the ad. Please try again.');
             });
-            const userDoc = await db.collection("users").doc(currentUser.uid).get();
-            const updatedBalance = userDoc.data().balance;
-            document.getElementById('balance-amount').textContent = `${updatedBalance.toFixed(2)} BDT`;
-            alert(`You have claimed ${rewardAmount.toFixed(2)} BDT!`);
-            claimButton.textContent = 'Claimed!';
-            claimButton.disabled = true;
+        }
+        
+        function adsterraSmartlink(rewardAmount, buttonId) {
+            const lastClaimKey = `tasks.${buttonId}`;
+            if (userData.tasks[buttonId] && (Date.now() - userData.tasks[buttonId]) < oneDay) {
+                showPopup('Already Claimed!', 'You have already claimed this reward for today. Please check back tomorrow.');
+                return;
+            }
+
+            const smartlinkUrl = 'https://viaanswerwillow.com/zcj9ncamas?key=6836bdc985e54703a11582786d62f2a5';
+            window.open(smartlinkUrl, '_blank');
+            
+            setTimeout(() => {
+                claimReward('adsterraSmartlink', rewardAmount, buttonId);
+            }, 10000); 
+        }
+
+        function showPopup(title, message) {
+            document.getElementById('popup-title').textContent = title;
+            document.getElementById('popup-message').textContent = message;
+            document.getElementById('rewardPopup').style.display = 'flex';
+        }
+
+        function hidePopup() {
+            document.getElementById('rewardPopup').style.display = 'none';
+        }
+
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+        function showSection(targetId) {
+            contentSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(targetId).classList.add('active');
+            navItems.forEach(nav => nav.classList.remove('active'));
+            const activeNav = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+            if (activeNav) {
+                activeNav.classList.add('active');
+            }
+        }
+        navItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('data-target');
+                showSection(targetId);
+            });
+        });
+
+        function showForm(formId) {
+            document.getElementById('mainSettings').style.display = 'none';
+            const forms = document.querySelectorAll('#settingsSection .hidden-form');
+            forms.forEach(form => form.style.display = 'none');
+            document.getElementById(formId).style.display = 'block';
+        }
+
+        function showMainSettings() {
+            const forms = document.querySelectorAll('#settingsSection .hidden-form');
+            forms.forEach(form => form.style.display = 'none');
+            document.getElementById('mainSettings').style.display = 'block';
         }
 
         async function handleWithdraw(event) {
             event.preventDefault();
-            const amount = document.getElementById('withdrawAmount').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
             const method = document.getElementById('paymentMethod').value;
             const details = document.getElementById('paymentDetails').value;
             const transPassword = document.getElementById('transPassword').value;
@@ -429,43 +852,99 @@
                 alert("Incorrect transaction password!");
                 return;
             }
-            if (parseFloat(amount) > userData.balance) {
+            if (amount > userData.balance) {
                 alert("Insufficient balance!");
                 return;
             }
-            if (parseFloat(amount) < 100 || parseFloat(amount) > 10000) {
+            if (amount < 100 || amount > 10000) {
                 alert("Withdrawal amount must be between 100 and 10,000 BDT.");
                 return;
             }
-            // Add withdrawal request to a new Firestore collection for admin review
-            await db.collection("withdrawals").add({
-                userId: currentUser.uid,
-                username: userData.username,
-                amount: parseFloat(amount),
-                method: method,
-                details: details,
-                status: 'pending',
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            alert(`Withdrawal request sent: Amount: ${amount} BDT, Method: ${method}, Details: ${details}`);
-            document.getElementById('withdrawAmount').value = '';
-            document.getElementById('paymentDetails').value = '';
-            document.getElementById('transPassword').value = '';
-        }
-        
-        async function showProfile() {
-            if (!userData) {
+            
+            try {
+                await db.collection("users").doc(currentUser.uid).update({
+                    balance: firebase.firestore.FieldValue.increment(-amount)
+                });
+                
+                await db.collection("withdrawalRequests").add({
+                    uid: currentUser.uid,
+                    username: userData.username,
+                    amount: amount,
+                    method: method,
+                    details: details,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    status: 'pending'
+                });
+                
                 const userDoc = await db.collection("users").doc(currentUser.uid).get();
                 userData = userDoc.data();
+                updateUI();
+                
+                alert(`Withdrawal request for ${amount.toFixed(2)} BDT sent successfully!`);
+                
+                document.getElementById('withdrawAmount').value = '';
+                document.getElementById('paymentDetails').value = '';
+                document.getElementById('transPassword').value = '';
+            } catch (error) {
+                console.error("Error processing withdrawal:", error);
+                alert("An error occurred during withdrawal. Please try again.");
             }
-            alert(`Profile\nUsername: ${userData.username}\nMobile: ${userData.mobile}`);
         }
+        
+        async function changePassword(type) {
+            if (type === 'trans') {
+                const current = document.getElementById('currentTransPassword').value;
+                const newPass = document.getElementById('newTransPassword').value;
+                const confirmPass = document.getElementById('confirmNewTransPassword').value;
 
-        function changePassword(type) {
-            const newPass = prompt(`Enter new ${type} password:`);
-            if (newPass) {
-                alert(`Password change request for ${type} password received. This needs to be implemented on the backend.`);
+                if (!current || !newPass || !confirmPass) {
+                    alert("Please fill out all fields.");
+                    return;
+                }
+                if (newPass !== confirmPass) {
+                    alert("New passwords do not match.");
+                    return;
+                }
+                if (current !== userData.transPassword) {
+                    alert("Incorrect current transaction password.");
+                    return;
+                }
+
+                try {
+                    await db.collection("users").doc(currentUser.uid).update({
+                        transPassword: newPass
+                    });
+                    userData.transPassword = newPass;
+                    updateUI();
+                    alert("Transaction password changed successfully!");
+                } catch (error) {
+                    console.error("Error changing transaction password:", error);
+                    alert("An error occurred. Please try again.");
+                }
+            } else if (type === 'login') {
+                const current = document.getElementById('currentLoginPassword').value;
+                const newPass = document.getElementById('newLoginPassword').value;
+                const confirmPass = document.getElementById('confirmNewLoginPassword').value;
+
+                if (!current || !newPass || !confirmPass) {
+                    alert("Please fill out all fields.");
+                    return;
+                }
+                if (newPass !== confirmPass) {
+                    alert("New passwords do not match.");
+                    return;
+                }
+                
+                try {
+                    await auth.currentUser.updatePassword(newPass);
+                    alert("Login password changed successfully!");
+                    showMainSettings();
+                } catch (error) {
+                    console.error("Error changing login password:", error);
+                    alert("An error occurred. Please try again.");
+                }
             }
+            showMainSettings();
         }
 
         function handleLogout() {
@@ -475,19 +954,6 @@
                 console.error("Error signing out:", error);
             });
         }
-        
-        const navItems = document.querySelectorAll('.nav-item');
-        const contentSections = document.querySelectorAll('.content-section');
-        navItems.forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                navItems.forEach(nav => nav.classList.remove('active'));
-                contentSections.forEach(section => section.classList.remove('active'));
-                item.classList.add('active');
-                const targetId = item.getAttribute('data-target');
-                document.getElementById(targetId).classList.add('active');
-            });
-        });
     </script>
 </body>
 </html>

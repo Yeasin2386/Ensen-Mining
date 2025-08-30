@@ -1,0 +1,487 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+:root {
+    --tg-theme-bg-color: #0f0f23;
+    --tg-theme-text-color: #ffffff;
+    --tg-theme-button-color: #5b58e2;
+    --tg-theme-button-text-color: #ffffff;
+    --tg-theme-secondary-bg-color: #1c1c36;
+    --tg-theme-hint-color: #aaaaaa;
+    --tg-theme-link-color: #5b58e2;
+    --tg-theme-section-bg-color: #1c1c36;
+}
+
+body {
+    background: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-container {
+    background: var(--tg-theme-secondary-bg-color);
+    border-radius: 16px;
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.logo-img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    box-shadow: 0 0 20px rgba(91, 88, 226, 0.7);
+    object-fit: cover; /* Ensures image fits the circular shape */
+}
+
+.logo-section h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #5b58e2, #8a58e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(91, 88, 226, 0.4);
+}
+
+.logo-section p {
+    font-size: 16px;
+    color: var(--tg-theme-text-color);
+    margin-top: 5px;
+}
+
+.tab-buttons {
+    display: flex;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(91, 88, 226, 0.2);
+}
+
+.tab-button {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: none;
+    color: var(--tg-theme-hint-color);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-button.active {
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    box-shadow: 0 0 15px rgba(91, 88, 226, 0.5);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(91, 88, 226, 0.1);
+    border: 1px solid rgba(91, 88, 226, 0.3);
+    border-radius: 12px;
+    color: var(--tg-theme-text-color);
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.form-input::placeholder {
+    color: var(--tg-theme-hint-color);
+    opacity: 0.7;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #5b58e2;
+    box-shadow: 0 0 12px rgba(91, 88, 226, 0.5);
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--tg-theme-button-color);
+    border: none;
+    border-radius: 12px;
+    color: var(--tg-theme-button-text-color);
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(91, 88, 226, 0.4);
+}
+
+.submit-btn:hover {
+    background-color: #7a77eb;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(91, 88, 226, 0.6);
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.forgot-password a {
+    color: var(--tg-theme-link-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+    color: #8a58e2;
+}
+
+.help-text {
+    font-size: 12px;
+    color: var(--tg-theme-hint-color);
+    margin-top: 5px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--tg-theme-hint-color);
+    cursor: pointer;
+}
+.password-container {
+    position: relative;
+}
+.terms-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.terms-container input[type="checkbox"] {
+    margin-right: 10px;
+    min-width: 18px;
+    min-height: 18px;
+    cursor: pointer;
+}
+.terms-text {
+    font-size: 14px;
+    color: var(--tg-theme-hint-color);
+}
+.terms-text a {
+    color: var(--tg-theme-link-color);
+    text-decoration: none;
+}
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    font-size: 14px;
+    margin-top: 20px;
+}
+.footer-links a {
+    color: var(--tg-theme-hint-color);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+.footer-links a:hover {
+    color: var(--tg-theme-text-color);
+}
+
+/* Pop-up Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--tg-theme-secondary-bg-color);
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease-in-out;
+    border: 2px solid #5b58e2;
+}
+
+.modal-content .modal-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.modal-content .modal-header .logo-icon {
+    font-size: 30px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #5b58e2, #8a58e2);
+    box-shadow: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content .modal-header h2 {
+    font-size: 24px;
+    background: linear-gradient(135deg, #5b58e2, #8a58e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.modal-content p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--tg-theme-text-color);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.modal-checks {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+.modal-check-item {
+    display: flex;
+    align-items: center;
+}
+.modal-check-item input[type="checkbox"] {
+    margin-right: 10px;
+    min-width: 20px;
+    min-height: 20px;
+    cursor: pointer;
+}
+.modal-check-item label {
+    font-size: 15px;
+    color: var(--tg-theme-text-color);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+}
+
+.modal-buttons .modal-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-buttons .modal-btn.primary {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: var(--tg-theme-button-text-color);
+}
+
+.modal-buttons .modal-btn.secondary {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: var(--tg-theme-button-text-color);
+}
+
+/* Forgot Password Page Styles */
+.forgot-password-page {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.forgot-password-page h2 {
+    font-size: 24px;
+    color: var(--tg-theme-text-color);
+    margin-bottom: 15px;
+}
+
+.forgot-password-page p {
+    font-size: 16px;
+    color: var(--tg-theme-hint-color);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.forgot-password-page a {
+    display: inline-block;
+    padding: 14px 25px;
+    background: #0088cc;
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.3s;
+}
+
+.forgot-password-page a:hover {
+    background: #006699;
+}
+
+.back-btn {
+    margin-top: 20px;
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    padding: 10px 20px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* New CSS for Improved Pop-up and Loading Spinner */
+
+/* Success Modal */
+#success-modal .modal-content {
+    border: 2px solid #2ecc71;
+    background: linear-gradient(135deg, #1c1c36, #2a2a4d);
+}
+
+#success-modal .modal-header {
+    flex-direction: row;
+}
+
+#success-modal .logo-icon {
+    background: none;
+    box-shadow: none;
+}
+
+#success-modal .logo-icon.success {
+    font-size: 50px;
+    color: #2ecc71;
+    animation: bounceIn 0.8s;
+}
+
+#success-modal .modal-header h2 {
+    -webkit-text-fill-color: #ffffff;
+    background: none;
+    margin-left: 10px;
+}
+
+/* Error Modal */
+#error-modal .modal-content {
+    border: 2px solid #e74c3c;
+    background: linear-gradient(135deg, #1c1c36, #2a2a4d);
+}
+
+#error-modal .logo-icon.error {
+    font-size: 50px;
+    color: #e74c3c;
+    animation: shake 0.5s;
+}
+
+#error-modal .modal-header h2 {
+    -webkit-text-fill-color: #ffffff;
+    background: none;
+    margin-left: 10px;
+}
+
+/* Loading Spinner */
+#loading-spinner {
+    display: none;
+    position: fixed;
+    z-index: 101;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 8px solid rgba(255, 255, 255, 0.1);
+    border-top: 8px solid var(--tg-theme-link-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.1);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}

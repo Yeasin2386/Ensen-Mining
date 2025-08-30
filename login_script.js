@@ -1,4 +1,4 @@
-// Your Firebase Configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyDmJ8wsK6sYlRX2DWYTFmxwZONCL9nsmos",
     authDomain: "ensen-mining-bd-4882b.firebaseapp.com",
@@ -9,209 +9,167 @@ const firebaseConfig = {
     appId: "1:1006758844776:web:df590613a79e1e9eed1edd",
     measurementId: "G-8YKDVM1W8B"
 };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
 
-// Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = app.auth();
-const db = app.firestore();
-const rtdb = app.database();
+// DOM elements
+const mainContainer = document.getElementById('main-container');
+const registerPage = document.getElementById('register-page');
+const forgotPasswordPage = document.getElementById('forgot-password-page');
+const loginBtn = document.getElementById('login-btn');
+const registerBtn = document.getElementById('register-btn');
+const resetPasswordBtn = document.getElementById('reset-password-btn');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const regEmailInput = document.getElementById('reg-email');
+const regPasswordInput = document.getElementById('reg-password');
+const termsCheckbox = document.getElementById('terms-checkbox');
+const resetEmailInput = document.getElementById('reset-email');
+const successModal = document.getElementById('success-modal');
+const errorModal = document.getElementById('error-modal');
+const successMessage = document.getElementById('success-message');
+const errorMessage = document.getElementById('error-message');
+const loadingSpinner = document.getElementById('loading-spinner');
 
-document.addEventListener('DOMContentLoaded', function() {
-    const loginTabBtn = document.getElementById('login-tab-btn');
-    const registerTabBtn = document.getElementById('register-tab-btn');
-    const loginForm = document.getElementById('login-form');
-    const registerForm = document.getElementById('register-form');
-    const initialModal = document.getElementById('initial-modal');
-    const modalProceedBtn = document.getElementById('modal-proceed-btn');
-    const forgotPasswordLink = document.getElementById('forgot-password-link');
-    const mainContainer = document.getElementById('main-container');
-    const forgotPasswordPage = document.getElementById('forgot-password-page');
-    const backToLoginBtn = document.getElementById('back-to-login-btn');
-    const successModal = document.getElementById('success-modal');
-    const errorModal = document.getElementById('error-modal');
-    const loadingSpinner = document.getElementById('loading-spinner');
+// Show/Hide UI functions
+function showLoading() { loadingSpinner.style.display = 'flex'; }
+function hideLoading() { loadingSpinner.style.display = 'none'; }
+function showSuccessModal(message) { successMessage.innerText = message; successModal.style.display = 'flex'; }
+function showErrorModal(message) { errorMessage.innerText = message; errorModal.style.display = 'flex'; }
 
-    // Function to show and hide the loading spinner
-    function showLoading() {
-        loadingSpinner.style.display = 'flex';
+// Modal close event listeners
+document.getElementById('success-modal-close-btn').addEventListener('click', () => successModal.style.display = 'none');
+document.getElementById('error-modal-close-btn').addEventListener('click', () => errorModal.style.display = 'none');
+
+// Toggle Password Visibility
+function togglePasswordVisibility(id) {
+    const passwordInput = document.getElementById(id);
+    const toggleIcon = passwordInput.nextElementSibling.querySelector('i');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
     }
+}
 
-    function hideLoading() {
-        loadingSpinner.style.display = 'none';
-    }
-
-    // Function to show custom success modal
-    function showSuccessModal(message) {
-        document.getElementById('success-message').innerText = message;
-        successModal.style.display = 'flex';
-        // Add event listener to close button
-        document.getElementById('success-modal-close-btn').onclick = () => {
-            successModal.style.display = 'none';
-            // Redirect or proceed to main.html after successful login/registration
-            // window.location.href = 'main.html';
-        };
-    }
-
-    // Function to show custom error modal
-    function showErrorModal(message) {
-        document.getElementById('error-message').innerText = message;
-        errorModal.style.display = 'flex';
-        // Add event listener to close button
-        document.getElementById('error-modal-close-btn').onclick = () => {
-            errorModal.style.display = 'none';
-        };
-    }
-
-    // Handle initial modal
+// UI Navigation
+document.getElementById('register-link').addEventListener('click', (e) => {
+    e.preventDefault();
     mainContainer.style.display = 'none';
-    initialModal.style.display = 'flex';
+    registerPage.style.display = 'block';
+});
+document.getElementById('back-to-login').addEventListener('click', (e) => {
+    e.preventDefault();
+    registerPage.style.display = 'none';
+    mainContainer.style.display = 'block';
+});
+document.getElementById('forgot-password-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    mainContainer.style.display = 'none';
+    forgotPasswordPage.style.display = 'block';
+});
+document.getElementById('back-to-login-from-forgot').addEventListener('click', (e) => {
+    e.preventDefault();
+    forgotPasswordPage.style.display = 'none';
+    mainContainer.style.display = 'block';
+});
 
-    modalProceedBtn.addEventListener('click', function() {
-        const ageCheckbox = document.getElementById('check-age').checked;
-        const awareCheckbox = document.getElementById('check-aware').checked;
-        const termsCheckbox = document.getElementById('check-terms').checked;
+// Firebase Auth Logic
+loginBtn.addEventListener('click', () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
 
-        if (ageCheckbox && awareCheckbox && termsCheckbox) {
-            initialModal.style.display = 'none';
-            mainContainer.style.display = 'block';
-        } else {
-            showErrorModal('চালিয়ে যেতে আপনাকে অবশ্যই সব শর্তাবলীতে সম্মত হতে হবে।');
-        }
-    });
+    if (!email || !password) {
+        showErrorModal('দয়া করে ইমেল এবং পাসওয়ার্ড পূরণ করুন।');
+        return;
+    }
 
-    // Tab switching
-    loginTabBtn.addEventListener('click', function() {
-        loginTabBtn.classList.add('active');
-        registerTabBtn.classList.remove('active');
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-    });
-
-    registerTabBtn.addEventListener('click', function() {
-        registerTabBtn.classList.add('active');
-        loginTabBtn.classList.remove('active');
-        registerForm.style.display = 'block';
-        loginForm.style.display = 'none';
-    });
-
-    // Forgot password link functionality
-    forgotPasswordLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        mainContainer.style.display = 'none';
-        forgotPasswordPage.style.display = 'flex';
-    });
-
-    backToLoginBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        forgotPasswordPage.style.display = 'none';
-        mainContainer.style.display = 'block';
-    });
-    
-    // Toggle password visibility
-    document.querySelectorAll('.toggle-password').forEach(icon => {
-        icon.addEventListener('click', function() {
-            const input = this.closest('.password-container').querySelector('.form-input');
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            input.setAttribute('type', type);
-            this.querySelector('i').classList.toggle('fa-eye');
-            this.querySelector('i').classList.toggle('fa-eye-slash');
+    showLoading();
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            hideLoading();
+            showSuccessModal('লগইন সফল! আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে।');
+            setTimeout(() => {
+                // Redirect to main.html on successful login
+                window.location.href = 'main.html';
+            }, 1000);
+        })
+        .catch(error => {
+            hideLoading();
+            let errorMessage = 'লগইন ব্যর্থ হয়েছে।';
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                errorMessage = 'ভুল ইমেল বা পাসওয়ার্ড।';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'ভুল ইমেল ফরম্যাট।';
+            }
+            showErrorModal(errorMessage);
         });
-    });
+});
 
-    // Firebase Registration Logic
-    document.getElementById('register-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        const fullName = document.getElementById('register-fullName').value;
-        const email = document.getElementById('register-email').value;
-        const mobile = document.getElementById('register-mobile').value;
-        const password = document.getElementById('register-password').value;
-        const confirmPassword = document.getElementById('register-confirm-password').value;
-        const termsCheckbox = document.getElementById('terms-checkbox');
+registerBtn.addEventListener('click', () => {
+    const email = regEmailInput.value;
+    const password = regPasswordInput.value;
 
-        if (password !== confirmPassword) {
-            showErrorModal('পাসওয়ার্ড দুটি মিলছে না!');
-            return;
-        }
+    if (!email || !password) {
+        showErrorModal('দয়া করে ইমেল এবং পাসওয়ার্ড পূরণ করুন।');
+        return;
+    }
+    
+    if (!termsCheckbox.checked) {
+        showErrorModal('অ্যাকাউন্ট তৈরি করতে আপনাকে অবশ্যই শর্তাবলী ও গোপনীয়তা নীতির সাথে একমত হতে হবে।');
+        return;
+    }
 
-        if (!termsCheckbox.checked) {
-            showErrorModal('অ্যাকাউন্ট তৈরি করতে আপনাকে পরিষেবার শর্তাবলীতে সম্মত হতে হবে।');
-            return;
-        }
+    showLoading();
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            hideLoading();
+            showSuccessModal('নিবন্ধন সফল! আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে।');
+            setTimeout(() => {
+                // Redirect to main.html after successful registration
+                window.location.href = 'main.html';
+            }, 1000);
+        })
+        .catch(error => {
+            hideLoading();
+            let errorMessage = 'নিবন্ধন ব্যর্থ হয়েছে।';
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'এই ইমেলটি ইতিমধ্যেই ব্যবহৃত হয়েছে।';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = 'পাসওয়ার্ডটি খুব দুর্বল। কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড ব্যবহার করুন।';
+            }
+            showErrorModal(errorMessage);
+        });
+});
 
-        if (password.length < 8) {
-            showErrorModal('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।');
-            return;
-        }
+resetPasswordBtn.addEventListener('click', () => {
+    const email = resetEmailInput.value;
 
-        showLoading();
+    if (!email) {
+        showErrorModal('দয়া করে আপনার ইমেল লিখুন।');
+        return;
+    }
 
-        auth.createUserWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                // Save user data to Firestore
-                return db.collection('users').doc(user.uid).set({
-                    fullName: fullName,
-                    email: email,
-                    mobile: mobile,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                }).then(() => {
-                    // Save initial balance to Realtime Database
-                    return rtdb.ref('balances/' + user.uid).set({
-                        currentBalance: 0,
-                        lastUpdated: firebase.database.ServerValue.TIMESTAMP
-                    });
-                });
-            })
-            .then(() => {
-                hideLoading();
-                showSuccessModal('অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
-            })
-            .catch((error) => {
-                hideLoading();
-                let errorMessage = 'একটি সমস্যা হয়েছে, আবার চেষ্টা করুন।';
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'এই ইমেইল ঠিকানাটি আগে থেকেই ব্যবহৃত হচ্ছে।';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'একটি বৈধ ইমেইল ঠিকানা লিখুন।';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'পাসওয়ার্ডটি খুব দুর্বল। আরও শক্তিশালী পাসওয়ার্ড ব্যবহার করুন।';
-                        break;
-                }
-                showErrorModal(errorMessage);
-            });
-    });
+    showLoading();
+    auth.sendPasswordResetEmail(email)
+        .then(() => {
+            hideLoading();
+            showSuccessModal('আপনার ইমেলে পাসওয়ার্ড রিসেট লিংক পাঠানো হয়েছে।');
+        })
+        .catch(error => {
+            hideLoading();
+            showErrorModal('এই ইমেলটি খুঁজে পাওয়া যায়নি।');
+        });
+});
 
-    // Firebase Login Logic
-    document.getElementById('login-btn').addEventListener('click', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-
-        showLoading();
-
-        auth.signInWithEmailAndPassword(email, password)
-            .then((userCredential) => {
-                hideLoading();
-                showSuccessModal('সফলভাবে লগইন করা হয়েছে!');
-                // Optional: Redirect to main.html
-                // window.location.href = 'main.html';
-            })
-            .catch((error) => {
-                hideLoading();
-                let errorMessage = 'লগইন ব্যর্থ হয়েছে। ইমেল বা পাসওয়ার্ড ভুল।';
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = 'ভুল ইমেইল বা পাসওয়ার্ড।';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'একটি বৈধ ইমেইল ঠিকানা লিখুন।';
-                        break;
-                }
-                showErrorModal(errorMessage);
-            });
-    });
+// Check for existing user on page load
+auth.onAuthStateChanged(user => {
+    if (user) {
+        // If a user is already logged in, redirect them immediately to main.html
+        window.location.href = 'main.html';
+    }
 });

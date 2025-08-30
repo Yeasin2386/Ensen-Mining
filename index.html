@@ -3,28 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ensen-Mining BD - Login</title>
+    <title>Ensen-Mining BD - Login/Register</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="login_style.css">
 </head>
 <body>
-    <div id="loading-spinner" class="loading-spinner">
-        <div class="spinner"></div>
-    </div>
-
     <div class="main-container" id="main-container">
         <img src="images/Flux_Dev_A_circular_logo_icon_with_a_glowing_email_envelope_a__0.jpg" alt="Logo" class="logo">
-        <h1>স্বাগতম</h1>
-        <p>আপনার অ্যাকাউন্টে লগইন করুন অথবা নতুন অ্যাকাউন্ট তৈরি করুন</p>
+        <h1>Welcome</h1>
+        <p>Login to your account or create a new one</p>
         
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="email" placeholder="ইমেল" required>
+            <input type="email" id="email" placeholder="Email" required>
         </div>
         
         <div class="input-group password-input-container">
             <i class="fas fa-lock"></i>
-            <input type="password" id="password" placeholder="পাসওয়ার্ড" required>
+            <input type="password" id="password" placeholder="Password" required>
             <span class="toggle-password" onclick="togglePasswordVisibility('password')">
                 <i class="fas fa-eye"></i>
             </span>
@@ -33,31 +29,31 @@
         <div class="options-row">
             <label class="remember-me">
                 <input type="checkbox" id="remember-me">
-                আমাকে মনে রাখুন
+                Remember Me
             </label>
-            <a href="#" id="forgot-password-link">পাসওয়ার্ড ভুলে গেছেন?</a>
+            <a href="#" id="forgot-password-link">Forgot Password?</a>
         </div>
         
-        <button id="login-btn" class="btn-primary">লগইন</button>
+        <button id="login-btn" class="btn-primary">Login</button>
 
         <div class="register-link">
-            কোনো অ্যাকাউন্ট নেই? <a href="#" id="register-link">একটি তৈরি করুন</a>
+            Don't have an account? <a href="#" id="register-link">Create one</a>
         </div>
     </div>
     
     <div class="main-container" id="register-page" style="display: none;">
         <img src="images/Flux_Dev_A_circular_logo_icon_with_a_glowing_email_envelope_a__0.jpg" alt="Logo" class="logo">
-        <h1>একটি নতুন অ্যাকাউন্ট তৈরি করুন</h1>
-        <p>আপনার ইমেল ও পাসওয়ার্ড দিয়ে নিবন্ধন করুন</p>
+        <h1>Create a New Account</h1>
+        <p>Register with your email and password</p>
         
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="reg-email" placeholder="ইমেল" required>
+            <input type="email" id="reg-email" placeholder="Email" required>
         </div>
         
         <div class="input-group password-input-container">
             <i class="fas fa-lock"></i>
-            <input type="password" id="reg-password" placeholder="পাসওয়ার্ড" required>
+            <input type="password" id="reg-password" placeholder="Password" required>
             <span class="toggle-password" onclick="togglePasswordVisibility('reg-password')">
                 <i class="fas fa-eye"></i>
             </span>
@@ -66,59 +62,37 @@
         <div class="options-row">
             <label class="remember-me">
                 <input type="checkbox" id="terms-checkbox">
-                <a href="terms-of-service.html" target="_blank">শর্তাবলী</a> ও <a href="privacy-policy.html" target="_blank">গোপনীয়তা নীতি</a>র সাথে একমত
+                I agree to the <a href="terms-of-service.html" target="_blank">Terms</a> & <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
             </label>
         </div>
         
-        <button id="register-btn" class="btn-primary">নিবন্ধন</button>
+        <button id="register-btn" class="btn-primary">Register</button>
 
         <div class="register-link">
-            ইতিমধ্যে একটি অ্যাকাউন্ট আছে? <a href="#" id="back-to-login">লগইন করুন</a>
+            Already have an account? <a href="#" id="back-to-login">Login</a>
         </div>
     </div>
     
     <div class="main-container" id="forgot-password-page" style="display: none;">
         <img src="images/Flux_Dev_A_circular_logo_icon_with_a_glowing_email_envelope_a__0.jpg" alt="Logo" class="logo">
-        <h1>পাসওয়ার্ড ভুলে গেছেন?</h1>
-        <p>আপনার ইমেল ঠিকানা লিখুন। আমরা আপনাকে একটি পাসওয়ার্ড রিসেট লিংক পাঠাব।</p>
+        <h1>Forgot Password?</h1>
+        <p>Enter your email address to receive a password reset link.</p>
         
         <div class="input-group">
             <i class="fas fa-envelope"></i>
-            <input type="email" id="reset-email" placeholder="ইমেল" required>
+            <input type="email" id="reset-email" placeholder="Email" required>
         </div>
         
-        <button id="reset-password-btn" class="btn-primary">রিসেট পাসওয়ার্ড</button>
+        <button id="reset-password-btn" class="btn-primary">Reset Password</button>
 
         <div class="register-link">
-            <a href="#" id="back-to-login-from-forgot">লগইন পেজে ফিরে যান</a>
-        </div>
-    </div>
-
-    <div id="success-modal" class="modal">
-        <div class="modal-content success">
-            <div class="modal-header">
-                <i class="fas fa-check-circle modal-icon"></i>
-                <h2>সফল!</h2>
-            </div>
-            <p id="success-message"></p>
-            <button class="modal-btn" id="success-modal-close-btn">ঠিক আছে</button>
+            <a href="#" id="back-to-login-from-forgot">Back to login</a>
         </div>
     </div>
     
-    <div id="error-modal" class="modal">
-        <div class="modal-content error">
-            <div class="modal-header">
-                <i class="fas fa-exclamation-circle modal-icon"></i>
-                <h2>ভুল হয়েছে!</h2>
-            </div>
-            <p id="error-message"></p>
-            <button class="modal-btn" id="error-modal-close-btn">আবার চেষ্টা করুন</button>
-        </div>
-    </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
+
     <script src="login_script.js"></script>
 </body>
 </html>

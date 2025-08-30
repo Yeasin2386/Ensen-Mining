@@ -6,18 +6,38 @@
     <title>Ensen-Mining BD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="main_style.css">
+    <style>
+        .loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            border-top: 8px solid var(--tg-theme-link-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <script type='text/javascript' src='//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js'></script>
-    
-    <script type='text/javascript' src='//viaanswerwillow.com/c2/2f/5a/c22f5a51bee05171649c6b1194870f89.js'></script>
-
-    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
-
-    <div id="loading-spinner" class="loading-spinner">
+    <div class="loading-spinner" id="loading-spinner">
         <div class="spinner"></div>
     </div>
-
+    
     <header class="main-header">
         <div id="balance-banner-top" class="ad-banner top-ad">
             </div>
@@ -29,11 +49,11 @@
             </div>
         </div>
         <div class="header-icons">
-            <div class="icon-container" id="notification-icon">
+            <div class="icon-container">
                 <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notification-count">0</span>
+                <span class="notification-badge">0</span>
             </div>
-            <div class="icon-container" id="mail-icon">
+            <div class="icon-container">
                 <i class="fas fa-envelope"></i>
             </div>
             <div class="icon-container" id="logout-btn">
@@ -47,7 +67,7 @@
             <div class="balance-card">
                 <div class="balance-text">
                     <span class="balance-label">Total Balance:</span>
-                    <span class="balance-amount" id="current-balance">0.00$</span>
+                    <span class="balance-amount">0.00$</span>
                 </div>
                 <div class="balance-actions">
                     <div class="balance-icon" id="add-balance-btn">
@@ -76,20 +96,18 @@
                     <div class="task-info">
                         <h3>Watch Video</h3>
                         <p>Watch a video for 5-15 seconds and earn money.</p>
-                        <p class="task-count">Completed: <span id="daily-video-count">0</span> / 1</p>
                     </div>
                     <div class="task-actions">
-                        <button class="task-btn" id="watch-daily-video-btn">Watch Video</button>
+                        <button class="task-btn">Watch Video</button>
                     </div>
                 </div>
                 <div class="task-card">
                     <div class="task-info">
                         <h3>Visit Website</h3>
                         <p>Visit a website for a while and earn money.</p>
-                        <p class="task-count">Completed: <span id="daily-website-count">0</span> / 1</p>
                     </div>
                     <div class="task-actions">
-                        <button class="task-btn" id="visit-daily-website-btn">Visit Website</button>
+                        <button class="task-btn">Visit Website</button>
                     </div>
                 </div>
             </div>
@@ -98,20 +116,18 @@
                     <div class="task-info">
                         <h3>Watch Video</h3>
                         <p>Watch a video for 5-15 seconds and earn money.</p>
-                        <p class="task-count">Completed: <span id="all-video-count">0</span> / 30</p>
                     </div>
                     <div class="task-actions">
-                        <button class="task-btn" id="watch-all-video-btn">Watch Video</button>
+                        <button class="task-btn">Watch Video</button>
                     </div>
                 </div>
                 <div class="task-card">
                     <div class="task-info">
                         <h3>Visit Website</h3>
                         <p>Visit a website for a while and earn money.</p>
-                        <p class="task-count">Completed: <span id="all-website-count">0</span> / 30</p>
                     </div>
                     <div class="task-actions">
-                        <button class="task-btn" id="visit-all-website-btn">Visit Website</button>
+                        <button class="task-btn">Visit Website</button>
                     </div>
                 </div>
             </div>
@@ -140,33 +156,20 @@
         </a>
     </footer>
 
-    <div id="success-modal" class="modal">
-        <div class="modal-content success">
-            <div class="modal-header">
-                <i class="fas fa-check-circle modal-icon"></i>
-                <h2>সফল!</h2>
+    <div class="modal" id="logout-modal">
+        <div class="modal-content">
+            <h2>Logout</h2>
+            <p>Are you sure you want to log out?</p>
+            <div class="modal-buttons">
+                <button id="cancel-logout">Cancel</button>
+                <button id="confirm-logout">Logout</button>
             </div>
-            <p id="success-message">কাজটি সফলভাবে সম্পন্ন হয়েছে।</p>
-            <button class="modal-btn" id="success-modal-close-btn">ঠিক আছে</button>
         </div>
     </div>
-    
-    <div id="error-modal" class="modal">
-        <div class="modal-content error">
-            <div class="modal-header">
-                <i class="fas fa-exclamation-circle modal-icon"></i>
-                <h2>ভুল হয়েছে!</h2>
-            </div>
-            <p id="error-message">আপনার অনুরোধটি সম্পূর্ণ করা সম্ভব হয়নি।</p>
-            <button class="modal-btn" id="error-modal-close-btn">আবার চেষ্টা করুন</button>
-        </div>
-    </div>
-
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-
     <script src="main_script.js"></script>
 </body>
 </html>

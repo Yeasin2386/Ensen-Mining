@@ -12,20 +12,18 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const firestore = firebase.firestore();
-
-// Use a hardcoded user ID for demonstration. In a real app, this should be set after user login.
-const userId = 'user_001'; 
+const auth = firebase.auth();
 
 document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
     const userBalanceEl = document.getElementById('user-balance');
-    const historyBtn = document.querySelector('.balance-actions .action-btn:last-child');
+    const historyBtn = document.getElementById('history-btn');
     const logoutBtn = document.getElementById('logout-btn');
     const logoutModal = document.getElementById('logout-modal');
     const cancelLogoutBtn = document.getElementById('cancel-logout');
     const confirmLogoutBtn = document.getElementById('confirm-logout');
+    const loadingSpinnerOverlay = document.getElementById('loading-spinner-overlay');
 
     // Profile elements
     const fullNameInput = document.getElementById('fullName');
@@ -33,55 +31,54 @@ document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
 
     // Referral Stats
-    const totalReferralsEl = document.querySelector('.referral-stats .stat-box:nth-child(1) .stat-value');
-    const totalEarningsEl = document.querySelector('.referral-stats .stat-box:nth-child(3) .stat-value');
+    const totalReferralsEl = document.getElementById('total-referrals');
+    const activeReferralsEl = document.getElementById('active-referrals');
+    const totalEarningsEl = document.getElementById('total-earnings');
+    const pendingBonusEl = document.getElementById('pending-bonus');
     
     // Settings menu buttons
     const settingsItems = document.querySelectorAll('.settings-item[data-target]');
     const backButtons = document.querySelectorAll('.back-btn');
     const settingsPages = document.querySelectorAll('.settings-page');
 
-    let userRef = db.ref('users/' + userId);
+    // Check for user login state
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            const userId = user.uid;
+            let userRef = db.ref('users/' + userId);
 
-    // Load all user data from Firebase and update UI
-    userRef.on('value', (snapshot) => {
-        const userData = snapshot.val();
-        if (userData) {
-            // Update Balance
-            userBalanceEl.textContent = `৳ ${userData.balance.toFixed(2)}`;
+            // Load all user data from Firebase
+            userRef.on('value', (snapshot) => {
+                const userData = snapshot.val();
+                if (userData) {
+                    // Update Balance
+                    userBalanceEl.textContent = `৳ ${userData.balance.toFixed(2)}`;
 
-            // Update Profile - Make inputs readonly to prevent accidental changes
-            if (fullNameInput) {
-                fullNameInput.value = userData.fullName || 'N/A';
-                fullNameInput.setAttribute('readonly', true);
-            }
-            if (emailInput) {
-                emailInput.value = userData.email || 'N/A';
-                emailInput.setAttribute('readonly', true);
-            }
-            if (phoneInput) {
-                phoneInput.value = userData.phone || 'N/A';
-                phoneInput.setAttribute('readonly', true);
-            }
+                    // Update Profile - Make inputs readonly to prevent accidental changes
+                    if (fullNameInput) {
+                        fullNameInput.value = userData.fullName || 'N/A';
+                        fullNameInput.setAttribute('readonly', true);
+                    }
+                    if (emailInput) {
+                        emailInput.value = userData.email || 'N/A';
+                        emailInput.setAttribute('readonly', true);
+                    }
+                    if (phoneInput) {
+                        phoneInput.value = userData.phone || 'N/A';
+                        phoneInput.setAttribute('readonly', true);
+                    }
 
-            // Update Referral Stats
-            if (totalReferralsEl) totalReferralsEl.textContent = userData.referrals?.total || 0;
-            if (totalEarningsEl) totalEarningsEl.textContent = `৳${userData.referrals?.earnings || 0}`;
-        } else {
-            // Initialize new user data if it doesn't exist
-            userRef.set({
-                balance: 0,
-                fullName: 'Md. Exmaple Name', // This should be from registration
-                email: 'example@email.com',  // This should be from registration
-                phone: '01700000000',        // This should be from registration
-                referrals: {
-                    total: 0,
-                    active: 0,
-                    earnings: 0,
-                    pending: 0
+                    // Update Referral Stats
+                    if (totalReferralsEl) totalReferralsEl.textContent = userData.referrals?.total || 0;
+                    if (activeReferralsEl) activeReferralsEl.textContent = userData.referrals?.active || 0;
+                    if (totalEarningsEl) totalEarningsEl.textContent = `৳${userData.referrals?.earnings || 0}`;
+                    if (pendingBonusEl) pendingBonusEl.textContent = `৳${userData.referrals?.pending || 0}`;
                 }
             });
-            userBalanceEl.textContent = `৳ 0.00`;
+
+        } else {
+            // User is not logged in, redirect to login page
+            window.location.href = 'index.html';
         }
     });
 
@@ -97,6 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.classList.add('active');
             }
         });
+        showSettingsPage('settings-menu');
     }
 
     navItems.forEach(item => {
@@ -133,18 +131,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // --- Logout Logic ---
-    logoutBtn.addEventListener('click', () => {
-        logoutModal.style.display = 'flex';
+    // Withdraw method selection
+    const withdrawMethods = document.querySelectorAll('.withdraw-method');
+    const accountNumberInput = document.getElementById('account-number');
+    withdrawMethods.forEach(method => {
+        method.addEventListener('click', () => {
+            withdrawMethods.forEach(m => m.classList.remove('selected'));
+            method.classList.add('selected');
+            if (method.dataset.method === 'bkash') {
+                accountNumberInput.placeholder = "e.g., 01700000000 (Bkash Number)";
+            } else {
+                accountNumberInput.placeholder = "e.g., Your Binance Pay ID or Address";
+            }
+        });
     });
 
-    cancelLogoutBtn.addEventListener('click', () => {
-        logoutModal.style.display = 'none';
-    });
+    // --- Logout Logic with Loading Spinner ---
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            logoutModal.style.display = 'flex';
+        });
+    }
 
-    confirmLogoutBtn.addEventListener('click', () => {
-        // Here you would add the Firebase logout function (e.g., firebase.auth().signOut())
-        // For now, we'll just redirect to the login page.
-        window.location.href = 'index.html'; 
-    });
+    if (cancelLogoutBtn) {
+        cancelLogoutBtn.addEventListener('click', () => {
+            logoutModal.style.display = 'none';
+        });
+    }
+
+    if (confirmLogoutBtn) {
+        confirmLogoutBtn.addEventListener('click', () => {
+            logoutModal.style.display = 'none';
+            loadingSpinnerOverlay.style.display = 'flex';
+            
+            auth.signOut().then(() => {
+                // Sign-out successful.
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                // An error happened.
+                console.error("Logout Error: ", error);
+                loadingSpinnerOverlay.style.display = 'none';
+                alert("Logout failed. Please try again.");
+            });
+        });
+    }
 });

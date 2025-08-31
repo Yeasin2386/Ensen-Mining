@@ -58,20 +58,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyConfirmModal = document.getElementById('copy-confirm-modal');
     const copyConfirmOkBtn = document.getElementById('copy-confirm-ok-btn');
 
+    // Profile elements
+    const fullNameInput = document.getElementById('fullName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+
+    // Referral Stats
+    const totalReferralsEl = document.querySelector('.referral-stats .stat-box:nth-child(1) .stat-value');
+    const activeReferralsEl = document.querySelector('.referral-stats .stat-box:nth-child(2) .stat-value');
+    const totalEarningsEl = document.querySelector('.referral-stats .stat-box:nth-child(3) .stat-value');
+    const pendingBonusEl = document.querySelector('.referral-stats .stat-box:nth-child(4) .stat-value');
+
     const dailyTaskLimit = 5;
     const allTaskLimit = 40; 
-    let tasksCompletedToday = {}; // Will be loaded from Firebase
+    let tasksCompletedToday = {}; 
 
     let userRef = db.ref('users/' + userId);
-    let tasksRef = db.ref('tasks/' + userId);
     let firestoreUsersRef = firestore.collection('users');
     let firestoreWithdrawalsRef = firestore.collection('withdrawals');
 
-    // Load user data from Firebase
+    // Load all user data from Firebase and update UI
     userRef.on('value', (snapshot) => {
         const userData = snapshot.val();
         if (userData) {
+            // Update Balance
             userBalanceEl.textContent = `৳ ${userData.balance.toFixed(2)}`;
+
+            // Update Profile
+            if (fullNameInput) fullNameInput.value = userData.fullName || 'N/A';
+            if (emailInput) emailInput.value = userData.email || 'N/A';
+            if (phoneInput) phoneInput.value = userData.phone || 'N/A';
+
+            // Update Referral Stats
+            if (totalReferralsEl) totalReferralsEl.textContent = userData.referrals?.total || 0;
+            if (activeReferralsEl) activeReferralsEl.textContent = userData.referrals?.active || 0;
+            if (totalEarningsEl) totalEarningsEl.textContent = `৳${userData.referrals?.earnings || 0}`;
+            if (pendingBonusEl) pendingBonusEl.textContent = `৳${userData.referrals?.pending || 0}`;
+
+            // Update Task counts
             tasksCompletedToday = userData.tasks || {
                 'dailyVideo': 0,
                 'dailyWebsite': 0,
@@ -81,8 +105,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateAllTaskCounter();
         } else {
             // Initialize new user data if it doesn't exist
+            // This is where you would set default values for a new user after registration
             userRef.set({
                 balance: 0,
+                fullName: 'Md. Exmaple Name', // This should come from registration form
+                email: 'example@email.com',  // This should come from registration form
+                phone: '01700000000',        // This should come from registration form
+                referrals: {
+                    total: 0,
+                    active: 0,
+                    earnings: 0,
+                    pending: 0
+                },
                 tasks: {
                     'dailyVideo': 0,
                     'dailyWebsite': 0,
@@ -314,8 +348,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     confirmLogoutBtn.addEventListener('click', () => {
-        // Firebase Auth is recommended for a real app, but for this example, we clear local storage.
+        // Clear local data if any
         localStorage.clear();
+        // Redirect to login page
         window.location.href = 'login.html'; 
     });
 

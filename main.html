@@ -6,44 +6,29 @@
     <title>Ensen-Mining BD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="main_style.css">
-    
-    <script type='text/javascript' src='//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js'></script>
-    <script type='text/javascript' src='//viaanswerwillow.com/c2/2f/5a/c22f5a51bee05171649c6b1194870f89.js'></script>
 </head>
 <body>
     <div class="app-container">
         <div class="header">
             <div class="logo">
-                <img src="images/Flux_Dev_A_circular_logo_icon_with_a_glowing_email_envelope_a__0.jpg" alt="Ensen-Mining BD Logo" style="width: 40px; height: 40px; border-radius: 50%;">
+                <div class="logo-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
                 <h1>Ensen-Mining BD</h1>
             </div>
-            <div class="mail-icon" id="mail-icon">
+            <div class="mail-icon">
                 <i class="fas fa-envelope"></i>
             </div>
         </div>
         
         <div class="content">
             <div class="tab-content active" id="home-tab">
-                
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <script type="text/javascript">
-                        atOptions = {
-                            'key' : '3e8de08585fbff771f13f27096f68fa0',
-                            'format' : 'iframe',
-                            'height' : 50,
-                            'width' : 320,
-                            'params' : {}
-                        };
-                    </script>
-                    <script type="text/javascript" src="//viaanswerwillow.com/3e8de08585fbff771f13f27096f68fa0/invoke.js"></script>
-                </div>
-                
                 <div class="balance-card">
                     <div class="balance-label">Your Balance</div>
-                    <div class="balance-amount" id="user-balance">৳ 0.00</div>
+                    <div class="balance-amount" id="user-balance">৳ 225.75</div>
                     <p>Minimum withdrawal: ৳ 100</p>
                     <div class="balance-actions">
-                        <button class="action-btn glow-effect" id="home-withdraw-btn">
+                        <button class="action-btn glow-effect">
                             <i class="fas fa-download"></i> Withdraw
                         </button>
                         <button class="action-btn" id="history-btn">
@@ -63,7 +48,7 @@
                             <h3>Watch a Video</h3>
                             <p>30 seconds video ad</p>
                         </div>
-                        <div class="task-reward"><button class="task-btn" id="watch-video-btn">+৳5</button></div>
+                        <div class="task-reward">+৳5</div>
                     </div>
                     <div class="task-item">
                         <div class="task-icon">
@@ -73,23 +58,14 @@
                             <h3>Visit Website</h3>
                             <p>Browse for 30 seconds</p>
                         </div>
-                        <div class="task-reward"><button class="task-btn" id="visit-website-btn">+৳3</button></div>
+                        <div class="task-reward">+৳3</div>
                     </div>
                 </div>
             </div>
             
             <div class="tab-content" id="tasks-tab">
                 <h2 class="section-title"><i class="fas fa-tasks"></i> All Tasks</h2>
-                <div class="task-counter-container">
-                    <div class="task-counter-item">
-                        <h3>Tasks Completed</h3>
-                        <p id="tasks-completed">0</p>
-                    </div>
-                    <div class="task-counter-item">
-                        <h3>Tasks Remaining</h3>
-                        <p id="tasks-remaining">40</p>
-                    </div>
-                </div>
+                
                 <div class="tasks-container">
                     <div class="task-item">
                         <div class="task-icon">
@@ -99,7 +75,7 @@
                             <h3>Watch a Video</h3>
                             <p>30 seconds video ad</p>
                         </div>
-                        <div class="task-reward"><button class="task-btn" id="watch-video-btn-all">+৳25</button></div>
+                        <div class="task-reward">+৳5</div>
                     </div>
                     <div class="task-item">
                         <div class="task-icon">
@@ -109,7 +85,7 @@
                             <h3>Visit Website</h3>
                             <p>Browse for 30 seconds</p>
                         </div>
-                        <div class="task-reward"><button class="task-btn" id="visit-website-btn-all">+৳25</button></div>
+                        <div class="task-reward">+৳3</div>
                     </div>
                 </div>
             </div>
@@ -124,8 +100,8 @@
                     </div>
                     
                     <div class="referral-code-box">
-                        <div class="referral-code" id="referral-link-display">https://ensen-mining.com/ref/AB12CD34</div>
-                        <button class="action-btn copy-btn" id="copy-referral-btn">
+                        <div class="referral-code">https://ensen-mining.com/ref/AB12CD34</div>
+                        <button class="action-btn copy-btn">
                             <i class="fas fa-copy"></i> Copy Link
                         </button>
                     </div>
@@ -137,19 +113,19 @@
                     <div class="referral-stats">
                         <div class="stat-box">
                             <div class="stat-label">Total Referrals</div>
-                            <div class="stat-value">8</div>
+                            <div class="stat-value" id="total-referrals">0</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Active Referrals</div>
-                            <div class="stat-value">5</div>
+                            <div class="stat-value" id="active-referrals">0</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Total Earnings</div>
-                            <div class="stat-value">৳120</div>
+                            <div class="stat-value" id="total-earnings">৳0</div>
                         </div>
                         <div class="stat-box">
                             <div class="stat-label">Pending Bonus</div>
-                            <div class="stat-value">৳45</div>
+                            <div class="stat-value" id="pending-bonus">৳0</div>
                         </div>
                     </div>
                 </div>
@@ -165,7 +141,7 @@
                             <div class="settings-details"><h3>Profile</h3><p>Manage your personal information</p></div>
                             <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
                         </div>
-                        <div class="settings-item" data-target="withdraw-page" id="settings-withdraw-btn">
+                        <div class="settings-item" data-target="withdraw-page">
                             <div class="settings-icon"><i class="fas fa-wallet"></i></div>
                             <div class="settings-details"><h3>Withdraw</h3><p>Withdraw your earnings</p></div>
                             <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
@@ -175,7 +151,7 @@
                             <div class="settings-details"><h3>Password Change</h3><p>Update your account password</p></div>
                             <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
                         </div>
-                        <div class="settings-item" data-target="mail-page" id="settings-mail-btn">
+                        <div class="settings-item" data-target="mail-page">
                             <div class="settings-icon"><i class="fas fa-envelope"></i></div>
                             <div class="settings-details"><h3>Mail/Notifications</h3><p>Manage your email notifications</p></div>
                             <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
@@ -232,7 +208,7 @@
                             <input type="text" id="account-number" class="form-input" placeholder="e.g., 01700000000 (Bkash Number)">
                              <p class="help-text">আপনার বিকাশ/বাইনান্স একাউন্ট নাম্বার দিন।</p>
                         </div>
-                        <button class="action-btn primary glow-effect" style="width: 100%; justify-content: center; padding: 12px;" id="submit-withdraw-btn">
+                        <button class="action-btn primary glow-effect" style="width: 100%; justify-content: center; padding: 12px;">
                             <i class="fas fa-paper-plane"></i> Submit Request
                         </button>
                          <p class="help-text" style="text-align: center; margin-top: 15px;">Withdrawal requests are processed within 24 hours. A 5% processing fee will be applied.</p>
@@ -314,43 +290,6 @@
             </a>
         </div>
         
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
-            <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '46272549345a79336d26e76ff1c1d24b',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
-            <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
-        </div>
-        
-        <div style="text-align: center; margin-top: 20px;">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '46272549345a79336d26e76ff1c1d24b',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
-        </div>
-
         <div class="footer">
             <div>© 2025 Ensen-Mining BD. All rights reserved.</div>
             <div class="footer-links">
@@ -360,49 +299,25 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="message-modal">
-        <div class="modal-content">
-            <h3 id="message-title"></h3>
-            <p id="message-text"></p>
-            <div class="modal-actions">
-                <button class="action-btn primary" id="message-ok-btn">OK</button>
-            </div>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="logout-modal">
         <div class="modal-content">
-            <h3 id="logout-title">Log Out</h3>
-            <p id="logout-text">Are you sure you want to log out? Your current session will be ended.</p>
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
             <div class="modal-actions">
-                <button class="action-btn" id="cancel-logout-btn">Cancel</button>
-                <button class="action-btn primary" id="confirm-logout-btn">Log Out</button>
+                <button class="action-btn" id="cancel-logout">Cancel</button>
+                <button class="action-btn primary" id="confirm-logout">Log Out</button>
             </div>
         </div>
     </div>
-
     
-    <div class="modal-overlay" id="copy-confirm-modal">
-        <div class="modal-content small-modal">
-            <h3 id="copy-confirm-title">Copied!</h3>
-            <p id="copy-confirm-text">Referral link copied to clipboard.</p>
-            <div class="modal-actions">
-                <button class="action-btn primary" id="copy-confirm-ok-btn">OK</button>
-            </div>
-        </div>
+    <div class="loading-spinner-overlay" id="loading-spinner-overlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Logging out...</p>
     </div>
-
-    <div class="loading-spinner" id="loading-spinner">
-        <div class="spinner"></div>
-    </div>
-
-    
-    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
 
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    
     <script src="main_script.js"></script>
 </body>
 </html>

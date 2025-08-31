@@ -52,20 +52,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 const userData = snapshot.val();
                 if (userData) {
                     // Update Balance
-                    userBalanceEl.textContent = `৳ ${userData.balance.toFixed(2)}`;
+                    userBalanceEl.textContent = `৳ ${userData.balance?.toFixed(2) || '0.00'}`;
 
-                    // Update Profile - Make inputs readonly to prevent accidental changes
+                    // Update Profile
                     if (fullNameInput) {
                         fullNameInput.value = userData.fullName || 'N/A';
-                        fullNameInput.setAttribute('readonly', true);
                     }
                     if (emailInput) {
                         emailInput.value = userData.email || 'N/A';
-                        emailInput.setAttribute('readonly', true);
                     }
                     if (phoneInput) {
                         phoneInput.value = userData.phone || 'N/A';
-                        phoneInput.setAttribute('readonly', true);
                     }
 
                     // Update Referral Stats
@@ -109,6 +106,20 @@ document.addEventListener('DOMContentLoaded', function() {
     if (historyBtn) {
         historyBtn.addEventListener('click', () => {
             window.location.href = 'history.html';
+        });
+    }
+    
+    // Copy referral link
+    const copyButton = document.querySelector('.copy-btn');
+    if (copyButton) {
+        copyButton.addEventListener('click', function() {
+            const referralLink = document.querySelector('.referral-code').textContent;
+            navigator.clipboard.writeText(referralLink).then(() => {
+                this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i> Copy Link';
+                }, 2000);
+            });
         });
     }
 
@@ -165,10 +176,8 @@ document.addEventListener('DOMContentLoaded', function() {
             loadingSpinnerOverlay.style.display = 'flex';
             
             auth.signOut().then(() => {
-                // Sign-out successful.
                 window.location.href = 'index.html';
             }).catch((error) => {
-                // An error happened.
                 console.error("Logout Error: ", error);
                 loadingSpinnerOverlay.style.display = 'none';
                 alert("Logout failed. Please try again.");

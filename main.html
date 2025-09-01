@@ -13,7 +13,7 @@
         <div class="header">
             <div class="logo">
                 <div class="logo-icon">
-                    <i class="fas fa-gem"></i>
+                    <img src="https://i.ibb.co/L5k619Y/Flux-Dev-A-circular-logo-icon-with-a-glowing-email-envelope-a-0.png" alt="Ensen-Mining BD Logo" style="height: 40px; width: 40px;">
                 </div>
                 <h1>Ensen-Mining BD</h1>
             </div>
@@ -24,7 +24,7 @@
         
         <div class="content">
             <div class="tab-content active" id="home-tab">
-                <div class="ad-container">
+                <div class="ad-container" style="text-align: center; margin-bottom: 20px;">
                     <script type="text/javascript">
                         atOptions = {
                             'key' : '3e8de08585fbff771f13f27096f68fa0',
@@ -40,7 +40,7 @@
                 <div class="balance-card">
                     <div class="balance-label">Your Balance</div>
                     <div class="balance-amount" id="user-balance">৳ 0.00</div>
-                    <p>Minimum withdrawal: ৳ 100</p>
+                    <p>Minimum withdrawal: <span id="min-withdrawal">৳ 100</span></p>
                     <div class="balance-actions">
                         <button class="action-btn glow-effect" id="withdraw-btn">
                             <i class="fas fa-download"></i> Withdraw
@@ -62,7 +62,7 @@
                             <h3>Watch a Video</h3>
                             <p>30 seconds video ad</p>
                         </div>
-                        <div class="task-reward" id="watch-ad-btn">+৳5</div>
+                        <div class="task-reward" id="watch-ad-btn"></div>
                     </div>
                     <div class="task-item">
                         <div class="task-icon">
@@ -72,7 +72,7 @@
                             <h3>Visit Website</h3>
                             <p>Browse for 30 seconds</p>
                         </div>
-                        <div class="task-reward">+৳3</div>
+                        <div class="task-reward" id="visit-site-btn"></div>
                     </div>
                 </div>
             </div>
@@ -89,7 +89,7 @@
                             <h3>Watch a Video</h3>
                             <p>30 seconds video ad</p>
                         </div>
-                        <div class="task-reward" id="watch-ad-btn-2">+৳5</div>
+                        <div class="task-reward" id="watch-ad-btn-2"></div>
                     </div>
                     <div class="task-item">
                         <div class="task-icon">
@@ -99,7 +99,17 @@
                             <h3>Visit Website</h3>
                             <p>Browse for 30 seconds</p>
                         </div>
-                        <div class="task-reward">+৳3</div>
+                        <div class="task-reward" id="visit-site-btn-2"></div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-icon">
+                            <i class="fas fa-ad"></i>
+                        </div>
+                        <div class="task-details">
+                            <h3>Rewarded Popup Ad</h3>
+                            <p>View a rewarded ad popup</p>
+                        </div>
+                        <div class="task-reward" id="rewarded-popup-btn"></div>
                     </div>
                 </div>
             </div>
@@ -117,6 +127,10 @@
                     </script>
                     <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
                 </div>
+                <div class="ad-container" style="text-align: center; margin-top: 20px;">
+                     <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
+                    <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
+                </div>
                 <div class="referral-container">
                     <div class="referral-header">
                         <div class="referral-icon">
@@ -133,7 +147,7 @@
                     </div>
                     
                     <p class="referral-desc">
-                        Invite friends and earn 10% of their withdrawals! If your referral withdraws 100৳, you'll get 10৳ bonus.
+                        Invite friends and earn <span id="referral-percent">10</span>% of their withdrawals! If your referral withdraws <span id="referral-amount">100</span>৳, you'll get <span id="referral-bonus">10</span>৳ bonus.
                     </p>
                     
                     <div class="referral-stats">
@@ -158,7 +172,22 @@
             </div>
             
             <div class="tab-content" id="settings-tab">
-                
+                 <div class="ad-container" style="text-align: center; margin-bottom: 20px;">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '46272549345a79336d26e76ff1c1d24b',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
+                </div>
+                <div class="ad-container" style="text-align: center; margin-top: 20px;">
+                     <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
+                    <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
+                </div>
                 <div id="settings-menu" class="settings-page active">
                     <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
                     <div class="settings-container">
@@ -192,27 +221,26 @@
                 
                 <div id="profile-page" class="settings-page">
                     <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Profile</h2>
+                    <p class="help-text">Your profile data cannot be changed.</p>
                     <div class="form-container">
                         <div class="form-group">
                             <label class="form-label" for="fullName">Full Name</label>
-                            <input type="text" id="fullName" class="form-input" value="N/A">
+                            <input type="text" id="fullName" class="form-input" value="N/A" readonly>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="email">Email Address</label>
-                            <input type="email" id="email" class="form-input" value="N/A">
+                            <input type="email" id="email" class="form-input" value="N/A" readonly>
                         </div>
                          <div class="form-group">
                             <label class="form-label" for="phone">Phone Number</label>
-                            <input type="tel" id="phone" class="form-input" value="N/A">
+                            <input type="tel" id="phone" class="form-input" value="N/A" readonly>
                         </div>
-                        <button class="action-btn primary" style="width: 100%; justify-content: center; padding: 12px;">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
                     </div>
                 </div>
                 
                 <div id="withdraw-page" class="settings-page">
                     <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Withdraw</h2>
+                     <p class="help-text">Minimum withdrawal amount is <span id="min-withdraw-message">৳100</span>. Processing fee is <span id="processing-fee">5</span>%.</p>
                     <div class="form-container">
                         <div class="form-group">
                             <label class="form-label">Select Method</label>
@@ -237,7 +265,6 @@
                         <button class="action-btn primary glow-effect" style="width: 100%; justify-content: center; padding: 12px;">
                             <i class="fas fa-paper-plane"></i> Submit Request
                         </button>
-                         <p class="help-text" style="text-align: center; margin-top: 15px;">Withdrawal requests are processed within 24 hours. A 5% processing fee will be applied.</p>
                     </div>
                 </div>
 
@@ -322,6 +349,22 @@
                 <a href="#" class="footer-link">Privacy Policy</a>
                 <a href="#" class="footer-link">Terms of Service</a>
             </div>
+             <div class="ad-container" style="text-align: center; margin-top: 20px;">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '46272549345a79336d26e76ff1c1d24b',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//viaanswerwillow.com/46272549345a79336d26e76ff1c1d24b/invoke.js"></script>
+            </div>
+             <div class="ad-container" style="text-align: center; margin-top: 20px;">
+                 <script async="async" data-cfasync="false" src="//viaanswerwillow.com/3209e68579e4f1bf631f417096bd186e/invoke.js"></script>
+                <div id="container-3209e68579e4f1bf631f417096bd186e"></div>
+            </div>
         </div>
     </div>
 
@@ -341,10 +384,33 @@
         <p class="loading-text">Logging out...</p>
     </div>
 
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
+            <div class="modal-actions">
+                <button class="action-btn primary" id="modal-ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="config.js"></script>
     <script src="main_script.js"></script>
+    <script>
+        show_9716498({
+            type: 'inApp',
+            inAppSettings: {
+                frequency: 2,
+                capping: 0.1,
+                interval: 30,
+                timeout: 5,
+                everyPage: false
+            }
+        });
+    </script>
     <script type='text/javascript' src='//viaanswerwillow.com/b5/7a/b6/b57ab6e3bce6c75b05b2019b75463542.js'></script>
     <script type='text/javascript' src='//viaanswerwillow.com/c2/2f/5a/c22f5a51bee05171649c6b1194870f89.js'></script>
 </body>

@@ -26,8 +26,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingSpinnerOverlay = document.getElementById('loading-spinner-overlay');
     const withdrawBtn = document.getElementById('withdraw-btn');
     const mailBtn = document.getElementById('mail-btn');
+    const minWithdrawalEl = document.getElementById('min-withdrawal');
+    const minWithdrawalMessageEl = document.getElementById('min-withdraw-message');
+    const processingFeeEl = document.getElementById('processing-fee');
+    const referralPercentEl = document.getElementById('referral-percent');
+    const referralAmountEl = document.getElementById('referral-amount');
+    const referralBonusEl = document.getElementById('referral-bonus');
+    
+    // Task Buttons
     const watchAdBtn = document.getElementById('watch-ad-btn');
     const watchAdBtn2 = document.getElementById('watch-ad-btn-2');
+    const visitSiteBtn = document.getElementById('visit-site-btn');
+    const visitSiteBtn2 = document.getElementById('visit-site-btn-2');
+    const rewardedPopupBtn = document.getElementById('rewarded-popup-btn');
+
+    // Pop-up Modal elements
+    const customModal = document.getElementById('custom-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const modalOkBtn = document.getElementById('modal-ok-btn');
 
     // Profile elements
     const fullNameInput = document.getElementById('fullName');
@@ -45,20 +62,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const backButtons = document.querySelectorAll('.back-btn');
     const settingsPages = document.querySelectorAll('.settings-page');
 
-    // Check for user login state
+    // --- Firebase and User Data ---
     auth.onAuthStateChanged(user => {
         if (user) {
             const userId = user.uid;
             let userRef = db.ref('users/' + userId);
 
-            // Load all user data from Firebase
             userRef.on('value', (snapshot) => {
                 const userData = snapshot.val();
                 if (userData) {
-                    // Update Balance
                     userBalanceEl.textContent = `৳ ${userData.balance?.toFixed(2) || '0.00'}`;
-
-                    // Update Profile
+                    
+                    // Update Profile Data
                     if (fullNameInput) {
                         fullNameInput.value = userData.fullName || 'N/A';
                     }
@@ -78,11 +93,108 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
         } else {
-            // User is not logged in, redirect to login page
             window.location.href = 'index.html';
         }
     });
 
+    function updateBalance(amount) {
+        const userId = auth.currentUser.uid;
+        const userRef = db.ref('users/' + userId);
+        userRef.transaction((currentData) => {
+            if (currentData) {
+                currentData.balance = (currentData.balance || 0) + amount;
+            }
+            return currentData;
+        }, (error, committed, snapshot) => {
+            if (error) {
+                console.error("Balance update failed:", error);
+            }
+        });
+    }
+    
+    // --- Update UI with values from config.js ---
+    if (minWithdrawalEl) minWithdrawalEl.textContent = `৳ ${configs.minWithdrawal}`;
+    if (minWithdrawalMessageEl) minWithdrawalMessageEl.textContent = `৳${configs.minWithdrawal}`;
+    if (processingFeeEl) processingFeeEl.textContent = `${configs.processingFee}%`;
+    if (referralPercentEl) referralPercentEl.textContent = `${configs.referralPercent}`;
+    if (referralAmountEl) referralAmountEl.textContent = `${configs.referralBonusAmount}`;
+    if (referralBonusEl) referralBonusEl.textContent = `${(configs.referralBonusAmount * (configs.referralPercent / 100))}`;
+    
+    if (watchAdBtn) watchAdBtn.textContent = `+৳${configs.rewards.watchVideo}`;
+    if (watchAdBtn2) watchAdBtn2.textContent = `+৳${configs.rewards.watchVideo}`;
+    if (visitSiteBtn) visitSiteBtn.textContent = `+৳${configs.rewards.visitWebsite}`;
+    if (visitSiteBtn2) visitSiteBtn2.textContent = `+৳${configs.rewards.visitWebsite}`;
+    if (rewardedPopupBtn) rewardedPopupBtn.textContent = `+৳${configs.rewards.rewardedPopup}`;
+
+
+    // --- Custom Pop-up Modal Functions ---
+    function showModal(title, message) {
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        customModal.style.display = 'flex';
+    }
+
+    modalOkBtn.addEventListener('click', () => {
+        customModal.style.display = 'none';
+    });
+
+    // --- Task Functionality ---
+
+    // 1. Watch a Video (Rewarded Interstitial)
+    function handleRewardedInterstitial(event) {
+        event.preventDefault();
+        if (typeof show_9716498 === 'function') {
+            show_9716498().then(() => {
+                updateBalance(configs.rewards.watchVideo);
+                showModal('Success!', `Your account has been credited with ৳${configs.rewards.watchVideo}.`);
+            }).catch(() => {
+                showModal('Error!', 'Ad could not be loaded. Please try again.');
+            });
+        } else {
+            showModal('Error!', 'Ad service is not available. Please try again later.');
+        }
+    }
+    if (watchAdBtn) watchAdBtn.addEventListener('click', handleRewardedInterstitial);
+    if (watchAdBtn2) watchAdBtn2.addEventListener('click', handleRewardedInterstitial);
+
+    // 2. Rewarded Popup Ad
+    if (rewardedPopupBtn) {
+        rewardedPopupBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            if (typeof show_9716498 === 'function') {
+                show_9716498('pop').then(() => {
+                    updateBalance(configs.rewards.rewardedPopup);
+                    showModal('Success!', `Your account has been credited with ৳${configs.rewards.rewardedPopup}.`);
+                }).catch(() => {
+                    showModal('Error!', 'Ad could not be loaded. Please try again.');
+                });
+            } else {
+                showModal('Error!', 'Ad service is not available. Please try again later.');
+            }
+        });
+    }
+
+    // 3. Visit Website (Adsterra Smartlink)
+    function handleVisitSite(event) {
+        event.preventDefault();
+        const smartlink = "https://viaanswerwillow.com/zcj9ncamas?key=6836bdc985e54703a11582786d62f2a5";
+        const stayTime = 10000; // 10 seconds
+
+        showModal('Visit Website', `You must stay on the site for 10-15 seconds to receive the reward of ৳${configs.rewards.visitWebsite}.`);
+        
+        setTimeout(() => {
+            window.open(smartlink, '_blank');
+        }, 1500);
+
+        setTimeout(() => {
+            updateBalance(configs.rewards.visitWebsite);
+            showModal('Success!', `Your account has been credited with ৳${configs.rewards.visitWebsite}.`);
+        }, stayTime + 2000); // Wait for the specified time plus a small buffer
+    }
+    if (visitSiteBtn) visitSiteBtn.addEventListener('click', handleVisitSite);
+    if (visitSiteBtn2) visitSiteBtn2.addEventListener('click', handleVisitSite);
+
+    // --- Tab and Navigation Logic ---
     function switchTab(tabId) {
         tabContents.forEach(content => {
             content.classList.remove('active');
@@ -106,14 +218,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle History Button click
     if (historyBtn) {
         historyBtn.addEventListener('click', () => {
             window.location.href = 'history.html';
         });
     }
 
-    // Handle Withdraw Button click
     if (withdrawBtn) {
         withdrawBtn.addEventListener('click', () => {
             switchTab('settings-tab');
@@ -121,45 +231,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Handle Mail Button click
     if (mailBtn) {
         mailBtn.addEventListener('click', () => {
             switchTab('settings-tab');
             showSettingsPage('mail-page');
         });
     }
-
-    // Handle "Watch a Video" task click
-    if (watchAdBtn) {
-        watchAdBtn.addEventListener('click', () => {
-             // Rewarded interstitial from Monetag
-            if (typeof show_9716498 === 'function') {
-                show_9716498().then(() => {
-                    // This function will run after the user watches the ad
-                    alert('You have seen an ad! Your reward will be added to your balance.');
-                    // Here you would add the reward logic, e.g., update balance in Firebase
-                });
-            } else {
-                alert('Ad service is not available. Please try again later.');
-            }
-        });
-    }
-
-    // Handle "Watch a Video" task on "All Tasks" tab
-    if (watchAdBtn2) {
-        watchAdBtn2.addEventListener('click', () => {
-            // Rewarded interstitial from Monetag
-            if (typeof show_9716498 === 'function') {
-                show_9716498().then(() => {
-                    alert('You have seen an ad! Your reward will be added to your balance.');
-                });
-            } else {
-                alert('Ad service is not available. Please try again later.');
-            }
-        });
-    }
     
-    // Copy referral link
     const copyButton = document.querySelector('.copy-btn');
     if (copyButton) {
         copyButton.addEventListener('click', function() {
@@ -192,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Withdraw method selection
     const withdrawMethods = document.querySelectorAll('.withdraw-method');
     const accountNumberInput = document.getElementById('account-number');
     withdrawMethods.forEach(method => {

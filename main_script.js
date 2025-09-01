@@ -24,6 +24,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const cancelLogoutBtn = document.getElementById('cancel-logout');
     const confirmLogoutBtn = document.getElementById('confirm-logout');
     const loadingSpinnerOverlay = document.getElementById('loading-spinner-overlay');
+    const withdrawBtn = document.getElementById('withdraw-btn');
+    const mailBtn = document.getElementById('mail-btn');
+    const watchAdBtn = document.getElementById('watch-ad-btn');
+    const watchAdBtn2 = document.getElementById('watch-ad-btn-2');
 
     // Profile elements
     const fullNameInput = document.getElementById('fullName');
@@ -106,6 +110,52 @@ document.addEventListener('DOMContentLoaded', function() {
     if (historyBtn) {
         historyBtn.addEventListener('click', () => {
             window.location.href = 'history.html';
+        });
+    }
+
+    // Handle Withdraw Button click
+    if (withdrawBtn) {
+        withdrawBtn.addEventListener('click', () => {
+            switchTab('settings-tab');
+            showSettingsPage('withdraw-page');
+        });
+    }
+    
+    // Handle Mail Button click
+    if (mailBtn) {
+        mailBtn.addEventListener('click', () => {
+            switchTab('settings-tab');
+            showSettingsPage('mail-page');
+        });
+    }
+
+    // Handle "Watch a Video" task click
+    if (watchAdBtn) {
+        watchAdBtn.addEventListener('click', () => {
+             // Rewarded interstitial from Monetag
+            if (typeof show_9716498 === 'function') {
+                show_9716498().then(() => {
+                    // This function will run after the user watches the ad
+                    alert('You have seen an ad! Your reward will be added to your balance.');
+                    // Here you would add the reward logic, e.g., update balance in Firebase
+                });
+            } else {
+                alert('Ad service is not available. Please try again later.');
+            }
+        });
+    }
+
+    // Handle "Watch a Video" task on "All Tasks" tab
+    if (watchAdBtn2) {
+        watchAdBtn2.addEventListener('click', () => {
+            // Rewarded interstitial from Monetag
+            if (typeof show_9716498 === 'function') {
+                show_9716498().then(() => {
+                    alert('You have seen an ad! Your reward will be added to your balance.');
+                });
+            } else {
+                alert('Ad service is not available. Please try again later.');
+            }
         });
     }
     

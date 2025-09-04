@@ -6,6 +6,8 @@
     <title>Ensen-Mining BD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="main_style.css">
+    
+    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
 </head>
 <body>
     <div class="app-container">
@@ -18,6 +20,7 @@
             </div>
             <div class="mail-icon" id="mail-btn">
                 <i class="fas fa-envelope"></i>
+                <span id="mail-count" class="notification-badge hidden">0</span>
             </div>
         </div>
         
@@ -47,7 +50,7 @@
                 <h2 class="section-title"><i class="fas fa-tasks"></i> All Tasks</h2>
                 
                 <div class="tasks-container">
-                    <div class="task-item">
+                    <div class="task-item" id="video-ad-task">
                         <div class="task-icon">
                             <i class="fas fa-play-circle"></i>
                         </div>
@@ -55,17 +58,21 @@
                             <h3>Watch a Video Ad</h3>
                             <p>30 seconds video</p>
                         </div>
-                        <div class="task-reward">+৳5</div>
+                        <button class="action-btn task-reward-btn">
+                            <i class="fas fa-dollar-sign"></i> +৳5
+                        </button>
                     </div>
-                    <div class="task-item">
+                    <div class="task-item" id="website-visit-task">
                         <div class="task-icon">
                             <i class="fas fa-globe"></i>
                         </div>
                         <div class="task-details">
                             <h3>Visit Website</h3>
-                            <p>Browse for 30 seconds</p>
+                            <p>Browse for 10 seconds</p>
                         </div>
-                        <div class="task-reward">+৳3</div>
+                        <button class="action-btn task-reward-btn">
+                            <i class="fas fa-dollar-sign"></i> +৳3
+                        </button>
                     </div>
                 </div>
             </div>
@@ -220,9 +227,8 @@
                              <h3>Email Notifications</h3>
                              <p>আপনার কার্যক্রমের জন্য ইমেল আপডেট পান।</p>
                         </div>
-                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
         
@@ -262,12 +268,13 @@
         <p class="loading-text">Logging out...</p>
     </div>
 
-    <div class="modal-overlay" id="custom-modal">
+    <div class="modal-overlay" id="website-modal">
         <div class="modal-content">
-            <h3 id="modal-title"></h3>
-            <p id="modal-message"></p>
+            <h3 id="modal-title">ওয়েবসাইট ভিজিট করুন</h3>
+            <p id="modal-message">টাকা পেতে হলে আপনাকে ১০-১২ সেকেন্ড ওয়েবসাইটে থাকতে হবে।</p>
             <div class="modal-actions">
-                <button class="action-btn primary" id="modal-ok-btn">OK</button>
+                <button class="action-btn" id="website-cancel-btn">বাতিল করুন</button>
+                <button class="action-btn primary" id="website-ok-btn">ওকে</button>
             </div>
         </div>
     </div>
@@ -277,5 +284,5 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script src="config.js"></script>
     <script src="main_script.js"></script>
-</body>
+    </body>
 </html>

@@ -6,8 +6,6 @@
     <title>Ensen-Mining BD</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="main_style.css">
-    
-    <script src='//libtl.com/sdk.js' data-zone='9716498' data-sdk='show_9716498'></script>
 </head>
 <body>
     <div class="app-container">
@@ -20,7 +18,6 @@
             </div>
             <div class="mail-icon" id="mail-btn">
                 <i class="fas fa-envelope"></i>
-                <span id="mail-count" class="notification-badge hidden">0</span>
             </div>
         </div>
         
@@ -41,16 +38,12 @@
                 </div>
                 
                 <h2 class="section-title"><i class="fas fa-calendar-day"></i> Daily Tasks</h2>
+                <div class="task-counter-container">
+                    <p id="task-counter">Today's Tasks: 25/25</p>
+                </div>
                 
-                <div class="tasks-container">
-                    </div>
-            </div>
-            
-            <div class="tab-content" id="tasks-tab">
-                <h2 class="section-title"><i class="fas fa-tasks"></i> All Tasks</h2>
-                
-                <div class="tasks-container">
-                    <div class="task-item" id="video-ad-task">
+                <div class="tasks-container" id="daily-tasks-container">
+                    <div class="task-item">
                         <div class="task-icon">
                             <i class="fas fa-play-circle"></i>
                         </div>
@@ -58,180 +51,142 @@
                             <h3>Watch a Video Ad</h3>
                             <p>30 seconds video</p>
                         </div>
-                        <button class="action-btn task-reward-btn">
-                            <i class="fas fa-dollar-sign"></i> +৳5
-                        </button>
+                        <button class="task-btn watch-ad-btn glow-effect" id="watch-ad-btn">Watch Ad</button>
                     </div>
-                    <div class="task-item" id="website-visit-task">
+                    <div class="task-item">
                         <div class="task-icon">
                             <i class="fas fa-globe"></i>
                         </div>
                         <div class="task-details">
                             <h3>Visit Website</h3>
-                            <p>Browse for 10 seconds</p>
+                            <p>Wait 8 seconds for reward</p>
                         </div>
-                        <button class="action-btn task-reward-btn">
-                            <i class="fas fa-dollar-sign"></i> +৳3
-                        </button>
+                        <button class="task-btn visit-site-btn glow-effect" id="visit-site-btn">Visit Site</button>
                     </div>
                 </div>
             </div>
             
+            <div class="tab-content" id="tasks-tab">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> All Tasks</h2>
+                <div class="tasks-container">
+                    <div class="task-item">
+                        <div class="task-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="task-details">
+                            <h3>Watch a Video Ad</h3>
+                            <p>30 seconds video</p>
+                        </div>
+                        <div class="task-reward">+৳5</div>
+                    </div>
+                    <div class="task-item">
+                        <div class="task-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="task-details">
+                            <h3>Visit Website</h3>
+                            <p>Browse for 30 seconds</p>
+                        </div>
+                        <div class="task-reward">+৳3</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="tab-content" id="referral-tab">
                 <div class="referral-container">
                     <div class="referral-header">
-                        <div class="referral-icon">
+                        <h2 class="section-title"><i class="fas fa-user-friends"></i> Referral Program</h2>
+                        <div class="referral-share-btn">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                    </div>
+                    <div class="referral-link-box">
+                        <p class="referral-link-label">Your Referral Link</p>
+                        <div class="referral-link-content">
+                            <span id="referral-link-text">Loading...</span>
+                            <button id="copy-btn"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="referral-stats-card">
+                        <div class="stat-item">
                             <i class="fas fa-users"></i>
+                            <div class="stat-details">
+                                <p class="stat-value" id="total-referrals">0</p>
+                                <p class="stat-label">Total Referrals</p>
+                            </div>
                         </div>
-                        <h2 class="section-title">Referral System</h2>
-                    </div>
-                    
-                    <div class="referral-code-box">
-                        <div class="referral-code">https://ensen-mining.com/ref/AB12CD34</div>
-                        <button class="action-btn copy-btn">
-                            <i class="fas fa-copy"></i> Copy Link
-                        </button>
-                    </div>
-                    
-                    <p class="referral-desc">
-                        Invite friends and earn <span id="referral-percent">10</span>% of their withdrawals! If your referral withdraws <span id="referral-amount">100</span>৳, you'll get <span id="referral-bonus">10</span>৳ bonus.
-                    </p>
-                    
-                    <div class="referral-stats">
-                        <div class="stat-box">
-                            <div class="stat-label">Total Referrals</div>
-                            <div class="stat-value" id="total-referrals">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Active Referrals</div>
-                            <div class="stat-value" id="active-referrals">0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Total Earnings</div>
-                            <div class="stat-value" id="total-earnings">৳0</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Pending Bonus</div>
-                            <div class="stat-value" id="pending-bonus">৳0</div>
+                        <div class="stat-item">
+                            <i class="fas fa-sack-dollar"></i>
+                            <div class="stat-details">
+                                <p class="stat-value" id="referral-earnings">৳0.00</p>
+                                <p class="stat-label">Earnings from Referrals</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="tab-content" id="settings-tab">
-                <div id="settings-menu" class="settings-page active">
-                    <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
-                    <div class="settings-container">
-                        <div class="settings-item" data-target="profile-page">
-                            <div class="settings-icon"><i class="fas fa-user"></i></div>
-                            <div class="settings-details"><h3>Profile</h3><p>Manage your personal information</p></div>
-                            <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                        <div class="settings-item" data-target="withdraw-page">
-                            <div class="settings-icon"><i class="fas fa-wallet"></i></div>
-                            <div class="settings-details"><h3>Withdraw</h3><p>Withdraw your earnings</p></div>
-                            <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                        <div class="settings-item" data-target="password-page">
-                            <div class="settings-icon"><i class="fas fa-lock"></i></div>
-                            <div class="settings-details"><h3>Password Change</h3><p>Update your account password</p></div>
-                            <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                        <div class="settings-item" data-target="mail-page">
-                            <div class="settings-icon"><i class="fas fa-envelope"></i></div>
-                            <div class="settings-details"><h3>Mail/Notifications</h3><p>Manage your email notifications</p></div>
-                            <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                        <div class="settings-item" id="logout-btn">
-                            <div class="settings-icon"><i class="fas fa-sign-out-alt"></i></div>
-                            <div class="settings-details"><h3>Log Out</h3><p>Sign out from your account</p></div>
-                            <div class="settings-arrow"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                    </div>
+
+            <div class="tab-content" id="withdraw-tab">
+                <h2 class="section-title"><i class="fas fa-money-check-alt"></i> Withdraw Funds</h2>
+                <div class="balance-info-card">
+                    <p>Current Balance: <span id="withdraw-balance">৳0.00</span></p>
+                    <p>Minimum Withdrawal: ৳<span id="min-withdrawal-message"></span></p>
+                    <p>Processing Fee: <span id="processing-fee"></span>%</p>
                 </div>
-                
-                <div id="profile-page" class="settings-page">
-                    <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Profile</h2>
-                    <p class="help-text highlight">Your profile data cannot be changed. This information is read-only.</p>
-                    <div class="form-container">
-                        <div class="form-group">
-                            <label class="form-label" for="fullName">Full Name</label>
-                            <input type="text" id="fullName" class="form-input" value="N/A" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="email">Email Address</label>
-                            <input type="email" id="email" class="form-input" value="N/A" readonly>
-                        </div>
-                         <div class="form-group">
-                            <label class="form-label" for="phone">Phone Number</label>
-                            <input type="tel" id="phone" class="form-input" value="N/A" readonly>
-                        </div>
+                <div class="withdraw-form">
+                    <div class="form-group">
+                        <label for="withdraw-amount">Amount</label>
+                        <input type="number" id="withdraw-amount" class="form-input" placeholder="Enter amount to withdraw">
                     </div>
-                </div>
-                
-                <div id="withdraw-page" class="settings-page">
-                    <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Withdraw</h2>
-                    <div class="form-container">
-                        <div class="form-group">
-                            <label class="form-label">Select Method</label>
-                            <div class="withdraw-methods">
-                                <div class="withdraw-method selected" data-method="bkash">
-                                    <i class="fas fa-money-bill-wave"></i> Bkash
-                                </div>
-                                <div class="withdraw-method" data-method="binance">
-                                    <i class="fab fa-bitcoin"></i> Binance
-                                </div>
+                    <div class="form-group">
+                        <label>Select Method</label>
+                        <div class="withdraw-methods">
+                            <div class="withdraw-method" data-method="bkash">
+                                <i class="fas fa-money-bill-wave"></i> Bkash
+                            </div>
+                            <div class="withdraw-method" data-method="binance">
+                                <i class="fas fa-coins"></i> Binance Pay
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label" for="withdraw-amount">Amount (৳)</label>
-                            <input type="number" id="withdraw-amount" class="form-input" placeholder="e.g., 500">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="account-number">Account Details</label>
-                            <input type="text" id="account-number" class="form-input" placeholder="e.g., 01700000000 (Bkash Number)">
-                             <p class="help-text">আপনার বিকাশ/বাইনান্স একাউন্ট নাম্বার দিন।</p>
-                        </div>
-                        <button class="action-btn primary glow-effect" style="width: 100%; justify-content: center; padding: 12px;">
-                            <i class="fas fa-paper-plane"></i> Submit Request
-                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="account-number">Account Number / Pay ID</label>
+                        <input type="text" id="account-number" class="form-input" placeholder="e.g., 01700000000 (Bkash Number)">
+                    </div>
+                    <button id="submit-withdraw-btn" class="action-btn primary">
+                        <i class="fas fa-paper-plane"></i> Submit Request
+                    </button>
+                </div>
+            </div>
+
+            <div class="tab-content" id="settings-tab">
+                <h2 class="section-title"><i class="fas fa-cog"></i> Settings</h2>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <a href="privacy-policy.html">
+                            <i class="fas fa-user-shield"></i>
+                            <span>Privacy Policy</span>
+                        </a>
+                    </div>
+                    <div class="setting-item">
+                        <a href="terms-of-service.html">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Terms of Service</span>
+                        </a>
+                    </div>
+                    <div class="setting-item" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log Out</span>
                     </div>
                 </div>
-
-                <div id="password-page" class="settings-page">
-                    <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Password Change</h2>
-                    <div class="form-container">
-                        <div class="form-group">
-                            <label class="form-label" for="current-password">Current Password</label>
-                            <input type="password" id="current-password" class="form-input" placeholder="Enter your current password">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="new-password">New Password</label>
-                            <input type="password" id="new-password" class="form-input" placeholder="Enter new password">
-                             <p class="help-text">পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।</p>
-                        </div>
-                         <div class="form-group">
-                            <label class="form-label" for="confirm-password">Confirm New Password</label>
-                            <input type="password" id="confirm-password" class="form-input" placeholder="Confirm your new password">
-                        </div>
-                        <button class="action-btn primary" style="width: 100%; justify-content: center; padding: 12px;">
-                            <i class="fas fa-key"></i> Update Password
-                        </button>
-                    </div>
-                </div>
-
-                <div id="mail-page" class="settings-page">
-                    <h2 class="section-title"><button class="action-btn back-btn"><i class="fas fa-arrow-left"></i></button> Mail/Notifications</h2>
-                    <div class="form-container">
-                        <div class="settings-details" style="padding: 10px 0;">
-                             <h3>Email Notifications</h3>
-                             <p>আপনার কার্যক্রমের জন্য ইমেল আপডেট পান।</p>
-                        </div>
-                    </div>
+                <div class="about-section">
+                    <h3>About Us</h3>
+                    <p>Ensen-Mining BD is an online income platform where users can earn by watching ads and visiting websites.</p>
+                    <div class="version-info">Version 1.0</div>
                 </div>
             </div>
         </div>
-        
+
         <div class="bottom-nav">
             <a href="#" class="nav-item active" data-tab="home-tab">
                 <div class="nav-icon"><i class="fas fa-home"></i></div>
@@ -239,11 +194,15 @@
             </a>
             <a href="#" class="nav-item" data-tab="tasks-tab">
                 <div class="nav-icon"><i class="fas fa-tasks"></i></div>
-                <span>All Task</span>
+                <span>Tasks</span>
             </a>
             <a href="#" class="nav-item" data-tab="referral-tab">
-                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <div class="nav-icon"><i class="fas fa-user-friends"></i></div>
                 <span>Referral</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="withdraw-tab">
+                <div class="nav-icon"><i class="fas fa-money-bill-wave"></i></div>
+                <span>Withdraw</span>
             </a>
             <a href="#" class="nav-item" data-tab="settings-tab">
                 <div class="nav-icon"><i class="fas fa-cog"></i></div>
@@ -268,13 +227,25 @@
         <p class="loading-text">Logging out...</p>
     </div>
 
-    <div class="modal-overlay" id="website-modal">
-        <div class="modal-content">
-            <h3 id="modal-title">ওয়েবসাইট ভিজিট করুন</h3>
-            <p id="modal-message">টাকা পেতে হলে আপনাকে ১০-১২ সেকেন্ড ওয়েবসাইটে থাকতে হবে।</p>
+    <div class="modal-overlay" id="custom-modal">
+        <div class="modal-content stylish-modal">
+            <h3 id="modal-title"></h3>
+            <p id="modal-message"></p>
             <div class="modal-actions">
-                <button class="action-btn" id="website-cancel-btn">বাতিল করুন</button>
-                <button class="action-btn primary" id="website-ok-btn">ওকে</button>
+                <button class="action-btn primary" id="modal-ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal-overlay" id="visit-site-modal">
+        <div class="modal-content stylish-modal">
+            <div class="modal-header">
+                <h3 id="visit-modal-title">Visit Website</h3>
+            </div>
+            <p id="visit-modal-message">Please wait for the timer to finish.</p>
+            <h2 id="visit-modal-timer">8</h2>
+            <div class="modal-actions">
+                <button class="action-btn primary" id="visit-modal-ok-btn">Go to Site</button>
             </div>
         </div>
     </div>
@@ -284,5 +255,5 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script src="config.js"></script>
     <script src="main_script.js"></script>
-    </body>
+</body>
 </html>

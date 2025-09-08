@@ -23,119 +23,63 @@ const loginEmailInput = document.getElementById('login-email');
 const loginPasswordInput = document.getElementById('login-password');
 const loginBtn = document.getElementById('login-btn');
 const registerBtn = document.getElementById('register-btn');
-const regFullNameInput = document.getElementById('register-fullName');
-const regEmailInput = document.getElementById('register-email');
-const regMobileInput = document.getElementById('register-mobile');
-const regPasswordInput = document.getElementById('register-password');
-const regConfirmPasswordInput = document.getElementById('register-confirm-password');
-const termsCheckbox = document.getElementById('terms-checkbox');
-const forgotPasswordLink = document.getElementById('forgot-password-link');
-const forgotPasswordPage = document.getElementById('forgot-password-page');
-const backToLoginBtn = document.getElementById('back-to-login-btn');
+const regFullNameInput = document.getElementById('reg-fullname');
+const regMobileInput = document.getElementById('reg-mobile');
+const regEmailInput = document.getElementById('reg-email');
+const regPasswordInput = document.getElementById('reg-password');
+const regConfirmPasswordInput = document.getElementById('reg-confirm-password');
+const regReferralInput = document.getElementById('reg-referral');
 
-// Modals and loading spinner
-const initialModal = document.getElementById('initial-modal');
-const modalProceedBtn = document.getElementById('modal-proceed-btn');
-const checkAge = document.getElementById('check-age');
-const checkAware = document.getElementById('check-aware');
-const checkTerms = document.getElementById('check-terms');
+// Modals
 const successModal = document.getElementById('success-modal');
-const errorModal = document.getElementById('error-modal');
-const successMessage = document.getElementById('success-message');
-const errorMessage = document.getElementById('error-message');
+const successMessageEl = document.getElementById('success-message');
 const successModalCloseBtn = document.getElementById('success-modal-close-btn');
+const errorModal = document.getElementById('error-modal');
+const errorMessageEl = document.getElementById('error-message');
 const errorModalCloseBtn = document.getElementById('error-modal-close-btn');
 const loadingSpinner = document.getElementById('loading-spinner');
 
-// Helper functions
-function showLoading() { loadingSpinner.style.display = 'flex'; }
-function hideLoading() { loadingSpinner.style.display = 'none'; }
-function showSuccessModal(message) { successMessage.innerText = message; successModal.style.display = 'flex'; }
-function showErrorModal(message) { errorMessage.innerText = message; errorModal.style.display = 'flex'; }
-function showMainContent() {
-    mainContainer.style.display = 'block';
-    forgotPasswordPage.style.display = 'none';
-}
-function showForgotPasswordPage() {
-    mainContainer.style.display = 'none';
-    forgotPasswordPage.style.display = 'flex';
-}
-function togglePasswordVisibility(inputElement) {
-    const icon = inputElement.nextElementSibling.querySelector('i');
-    if (inputElement.type === 'password') {
-        inputElement.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
-    } else {
-        inputElement.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
-    }
+// Show/Hide Modals
+function showSuccessModal(message) {
+    successMessageEl.textContent = message;
+    successModal.style.display = 'flex';
 }
 
-// Event listeners for password visibility
-document.querySelectorAll('.toggle-password').forEach(toggleBtn => {
-    toggleBtn.addEventListener('click', () => {
-        const input = toggleBtn.previousElementSibling;
-        togglePasswordVisibility(input);
-    });
-});
+function showErrorModal(message) {
+    errorMessageEl.textContent = message;
+    errorModal.style.display = 'flex';
+}
 
-// Initial Modal Logic
-document.addEventListener('DOMContentLoaded', () => {
-    initialModal.style.display = 'flex';
-});
+function showLoading() {
+    loadingSpinner.style.display = 'flex';
+}
 
-modalProceedBtn.addEventListener('click', () => {
-    if (checkAge.checked && checkAware.checked && checkTerms.checked) {
-        initialModal.style.display = 'none';
-        showMainContent();
-    } else {
-        alert('অনুগ্রহ করে সমস্ত শর্তাবলীতে সম্মত হন।');
-    }
-});
+function hideLoading() {
+    loadingSpinner.style.display = 'none';
+}
 
-// Check for existing user on page load and redirect
-auth.onAuthStateChanged(user => {
-    if (user) {
-        window.location.href = 'main.html';
-    }
-});
-
-// Tab switching logic
+// Tab functionality
 loginTabBtn.addEventListener('click', () => {
+    loginForm.classList.add('active');
+    registerForm.classList.remove('active');
     loginTabBtn.classList.add('active');
     registerTabBtn.classList.remove('active');
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
 });
 
 registerTabBtn.addEventListener('click', () => {
+    registerForm.classList.add('active');
+    loginForm.classList.remove('active');
     registerTabBtn.classList.add('active');
     loginTabBtn.classList.remove('active');
-    registerForm.style.display = 'block';
-    loginForm.style.display = 'none';
 });
 
-// Forgot password link
-forgotPasswordLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    showForgotPasswordPage();
-});
-
-backToLoginBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    showMainContent();
-});
-
-// Login functionality
-loginBtn.addEventListener('click', (e) => {
-    e.preventDefault();
+// Login button logic
+loginBtn.addEventListener('click', () => {
     const email = loginEmailInput.value;
     const password = loginPasswordInput.value;
 
     if (!email || !password) {
-        showErrorModal('দয়া করে ইমেল এবং পাসওয়ার্ড পূরণ করুন।');
+        showErrorModal('দয়া করে ইমেল এবং পাসওয়ার্ড দিন।');
         return;
     }
 
@@ -145,47 +89,36 @@ loginBtn.addEventListener('click', (e) => {
             hideLoading();
             showSuccessModal('লগইন সফল! আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে।');
             setTimeout(() => {
-                window.location.href = 'main.html';
+                // main.html-এ রিডাইরেক্ট করার সঠিক পথ
+                window.location.href = 'main-system/main.html';
             }, 1000);
         })
         .catch(error => {
             hideLoading();
             let errorMessage = 'লগইন ব্যর্থ হয়েছে।';
-            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
                 errorMessage = 'ভুল ইমেল বা পাসওয়ার্ড।';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'ভুল ইমেল ফরম্যাট।';
             }
             showErrorModal(errorMessage);
         });
 });
 
-// Registration functionality
-registerBtn.addEventListener('click', (e) => {
-    e.preventDefault();
+// Register button logic
+registerBtn.addEventListener('click', () => {
     const fullName = regFullNameInput.value;
-    const email = regEmailInput.value;
     const mobile = regMobileInput.value;
+    const email = regEmailInput.value;
     const password = regPasswordInput.value;
     const confirmPassword = regConfirmPasswordInput.value;
+    const referralCode = regReferralInput.value;
 
-    if (!fullName || !email || !mobile || !password || !confirmPassword) {
-        showErrorModal('অনুগ্রহ করে সব তথ্য পূরণ করুন।');
+    if (!fullName || !mobile || !email || !password || !confirmPassword) {
+        showErrorModal('দয়া করে সব তথ্য পূরণ করুন।');
         return;
     }
 
     if (password !== confirmPassword) {
-        showErrorModal('পাসওয়ার্ড দুটি মেলে না।');
-        return;
-    }
-
-    if (password.length < 8) {
-        showErrorModal('পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।');
-        return;
-    }
-
-    if (!termsCheckbox.checked) {
-        showErrorModal('অ্যাকাউন্ট তৈরি করতে আপনাকে অবশ্যই নিয়মাবলীতে সম্মত হতে হবে।');
+        showErrorModal('পাসওয়ার্ড দুটি মিলছে না।');
         return;
     }
 
@@ -193,17 +126,38 @@ registerBtn.addEventListener('click', (e) => {
     auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
             const user = userCredential.user;
-            // Save user info to Firebase Realtime Database
+            // Save user data to Realtime Database
             database.ref('users/' + user.uid).set({
                 fullName: fullName,
                 email: email,
                 mobile: mobile,
+                balance: 0,
+                dailyTaskCount: 0,
+                lastTaskDate: '',
+                totalReferrals: 0,
+                referralEarnings: 0,
                 registeredAt: new Date().toISOString()
             }).then(() => {
+                // If there's a referral code, add a referral to the referrer
+                if (referralCode) {
+                    database.ref('users').orderByChild('uid').equalTo(referralCode).once('value', snapshot => {
+                        snapshot.forEach(childSnapshot => {
+                            const referrerId = childSnapshot.key;
+                            database.ref('users/' + referrerId).transaction((currentData) => {
+                                if (currentData) {
+                                    currentData.totalReferrals = (currentData.totalReferrals || 0) + 1;
+                                }
+                                return currentData;
+                            });
+                        });
+                    });
+                }
+
                 hideLoading();
                 showSuccessModal('নিবন্ধন সফল! আপনাকে ড্যাশবোর্ডে নিয়ে যাওয়া হচ্ছে।');
                 setTimeout(() => {
-                    window.location.href = 'main.html';
+                    // main.html-এ রিডাইরেক্ট করার সঠিক পথ
+                    window.location.href = 'main-system/main.html';
                 }, 1000);
             }).catch(dbError => {
                 hideLoading();
@@ -219,7 +173,7 @@ registerBtn.addEventListener('click', (e) => {
             } else if (error.code === 'auth/invalid-email') {
                 errorMessage = 'ভুল ইমেল ফরম্যাট।';
             } else if (error.code === 'auth/weak-password') {
-                errorMessage = 'পাসওয়ার্ডটি খুব দুর্বল। কমপক্ষে ৮ অক্ষরের পাসওয়ার্ড ব্যবহার করুন।';
+                errorMessage = 'পাসওয়ার্ডটি খুব দুর্বল। কমপক্ষে ৬ অক্ষরের পাসওয়ার্ড ব্যবহার করুন।';
             }
             showErrorModal(errorMessage);
         });

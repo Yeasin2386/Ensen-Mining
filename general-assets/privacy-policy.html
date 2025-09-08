@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ensen-Mining BD - গোপনীয়তা নীতি</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --tg-theme-bg-color: #0f0f23;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-button-color: #5b58e2;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #1c1c36;
+            --tg-theme-hint-color: #aaaaaa;
+            --tg-theme-link-color: #5b58e2;
+            --tg-theme-section-bg-color: #1c1c36;
+        }
+
+        body {
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .policy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--tg-theme-secondary-bg-color);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1c1c36, #2a2a4d);
+            color: var(--tg-theme-text-color);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(91, 88, 226, 0.5);
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 15px;
+            color: var(--tg-theme-link-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            color: var(--tg-theme-hint-color);
+        }
+
+        .content {
+            padding: 40px;
+            line-height: 1.8;
+            flex: 1;
+        }
+
+        .content h2 {
+            color: var(--tg-theme-text-color);
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--tg-theme-link-color);
+            position: relative;
+        }
+        
+        .content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background: #e74c3c;
+        }
+
+        .content p {
+            margin-bottom: 20px;
+            text-align: justify;
+            color: var(--tg-theme-hint-color);
+        }
+
+        .content ul {
+            margin: 20px 0;
+            padding-left: 30px;
+            color: var(--tg-theme-hint-color);
+        }
+
+        .content li {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .content li::before {
+            content: '•';
+            color: var(--tg-theme-link-color);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            font-size: 1.2em;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 30px;
+            padding: 12px 25px;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-btn:hover {
+            background: #8a58e2;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .action-btn i {
+            margin-right: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px;
+            font-size: 14px;
+            color: var(--tg-theme-hint-color);
+            background-color: var(--tg-theme-bg-color);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .highlight {
+            background: rgba(91, 88, 226, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--tg-theme-button-color);
+            margin: 25px 0;
+            color: var(--tg-theme-text-color);
+        }
+
+        .contact-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(91, 88, 226, 0.05);
+            border-radius: 10px;
+            color: var(--tg-theme-text-color);
+        }
+
+        .contact-info h3 {
+            color: var(--tg-theme-text-color);
+            margin-bottom: 15px;
+        }
+
+        .contact-info p {
+            color: var(--tg-theme-hint-color);
+        }
+        
+        /* Animation for content */
+        .content h2, .content p, .content ul {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Delay animations for better visual effect */
+        .content h2 { animation-delay: 0.2s; }
+        .content p { animation-delay: 0.4s; }
+        .content ul { animation-delay: 0.6s; }
+        .highlight { animation-delay: 0.8s; }
+        .contact-info { animation-delay: 1s; }
+        .action-btn { animation-delay: 1.2s; }
+        
+        @media (max-width: 850px) {
+            .policy-container {
+                margin: 0;
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 26px;
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="policy-container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <h1>Ensen-Mining BD - গোপনীয়তা নীতি</h1>
+            <p>সর্বশেষ আপডেট: জানুয়ারি ১, ২০২৫</p>
+        </div>
+        
+        <div class="content">
+            <h2>১. ভূমিকা</h2>
+            <p>Ensen-Mining BD-তে আপনাকে স্বাগতম। আমরা আপনার ব্যক্তিগত তথ্য এবং আপনার গোপনীয়তার অধিকার রক্ষায় প্রতিশ্রুতিবদ্ধ। এই গোপনীয়তা নীতি ব্যাখ্যা করে যে আমরা কীভাবে আপনার সম্পর্কে তথ্য সংগ্রহ, ব্যবহার এবং শেয়ার করি যখন আপনি আমাদের ওয়েবসাইট এবং পরিষেবাগুলি ব্যবহার করেন।</p>
+            
+            <h2>২. আমরা যে তথ্য সংগ্রহ করি</h2>
+            <p>আমরা নিম্নলিখিত ধরণের তথ্য সংগ্রহ করতে পারি:</p>
+            <ul>
+                <li>নিবন্ধনের সময় প্রদত্ত ব্যক্তিগত তথ্য (নাম, ইমেল, ফোন নম্বর)</li>
+                <li>ব্যবহারের ডেটা, যার মধ্যে আইপি ঠিকানা, ব্রাউজারের ধরন এবং ভিজিট করা পৃষ্ঠাগুলি অন্তর্ভুক্ত</li>
+                <li>আপনার ডিভাইস এবং আপনি কীভাবে আমাদের প্ল্যাটফর্মের সাথে ইন্টারঅ্যাক্ট করেন সে সম্পর্কিত তথ্য</li>
+                <li>আপনার আয় এবং কার্যকলাপ সম্পর্কিত লেনদেনের ইতিহাস</li>
+            </ul>
+            
+            <h2>৩. আমরা যেভাবে আপনার তথ্য ব্যবহার করি</h2>
+            <p>আমরা সংগৃহীত তথ্য নিম্নলিখিত উদ্দেশ্যে ব্যবহার করি:</p>
+            <ul>
+                <li>আপনার অ্যাকাউন্ট তৈরি এবং রক্ষণাবেক্ষণ করতে</li>
+                <li>আপনার আয় এবং পেমেন্ট প্রক্রিয়া করতে</li>
+                <li>আমাদের পরিষেবা এবং ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে</li>
+                <li>আপডেট, প্রচার এবং গুরুত্বপূর্ণ বিজ্ঞপ্তি সম্পর্কে আপনার সাথে যোগাযোগ করতে</li>
+                <li>আমাদের প্ল্যাটফর্মের নিরাপত্তা নিশ্চিত করতে এবং প্রতারণা প্রতিরোধ করতে</li>
+            </ul>
+            
+            <div class="highlight">
+                <p><i class="fas fa-info-circle"></i> <strong>গুরুত্বপূর্ণ বিজ্ঞপ্তি:</strong> আমরা কখনোই আপনার ব্যক্তিগত তথ্য তৃতীয় পক্ষের কাছে বিক্রি করি না। আপনার ডেটার নিরাপত্তা আমাদের প্রধান অগ্রাধিকার।</p>
+            </div>
+            
+            <h2>৪. তথ্য শেয়ারিং এবং প্রকাশ</h2>
+            <p>আমরা আপনার ব্যক্তিগত তথ্য বিক্রি করি না। আমরা আপনার তথ্য শেয়ার করতে পারি:</p>
+            <ul>
+                <li>সেবা প্রদানকারীদের সাথে যারা আমাদের কার্যক্রমে সহায়তা করে</li>
+                <li>আইন দ্বারা প্রয়োজন হলে আইনী কর্তৃপক্ষের সাথে</li>
+                <li>একটি ব্যবসায়িক স্থানান্তর বা একীভূতকরণের সাথে সম্পর্কিত তৃতীয় পক্ষের সাথে</li>
+            </ul>
+            
+            <h2>৫. তথ্য সুরক্ষা</h2>
+            <p>আমরা আপনার ব্যক্তিগত তথ্য রক্ষা করার জন্য উপযুক্ত নিরাপত্তা ব্যবস্থা বাস্তবায়ন করি। যাইহোক, ইন্টারনেটের মাধ্যমে ডেটা স্থানান্তরের কোনো পদ্ধতি ১০০% নিরাপদ নয়, এবং আমরা সম্পূর্ণ নিরাপত্তার নিশ্চয়তা দিতে পারি না।</p>
+            
+            <h2>৬. আপনার অধিকার</h2>
+            <p>আপনার নিম্নলিখিত অধিকার রয়েছে:</p>
+            <ul>
+                <li>আপনার ব্যক্তিগত তথ্য অ্যাক্সেস এবং আপডেট করা</li>
+                <li>আপনার অ্যাকাউন্ট এবং ব্যক্তিগত ডেটা মুছে ফেলা</li>
+                <li>মার্কেটিং যোগাযোগ থেকে অপ্ট-আউট করা</li>
+                <li>আপনার ডেটা কীভাবে ব্যবহার করা হচ্ছে সে সম্পর্কে তথ্যের অনুরোধ করা</li>
+            </ul>
+            
+            <h2>৭. এই নীতিতে পরিবর্তন</h2>
+            <p>আমরা সময়ে সময়ে এই গোপনীয়তা নীতি আপডেট করতে পারি। আমরা এই পৃষ্ঠায় নতুন নীতি পোস্ট করে এবং "সর্বশেষ আপডেট" তারিখ আপডেট করে যেকোনো পরিবর্তনের বিজ্ঞপ্তি দেব।</p>
+            
+            <div class="contact-info">
+                <h3><i class="fas fa-headset"></i> যোগাযোগ করুন</h3>
+                <p>যদি আপনার এই গোপনীয়তা নীতি সম্পর্কে কোনো প্রশ্ন থাকে, তাহলে অনুগ্রহ করে নিচের মাধ্যমে আমাদের সাথে যোগাযোগ করুন:</p>
+                <p>Email: privacy@ensen-mining-bd.com</p>
+                <p>Phone: +880 XXXXX-XXXXX</p>
+            </div>
+            
+            <a href="index.html" class="action-btn">
+                <i class="fas fa-arrow-left"></i> হোমপেজে ফিরে যান
+            </a>
+        </div>
+        
+        <div class="footer">
+            &copy; 2025 Ensen-Mining BD. সর্বস্বত্ব সংরক্ষিত।
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.content h2, .content p, .content ul, .highlight, .contact-info, .action-btn');
+            
+            elements.forEach((element, index) => {
+                element.style.animationDelay = (0.2 + index * 0.2) + 's';
+            });
+        });
+    </script>
+</body>
+</html>

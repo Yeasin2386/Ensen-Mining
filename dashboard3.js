@@ -102,6 +102,7 @@ document.getElementById("dailyTaskStartBtn").addEventListener("click", function(
     });
 });
 
+
 // All Tasks Page: Task Popup
 document.querySelectorAll('.start-task-btn[data-task]').forEach(btn => {
     btn.addEventListener('click', () => {

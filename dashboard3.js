@@ -101,29 +101,6 @@ document.getElementById("dailyTaskStartBtn").addEventListener("click", function(
         }
     });
 });
-document.getElementById("telegramTaskStartBtn").addEventListener("click", function(){
-    showCustomPopup({
-        title: "টেলিগ্রাম গ্রুপ টাস্ক",
-        amount: "৳3.00",
-        icon: `<i class="fa-brands fa-telegram"></i>`,
-        message: `<div style="color:#b9a9ff;">গ্রুপে জয়েন করলে রিওয়ার্ড পাবেন। (ডেমো)</div>`,
-        onOK: function() {
-            show_9716498().then(() => {
-                // ভিডিও দেখার পর টাকা যোগ হবে
-                userData.balance += 3;
-                userData.todayEarnings += 3;
-                userData.totalEarnings += 3;
-                userData.dailyTasksCompleted += 1;
-                updateUI();
-                showCustomPopup({
-                    title: "অভিনন্দন!",
-                    message: `<span style="color: #b9a9ff;">আপনি টেলিগ্রাম টাস্ক সফলভাবে কমপ্লিট করেছেন এবং <span style="font-size:20px;font-weight:800;color:#ffd700;"><i class="fa-solid fa-bangladeshi-taka-sign"></i> 3.00</span> অর্জন করেছেন!</span>`,
-                    icon: `<i class="fa-solid fa-check-circle"></i>`
-                });
-            });
-        }
-    });
-});
 
 // All Tasks Page: Task Popup
 document.querySelectorAll('.start-task-btn[data-task]').forEach(btn => {

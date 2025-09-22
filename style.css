@@ -296,14 +296,14 @@ body {
     color: var(--text-secondary); margin-bottom: 15px; line-height: 1.6;
 }
 .modal-button, .modal-button-blue, .modal-button-secondary {
-    border: none; padding: 12px; border-radius: 12px; width: 100%;
+    border: none; padding: 14px; border-radius: 12px; width: 100%;
     font-size: 1rem; font-weight: 700; cursor: pointer;
 }
 .modal-button {
     background: var(--accent-gold); color: #111;
 }
 .modal-button:disabled {
-    background: #4A5568; color: #A0AEC0; cursor: not-allowed;
+    background: #4A5568; color: #A0AEC0; cursor: not-allowed; opacity: 0.7;
 }
 .modal-button-blue {
     background: var(--accent-blue); color: var(--text-primary);
@@ -312,7 +312,7 @@ body {
     background: var(--bg-dark); color: var(--text-secondary); border: 1px solid var(--border-color);
 }
 
-/* Consent Modal Checkbox Design */
+/* New Consent Checkbox Design */
 .consent-modal-content {
     padding-top: 40px;
 }
@@ -342,10 +342,10 @@ body {
     background-color: var(--accent-gold); border-color: var(--accent-gold);
 }
 .checkmark::after {
-    content: '✔'; color: #111; font-size: 14px; font-weight: bold; display: none;
+    content: '✔'; color: #111; font-size: 14px; font-weight: bold; transform: scale(0); transition: transform 0.2s ease;
 }
 .consent-checkbox input:checked + .checkmark::after {
-    display: block;
+    transform: scale(1);
 }
 .consent-checkbox span {
     flex: 1; color: var(--text-secondary); font-size: 0.95rem;

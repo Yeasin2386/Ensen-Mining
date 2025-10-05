@@ -1,120 +1,179 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quantum Earning Platform - Final Polished v3</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#F8F5EF" />
+  <title>Grand — Home</title>
+
+  <!-- Google Fonts: DM Serif Display & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <div class="app-container">
-        <!-- Main Header -->
-        <header class="app-header"><!-- Header content will be added by JS --></header>
-        <!-- Page Content Area -->
-        <div class="page-content"><!-- All page content will be added by JS --></div>
-        <!-- Final Polished Bottom Navigation Bar -->
-        <nav class="bottom-nav"><!-- Nav items will be added by JS --></nav>
+  
+  <!-- === PRELOADER === -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <h1 class="preloader-brand">Grand</h1>
+      <div class="preloader-progress"><div class="preloader-progress-bar"></div></div>
+      <p class="preloader-powered">powered by Yeasin Group</p>
     </div>
+  </div>
 
-    <!-- ALL MODALS / POPUPS -->
-
-    <!-- Consent Modal (Main Popup with New Checkbox Design) -->
-    <div id="consent-modal" class="modal-overlay">
-        <div class="modal-content consent-modal-content">
-            <div class="modal-icon lock-icon">🔒</div>
-            <h3>প্রবেশের পূর্বে সম্মতি দিন</h3>
-            <p>আমাদের প্ল্যাটফর্মে কাজ করার জন্য নিচের শর্তাবলীতে আপনার সম্মতি প্রয়োজন।</p>
-            <div class="consent-checks">
-                <label class="consent-checkbox"><input type="checkbox" name="consent"><span class="checkmark"></span><span>আমার বয়স ১৮ বছর বা তার বেশি।</span></label>
-                <label class="consent-checkbox"><input type="checkbox" name="consent"><span class="checkmark"></span><span>আমি অবগত যে এখানে প্রাপ্তবয়স্কদের জন্য বিজ্ঞাপন প্রদর্শিত হতে পারে।</span></label>
-                <label class="consent-checkbox"><input type="checkbox" name="consent"><span class="checkmark"></span><span>আমি প্রাইভেসি পলিসি এবং সকল নিয়মাবলী পড়েছি ও তাতে সম্মত।</span></label>
-            </div>
-            <button id="consent-accept-btn" class="modal-button">প্রবেশ করুন</button>
-        </div>
-    </div>
-
-    <!-- Helper Popup (For users who don't tick the boxes) -->
-    <div id="helper-modal" class="modal-overlay">
-        <div class="modal-content helper-modal-content">
-            <button class="close-modal">&times;</button>
-            <div class="modal-icon">💡</div>
-            <h3>সবগুলো শর্তে সম্মতি দিন</h3>
-            <p>অ্যাপে প্রবেশ করতে, আপনাকে উপরের তিনটি শর্তেই টিক চিহ্ন দিতে হবে। আমরা কি আপনার জন্য সবগুলো বক্সে টিক দিয়ে দেব?</p>
-            <div class="helper-buttons">
-                <button id="helper-accept-btn" class="modal-button-blue">হ্যাঁ, টিক দিন ও প্রবেশ করুন</button>
-                <button id="helper-close-btn" class="modal-button-secondary">না, আমি দিচ্ছি</button>
-            </div>
-        </div>
-    </div>
+  <!-- === MAIN APP WRAPPER === -->
+  <div id="app" class="app" aria-hidden="true">
     
-    <!-- Other modals remain the same -->
-    <div id="welcome-modal" class="modal-overlay"><!-- ... welcome modal ... --></div>
-    <div id="withdraw-method-modal" class="modal-overlay"><!-- ... withdraw method modal ... --></div>
-    <div id="withdraw-form-modal" class="modal-overlay"><!-- ... withdraw form modal ... --></div>
-    <div id="ad-modal" class="modal-overlay"><!-- ... ad modal ... --></div>
+    <!-- === APP HEADER (UPDATED) === -->
+<header class="app-header">
+  <a href="index.html" class="header-logo" aria-label="হোমপেজ">
+    <img src="assets/logo-icon.svg" alt="Grand Logo" />
+  </a>
+  <h1 class="app-title">Grand</h1>
+  <a href="settings.html" class="header-btn" aria-label="সেটিংস">
+    <!-- NEW Settings Icon (Gear) -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </a>
+</header>
 
-    <!-- Main App Logic (JS - Updated for Helper Popup) -->
-    <script>
-    function loadContent() {
-        // This is a placeholder for the large HTML content from the previous answer
-        // Please use the full HTML templating from the previous response here
-        document.querySelector('.app-header').innerHTML = `<div class="header-logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5-10-5-10 5z"></path></svg></div><h1 class="app-name">QuantumEarn</h1><div class="notification-bell"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-5-5.917V5a1 1 0 00-2 0v.083A6 6 0 006 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg><span class="notification-dot"></span></div>`;
-        document.querySelector('.page-content').innerHTML = `<main id="home-page" class="page active-page"></main><main id="task-page" class="page"></main><main id="referral-page" class="page"></main><main id="support-page" class="page"></main><main id="setting-page" class="page"></main>`;
-        document.querySelector('.bottom-nav').innerHTML = `<a href="#" class="nav-item active" data-page="home-page"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg><span>Home</span></a><a href="#" class="nav-item" data-page="task-page"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg><span>Task</span></a><a href="#" class="nav-item" data-page="referral-page"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path></svg><span>Referral</span></a><a href="#" class="nav-item" data-page="support-page"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-2 0c0 .993-.241 1.929-.668 2.754l-1.524-1.525a3.997 3.997 0 00.078-2.183l1.525-1.524A6.01 6.01 0 0116 10zM3.535 7.879l1.524 1.525a3.997 3.997 0 00-2.183-.079l-1.524-1.524a6.01 6.01 0 012.754.668zM10 16a6.01 6.01 0 01-2.754-.668l1.524-1.524a3.997 3.997 0 002.183.079l1.524 1.524A6.01 6.01 0 0110 16z"></path></svg><span>Support</span></a><a href="#" class="nav-item" data-page="withdraw-page"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg><span>Withdraw</span></a><a href="#" class="nav-item" data-page="setting-page"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.532 1.532 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.532 1.532 0 01-.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg><span>Setting</span></a>`;
-        // ... Load other pages and modals HTML here ...
-        attachEventListeners();
-    }
-    
-    function attachEventListeners() {
-        const modals = { consent: document.getElementById('consent-modal'), welcome: document.getElementById('welcome-modal'), ad: document.getElementById('ad-modal'), withdrawMethod: document.getElementById('withdraw-method-modal'), withdrawForm: document.getElementById('withdraw-form-modal'), helper: document.getElementById('helper-modal') };
-        
-        // ⚠️ UPDATED: New function to enter the app
-        const enterTheApp = () => {
-            localStorage.setItem('quantumEarnConsentGiven', 'true');
-            modals.consent.classList.remove('visible');
-            setTimeout(() => {
-                modals.welcome.classList.add('visible');
-            }, 300); // Small delay for smooth transition
-        };
+    <!-- === MAIN CONTENT === -->
+    <main class="app-main">
+      
+      <!-- User Info -->
+      <section class="user-info">
+        <img id="user-avatar" class="avatar" src="assets/avatar-placeholder.png" alt="প্রোফাইল ছবি" />
+        <div>
+          <h2 id="user-name" class="user-name">ইউজারের নাম</h2>
+          <p id="user-username" class="user-handle">@username</p>
+        </div>
+      </section>
 
-        const hasGivenConsent = localStorage.getItem('quantumEarnConsentGiven');
-        if (!hasGivenConsent) {
-            modals.consent.classList.add('visible');
-        } else {
-            modals.welcome.classList.add('visible');
-        }
-        
-        const consentCheckboxes = modals.consent.querySelectorAll('input[name="consent"]');
-        const consentAcceptBtn = document.getElementById('consent-accept-btn');
-        const helperAcceptBtn = document.getElementById('helper-accept-btn');
-        const helperCloseBtn = document.getElementById('helper-close-btn');
+      <!-- Balance Card -->
+      <section class="balance-card-wrapper">
+        <div class="balance-card">
+          <div class="balance-label"><span>আপনার ব্যালেন্স</span></div>
+          <p class="balance-amount">৳<span id="balance-amount">0.00</span></p>
+        </div>
+      </section>
 
-        const checkConsentState = () => {
-            const allChecked = [...consentCheckboxes].every(cb => cb.checked);
-            consentAcceptBtn.disabled = !allChecked;
-        };
-        consentCheckboxes.forEach(checkbox => checkbox.addEventListener('change', checkConsentState));
-        checkConsentState(); // Initial check
+      <!-- Stats Grid -->
+      <section class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-value" id="tasks-today">0/20</div>
+          <div class="stat-label">আজকের টাস্ক</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="referrals-count">0</div>
+          <div class="stat-label">মোট রেফারেল</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="tasks-completed-total">0</div>
+          <div class="stat-label">মোট সম্পন্ন</div>
+        </div>
+      </section>
 
-        consentAcceptBtn.addEventListener('click', () => {
-            if (consentAcceptBtn.disabled) {
-                modals.helper.classList.add('visible');
-            } else {
-                enterTheApp();
-            }
-        });
+      <!-- Daily Tasks -->
+      <section class="tasks-section">
+        <h3 class="section-title">ডেইলি টাস্ক</h3>
+        <div class="task-list">
+          <div class="task-card" data-task-id="join-channel" data-reward="5">
+            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
+            <div class="task-details">
+              <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
+              <p class="reward">+ ৳5 বোনাস</p>
+            </div>
+            <button class="btn-go" data-open-modal="join-channel">Go</button>
+          </div>
+          <div class="task-card" data-task-id="watch-video" data-reward="3" data-duration="15">
+            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
+            <div class="task-details">
+              <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
+              <p class="reward">+ ৳3 বোনাস</p>
+            </div>
+            <button class="btn-go" data-open-modal="watch-video">Go</button>
+          </div>
+        </div>
+      </section>
+    </main>
 
-        helperAcceptBtn.addEventListener('click', () => {
-            consentCheckboxes.forEach(cb => cb.checked = true);
-            modals.helper.classList.remove('visible');
-            enterTheApp(); // Directly enter the app
-        });
-        helperCloseBtn.addEventListener('click', () => modals.helper.classList.remove('visible'));
+    <!-- === BOTTOM NAVIGATION (UPDATED) === -->
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-item active" aria-current="page">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
+    <span>Home</span>
+  </a>
+  <a href="tasks.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <span>Task</span>
+  </a>
+  <a href="tutorial.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+    <span>Tutorial</span>
+  </a>
+  <a href="referral.html" class="nav-item">
+    <!-- NEW Referral Icon (User Plus) -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+    </svg>
+    <span>Referral</span>
+  </a>
+  <a href="withdraw.html" class="nav-item">
+    <!-- NEW Withdraw Icon (Bank Building) -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+    </svg>
+    <span>Withdraw</span>
+  </a>
+</nav>
 
-        // All other event listeners from the previous correct answer remain the same...
-    }
+  <!-- === MODALS (Popups) === -->
+  <div id="modal-join-channel" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <div class="modal-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+      </div>
+      <div class="modal-header">
+        <h3>চ্যানেলে জয়েন করুন</h3>
+        <p class="modal-reward">আপনি পাবেন ৳5</p>
+      </div>
+      <div class="modal-body">
+        <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটনে ক্লিক করুন।</p>
+      </div>
+      <div class="modal-actions">
+        <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
+        <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+        <div class="modal-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+        </div>
+      <div class="modal-header">
+        <h3>ভিডিও দেখুন</h3>
+        <p class="modal-reward">আপনি পাবেন ৳3</p>
+      </div>
+      <div class="modal-body">
+        <p>পুরো ভিডিওটি দেখুন (১৫ সেকেন্ড)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
+        <button class="btn-primary" data-action="confirm-task" data-task="watch-video">Complete</button>
+      </div>
+    </div>
+  </div>
 
-    document.addEventListener('DOMContentLoaded', loadContent);
-    </script>
+  <script defer src="app.js"></script>
 </body>
-    </html>
+</html>

@@ -68,19 +68,12 @@
       <section class="tasks-section">
         <h3 class="section-title">ডেইলি টাস্ক</h3>
         <div class="task-list">
-          <div class="task-card" data-task-id="join-channel" data-reward="5">
-            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
-            <div class="task-details">
-              <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
-              <p class="reward">+ ৳5 বোনাস</p>
-            </div>
-            <button class="btn-go" data-open-modal="join-channel">Go</button>
-          </div>
-          <div class="task-card" data-task-id="watch-video" data-reward="3" data-duration="15">
+          
+          <div class="task-card" data-task-id="watch-video" data-reward="1" data-duration="15">
             <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
             <div class="task-details">
               <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
-              <p class="reward">+ ৳3 বোনাস</p>
+              <p class="reward">+ ৳1 বোনাস</p>
             </div>
             <button class="btn-go" data-open-modal="watch-video">Go</button>
           </div>
@@ -115,26 +108,6 @@
   </a>
 </nav>
 
-  <div id="modal-join-channel" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-dialog">
-      <div class="modal-icon-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
-      </div>
-      <div class="modal-header">
-        <h3>চ্যানেলে জয়েন করুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳5</p>
-      </div>
-      <div class="modal-body">
-        <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটনে ক্লিক করুন।</p>
-      </div>
-      <div class="modal-actions">
-        <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
-        <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
-      </div>
-    </div>
-  </div>
-  
   <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-dialog">
@@ -143,10 +116,10 @@
         </div>
       <div class="modal-header">
         <h3>ভিডিও দেখুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳3</p>
+        <p class="modal-reward">আপনি পাবেন ৳1</p>
       </div>
       <div class="modal-body">
-        <p>পুরো ভিডিওটি দেখুন (১৫ সেকেন্ড)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
+        <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
@@ -155,6 +128,7 @@
     </div>
   </div>
 
+  <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
   <script defer src="script.js"></script>
 </body>
   </html>

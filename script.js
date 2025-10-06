@@ -4,7 +4,8 @@
   
   Updates:
   - Adjusted to match new header structure.
-  - Updated stats logic for "Today's Tasks", "Total Referrals", "Total Completed".
+  - Updated stats logic for "Today's Tasks" (Total Completed removed).
+  - Added support for Task Page's limit display.
   - Kept modal and task completion logic.
 */
 
@@ -26,9 +27,10 @@
     userAvatar: $("#user-avatar"),
     balanceAmount: $("#balance-amount"),
     // **UPDATED** for new stats section
-    tasksToday: $("#tasks-today"),
+    tasksToday: $("#tasks-today"), // Home page stat
     referralsCount: $("#referrals-count"),
-    tasksCompletedTotal: $("#tasks-completed-total"),
+    tasksTodayPage: $("#tasks-today-page"), // Added for task.html
+    // tasksCompletedTotal Removed
     modals: {
       join: $("#modal-join-channel"),
       video: $("#modal-watch-video"),
@@ -102,10 +104,10 @@
   }
   
   /**
-   * **UPDATED** - Synchronizes tasks and calculates new stats.
+   * **UPDATED** - Synchronizes tasks and calculates new stats (Removed total completed count).
    */
   function syncTasksAndStats() {
-    let totalCompletedCount = 0;
+    // let totalCompletedCount = 0; // Removed
     let todayCompletedCount = 0;
     
     // Helper to check if a timestamp is from today
@@ -129,7 +131,7 @@
       if (isCompleted) {
         task.goButton.textContent = "Done";
         task.goButton.disabled = true;
-        totalCompletedCount++;
+        // totalCompletedCount++; // Removed
         // Check if it was completed today
         if (isToday(taskState.completed_at)) {
             todayCompletedCount++;
@@ -141,18 +143,24 @@
     });
 
     store.set(STORE_KEYS.tasks, tasksState);
-    updateStatsUI(todayCompletedCount, totalCompletedCount);
+    updateStatsUI(todayCompletedCount, 0); // Passing 0 for totalCount (now unused)
   }
 
   /**
-   * **UPDATED** - Updates the UI with new stats format.
+   * **UPDATED** - Updates the UI with new stats format (Includes Task Page logic).
    */
   function updateStatsUI(todayCount, totalCount) {
     if (els.balanceAmount) els.balanceAmount.textContent = balance.toFixed(2);
     
     // New stats
-    if (els.tasksToday) els.tasksToday.textContent = `${todayCount}/${DAILY_TASK_LIMIT}`;
-    if (els.tasksCompletedTotal) els.tasksCompletedTotal.textContent = totalCount;
+    const taskLimitText = `${todayCount}/${DAILY_TASK_LIMIT}`;
+
+    // Update on Home Screen
+    if (els.tasksToday) els.tasksToday.textContent = taskLimitText;
+    
+    // Update on Task Page (new element)
+    if (els.tasksTodayPage) els.tasksTodayPage.textContent = taskLimitText;
+
     if (els.referralsCount) els.referralsCount.textContent = store.get(STORE_KEYS.referrals, 0);
   }
 
@@ -261,4 +269,4 @@
   
   document.addEventListener("DOMContentLoaded", init);
 
-})();
+    })();

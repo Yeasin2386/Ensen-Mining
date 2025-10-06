@@ -3,10 +3,10 @@
   Main JavaScript file for the home screen.
   
   Updates:
-  - Adjusted to match new header structure.
-  - Updated stats logic for "Today's Tasks" (Total Completed removed).
-  - Added support for Task Page's limit display.
-  - Kept modal and task completion logic.
+  - TELEGRAM TASK REMOVED FROM INDEX.HTML (One-Time moved to task.html).
+  - Daily video task reward set to ৳1.00.
+  - Manual 15s timer replaced by Monetag Ad SDK call (show_10002890).
+  - Strict daily limit logic implemented based on page URL (1x for index.html, 20x for task.html).
 */
 
 // Using an IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope.
@@ -32,7 +32,7 @@
     tasksTodayPage: $("#tasks-today-page"), // Added for task.html
     // tasksCompletedTotal Removed
     modals: {
-      join: $("#modal-join-channel"),
+      // join: $("#modal-join-channel"), // REMOVED from index.html
       video: $("#modal-watch-video"),
     },
   };
@@ -67,13 +67,41 @@
   let tasksState = store.get(STORE_KEYS.tasks, {});
   const DAILY_TASK_LIMIT = 20;
   
+  // New reward map for consistency
+  const TASK_REWARDS = {
+    'join-channel': 5.00, 
+    'watch-video': 1.00, 
+  };
+  
   // Get all task definitions from the HTML.
   const tasksFromDOM = $$(".task-card").map(card => ({
     id: card.dataset.taskId,
-    reward: Number(card.dataset.reward || 0),
+    // Use the new reward map
+    reward: TASK_REWARDS[card.dataset.taskId] || 0,
     duration: card.dataset.duration ? Number(card.dataset.duration) : null,
     goButton: card.querySelector(".btn-go"),
   }));
+  
+  // Helper to check if a timestamp is from today
+  const isToday = (ts) => {
+      if (!ts) return false;
+      const today = new Date();
+      const otherDate = new Date(ts);
+      return today.getFullYear() === otherDate.getFullYear() &&
+             today.getMonth() === otherDate.getMonth() &&
+             today.getDate() === otherDate.getDate();
+  };
+
+  // Helper to get today's completed count (only for 'watch-video')
+  function getCompletedTasksToday() {
+      let todayCompletedCount = 0;
+      for (const taskId in tasksState) {
+          if (taskId === 'watch-video' && tasksState[taskId].status === 'completed' && isToday(tasksState[taskId].completed_at)) {
+              todayCompletedCount++;
+          }
+      }
+      return todayCompletedCount;
+  }
 
   // --- 4. Core Functions ---
 
@@ -104,22 +132,11 @@
   }
   
   /**
-   * **UPDATED** - Synchronizes tasks and calculates new stats (Removed total completed count).
+   * **UPDATED** - Synchronizes tasks and calculates new stats (Includes 24hr reset logic for index.html).
    */
   function syncTasksAndStats() {
-    // let totalCompletedCount = 0; // Removed
-    let todayCompletedCount = 0;
+    let todayCompletedCount = getCompletedTasksToday();
     
-    // Helper to check if a timestamp is from today
-    const isToday = (ts) => {
-        if (!ts) return false;
-        const today = new Date();
-        const otherDate = new Date(ts);
-        return today.getFullYear() === otherDate.getFullYear() &&
-               today.getMonth() === otherDate.getMonth() &&
-               today.getDate() === otherDate.getDate();
-    };
-
     tasksFromDOM.forEach(task => {
       if (!tasksState[task.id]) {
         tasksState[task.id] = { status: "pending", completed_at: null };
@@ -129,21 +146,39 @@
       const isCompleted = taskState.status === "completed";
       
       if (isCompleted) {
-        task.goButton.textContent = "Done";
-        task.goButton.disabled = true;
-        // totalCompletedCount++; // Removed
-        // Check if it was completed today
-        if (isToday(taskState.completed_at)) {
-            todayCompletedCount++;
+        if (task.id === 'watch-video') {
+            // Home page logic (1x daily reset)
+            if (document.URL.includes('index.html')) {
+                if (isToday(taskState.completed_at)) {
+                    task.goButton.textContent = "Done";
+                    task.goButton.disabled = true;
+                } else {
+                    // Reset to pending if last completion was not today (24hr reset)
+                    taskState.status = "pending";
+                    task.goButton.textContent = "Go";
+                    task.goButton.disabled = false;
+                }
+            } else {
+                // The task page logic relies on the count (completedCount) in completeTask()
+                // If it's done, but we are under the limit, we keep the button active via code in task.html
+                // Since this script runs on index.html, the watch-video task here only checks for 1x completion.
+                task.goButton.textContent = "Done";
+                task.goButton.disabled = true;
+            }
+        } else if (task.id === 'join-channel') {
+            // Telegram is a one-time task
+            task.goButton.textContent = "Done";
+            task.goButton.disabled = true;
         }
       } else {
+        // Task is pending
         task.goButton.textContent = "Go";
         task.goButton.disabled = false;
       }
     });
 
     store.set(STORE_KEYS.tasks, tasksState);
-    updateStatsUI(todayCompletedCount, 0); // Passing 0 for totalCount (now unused)
+    updateStatsUI(todayCompletedCount, 0); 
   }
 
   /**
@@ -158,8 +193,8 @@
     // Update on Home Screen
     if (els.tasksToday) els.tasksToday.textContent = taskLimitText;
     
-    // Update on Task Page (new element)
-    if (els.tasksTodayPage) els.tasksTodayPage.textContent = taskLimitText;
+    // Update on Task Page (new element, should be handled by the inline script there for task.html)
+    // if (els.tasksTodayPage) els.tasksTodayPage.textContent = taskLimitText;
 
     if (els.referralsCount) els.referralsCount.textContent = store.get(STORE_KEYS.referrals, 0);
   }
@@ -167,12 +202,54 @@
   function completeTask(taskId) {
     const taskState = tasksState[taskId];
     const taskDef = tasksFromDOM.find(t => t.id === taskId);
+    const todayCompletedCount = getCompletedTasksToday();
 
-    if (taskState.status === "completed" || !taskDef) return;
+    if (!taskDef) return;
 
+    // --- 1. Strict Limit Checks ---
+
+    if (taskId === 'join-channel') {
+        // One-Time Task Check (Even if it exists on the page, the logic applies)
+        if (taskState.status === "completed") {
+            alert("এই টাস্কটি (টেলিগ্রাম জয়েন) একবারই সম্পন্ন করা যাবে।");
+            return;
+        }
+    }
+
+    if (taskId === 'watch-video') {
+        // Home Page Logic (index.html): Must be done ONLY once per day
+        if (document.URL.includes('index.html')) {
+            if (todayCompletedCount >= 1) {
+                alert("আজকের ডেইলি টাস্ক হোমপেজ থেকে একবার সম্পন্ন করা হয়েছে।");
+                return;
+            }
+        }
+        
+        // All Tasks Page Logic (task.html): Must be done ONLY 20 times per day
+        if (document.URL.includes('task.html')) {
+            if (todayCompletedCount >= DAILY_TASK_LIMIT) {
+                alert(`আজকের টাস্ক লিমিট (${DAILY_TASK_LIMIT} টি) শেষ। এর বেশি দেখতে পারবেন না।`);
+                return;
+            }
+        }
+
+        // Ensure ad was started/finished before completing
+        const modal = $("#modal-watch-video");
+        const startBtn = modal.querySelector('[data-action="start-video"]');
+        if (startBtn.textContent !== 'Finished') {
+           alert('ভিডিওটি এখনো দেখা হয়নি, বা বিজ্ঞাপন লোড হচ্ছে।');
+           return;
+        }
+    }
+    
+    // --- 2. Completion Logic ---
+    
+    // Always mark completed, syncTasksAndStats will handle the reset logic if applicable
     taskState.status = "completed";
-    taskState.completed_at = Date.now(); // Store completion timestamp
-    balance += taskDef.reward;
+    taskState.completed_at = Date.now();
+    
+    // Use the defined rewards for balance update
+    balance += TASK_REWARDS[taskId]; 
 
     store.set(STORE_KEYS.tasks, tasksState);
     store.set(STORE_KEYS.balance, balance);
@@ -180,10 +257,10 @@
     syncTasksAndStats();
   }
 
-  // --- 5. Modal & Task-Specific Logic (Remains mostly the same) ---
+  // --- 5. Modal & Task-Specific Logic (Updated for Monetag) ---
   
-  let videoTimer = null;
-  
+  let videoTimer = null; // Timer variable remains for compatibility
+
   function openModal(modalId) {
     const modal = $(`#modal-${modalId}`);
     if (!modal) return;
@@ -208,29 +285,40 @@
       videoTimer = null;
     }
   }
-
-  function startVideoTimer(startBtn) {
-    const duration = Number(startBtn.dataset.duration || 15);
-    let timeLeft = duration;
-    
-    startBtn.disabled = true;
-
-    videoTimer = setInterval(() => {
-      timeLeft--;
-      startBtn.textContent = `Waiting ${timeLeft}s...`;
-      
-      if (timeLeft <= 0) {
-        clearInterval(videoTimer);
-        videoTimer = null;
-        startBtn.textContent = "Finished";
-        const modal = startBtn.closest(".modal");
-        const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-        completeBtn.disabled = false;
+  
+  /**
+   * **NEW FUNCTION** - Replaces startVideoTimer with Monetag Rewarded Interstitial logic.
+   */
+  function startMonetagAd(startBtn) {
+      if (typeof show_10002890 !== 'function') {
+          alert("বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
+          startBtn.disabled = false;
+          startBtn.textContent = 'Watch Now';
+          return;
       }
-    }, 1000);
+
+      startBtn.disabled = true;
+      startBtn.textContent = 'Ad Loading...';
+
+      // Call the Monetag SDK function
+      show_10002890().then(() => {
+          // Ad shown successfully - Give the user the reward completion capability
+          startBtn.textContent = "Finished";
+          const modal = startBtn.closest(".modal");
+          const completeBtn = modal.querySelector('[data-action="confirm-task"]');
+          completeBtn.disabled = false;
+          alert('বিজ্ঞাপন দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
+      }).catch((error) => {
+          // Ad showing failed
+          startBtn.disabled = false;
+          startBtn.textContent = 'Watch Now';
+          console.error('Monetag Ad Error:', error);
+          alert('বিজ্ঞাপনটি লোড হতে পারেনি। আবার চেষ্টা করুন।');
+      });
   }
 
-  // --- 6. Event Listeners (Remains the same) ---
+
+  // --- 6. Event Listeners ---
   
   function bindEvents() {
     document.addEventListener("click", (e) => {
@@ -247,7 +335,8 @@
       }
 
       const startVideoBtn = e.target.closest('[data-action="start-video"]');
-      if (startVideoBtn && !startVideoBtn.disabled) startVideoTimer(startVideoBtn);
+      // Replace manual timer with Monetag ad function
+      if (startVideoBtn && !startVideoBtn.disabled) startMonetagAd(startVideoBtn);
     });
 
     document.addEventListener("keydown", (e) => {
@@ -269,4 +358,4 @@
   
   document.addEventListener("DOMContentLoaded", init);
 
-    })();
+})();

@@ -41,7 +41,7 @@
     .referral-input-group {
         display: flex;
         gap: 8px;
-        align-items: center;
+        align-items: stretch; /* নিশ্চিত করার জন্য যে এটি উচ্চতা নেয় */
         background-color: var(--bg-primary);
         border: 1px solid var(--border-color);
         border-radius: 12px;
@@ -51,21 +51,21 @@
 
     .referral-code-display {
         flex-grow: 1;
-        /* এই প্রপার্টি নিশ্চিত করবে যে এটি বাটনকে বাইরে ঠেলে দেবে না */
         min-width: 0; 
-        font-family: var(--font-heading);
-        font-size: 1.25rem;
+        font-family: var(--font-body); /* ফন্ট পরিবর্তন করা হলো যাতে স্ক্রিনে ধরে */
+        font-size: 1.1rem; /* ফন্ট সাইজ সামান্য কমানো হলো */
         font-weight: 700;
         color: var(--text-primary);
         text-align: left;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        /* বড় টেক্সট ভাঙার জন্য এই লাইনগুলো অপরিহার্য */
+        white-space: normal; 
+        word-break: break-all;
         padding-left: 8px;
+        display: flex;
+        align-items: center;
     }
     
     .btn-copy {
-        /* এই প্রপার্টি নিশ্চিত করবে যে বাটন সংকুচিত হবে না */
         flex-shrink: 0; 
         background-color: var(--accent-primary);
         color: white;
@@ -78,14 +78,16 @@
         display: flex;
         align-items: center;
         gap: 5px;
-        font-size: 0.9rem; /* ফন্ট ছোট করা হলো যাতে সহজে স্ক্রিনে ধরে */
+        font-size: 0.9rem;
+        line-height: 1;
+        /* নিশ্চিত করা হলো যে বাটন সব সময় ঠিক থাকে */
+        height: auto; 
     }
     .btn-copy:active { background-color: var(--accent-primary-hover); }
 
     /* Referral Stats */
     .stats-grid {
         display: grid;
-        /* নিশ্চিত করা হলো যে ছোট স্ক্রিনেও ঠিকভাবে কাজ করে */
         grid-template-columns: repeat(2, 1fr); 
         gap: var(--spacing);
         margin-bottom: 20px;
@@ -116,7 +118,7 @@
     /* Benefits Section */
     .benefit-item {
         display: flex;
-        align-items: flex-start; /* উপরের দিকে align করা হলো */
+        align-items: flex-start;
         gap: 12px;
         padding: 12px 0;
         border-bottom: 1px solid var(--border-color);
@@ -183,7 +185,7 @@
         
         <h4 style="margin-top: 20px;">আপনার রেফারেল লিঙ্ক</h4>
         <div class="referral-input-group">
-            <div id="referral-link" class="referral-code-display">https://grand.app/ref/grand2025</div>
+            <div id="referral-link" class="referral-code-display">https://grand.app/ref/grand2025/long_link_to_test_screen_fit</div>
             <button class="btn-copy" data-target="referral-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                 <span>কপি</span>
@@ -221,7 +223,7 @@
                 <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9h6" /></svg>
                 <div class="benefit-details">
                     <h5>লাইফটাইম ১০% কমিশন</h5>
-                    <p>আপনার রেফার করা ইউজাররা যতবার উইথড্র করবে, আপনি তার ওপর ১০% কমিশন পাবেন।</p>
+                    <p>আপনার রেফার করা ইউজাররা যতবার উইথড্র করবে, আপনি তার ওপর **১০% কমিশন** পাবেন।</p>
                 </div>
             </div>
 

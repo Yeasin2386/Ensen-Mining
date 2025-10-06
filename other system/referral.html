@@ -37,6 +37,7 @@
         font-size: 1rem;
     }
 
+    /* স্ক্রিনের বাইরে না যাওয়ার জন্য flex-shrink এবং overflow সেট করা হলো */
     .referral-input-group {
         display: flex;
         gap: 8px;
@@ -50,6 +51,8 @@
 
     .referral-code-display {
         flex-grow: 1;
+        /* এই প্রপার্টি নিশ্চিত করবে যে এটি বাটনকে বাইরে ঠেলে দেবে না */
+        min-width: 0; 
         font-family: var(--font-heading);
         font-size: 1.25rem;
         font-weight: 700;
@@ -62,6 +65,8 @@
     }
     
     .btn-copy {
+        /* এই প্রপার্টি নিশ্চিত করবে যে বাটন সংকুচিত হবে না */
+        flex-shrink: 0; 
         background-color: var(--accent-primary);
         color: white;
         padding: 10px 15px;
@@ -73,13 +78,15 @@
         display: flex;
         align-items: center;
         gap: 5px;
+        font-size: 0.9rem; /* ফন্ট ছোট করা হলো যাতে সহজে স্ক্রিনে ধরে */
     }
     .btn-copy:active { background-color: var(--accent-primary-hover); }
 
     /* Referral Stats */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        /* নিশ্চিত করা হলো যে ছোট স্ক্রিনেও ঠিকভাবে কাজ করে */
+        grid-template-columns: repeat(2, 1fr); 
         gap: var(--spacing);
         margin-bottom: 20px;
     }
@@ -109,7 +116,7 @@
     /* Benefits Section */
     .benefit-item {
         display: flex;
-        align-items: center;
+        align-items: flex-start; /* উপরের দিকে align করা হলো */
         gap: 12px;
         padding: 12px 0;
         border-bottom: 1px solid var(--border-color);
@@ -120,6 +127,8 @@
         color: var(--success-color);
         width: 24px;
         height: 24px;
+        flex-shrink: 0;
+        margin-top: 2px;
     }
     
     .benefit-details h5 {
@@ -203,16 +212,16 @@
             <div class="benefit-item">
                 <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.668.243 9.38 9.38 0 002.668-.243m-15.336 0c.26-.065.517-.13.776-.197M6 16.452l4.872-3.155L14.743 18m-9.743-1.548c.26-.065.517-.13.776-.197M18 16.452l-4.872-3.155L9.257 18M9.257 18l1.621 1.054M12 12.75h.008v.008H12v-.008z" /></svg>
                 <div class="benefit-details">
-                    <h5>প্রতি রেফারে ৳10</h5>
-                    <p>আপনার কোড ব্যবহার করে অ্যাকাউন্ট খুললেই পাবেন এই বোনাস।</p>
+                    <h5>প্রতি রেফারে ৳5 বোনাস</h5>
+                    <p>আপনার কোড ব্যবহার করে নতুন অ্যাকাউন্ট খুললেই আপনি পাবেন এই বোনাস।</p>
                 </div>
             </div>
 
             <div class="benefit-item">
                 <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9h6" /></svg>
                 <div class="benefit-details">
-                    <h5>লাইফটাইম কমিশন</h5>
-                    <p>আপনার রেফার করা ইউজারদের আয়ের ওপর পাবেন বিশেষ কমিশন।</p>
+                    <h5>লাইফটাইম ১০% কমিশন</h5>
+                    <p>আপনার রেফার করা ইউজাররা যতবার উইথড্র করবে, আপনি তার ওপর ১০% কমিশন পাবেন।</p>
                 </div>
             </div>
 
@@ -261,7 +270,6 @@
   <script>
     // --- Helper for DOM selection ---
     const $ = (selector, parent = document) => parent.querySelector(selector);
-    const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
 
     // --- Core Functions ---
     
@@ -288,7 +296,6 @@
     function fallbackCopy(text, button) {
         const textArea = document.createElement("textarea");
         textArea.value = text;
-        // Avoid flashing content
         textArea.style.position = "fixed"; 
         textArea.style.top = "-9999px"; 
         document.body.appendChild(textArea);

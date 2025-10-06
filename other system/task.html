@@ -80,11 +80,21 @@
       <section class="tasks-section">
         <h3 class="section-title">টাস্ক</h3>
         <div class="task-list">
-          <div class="task-card" data-task-id="watch-video" data-reward="3" data-duration="15">
+          
+          <div class="task-card" data-task-id="join-channel" data-reward="5">
+              <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
+              <div class="task-details">
+                <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
+                <p class="reward">+ ৳5 বোনাস (এককালীন)</p>
+              </div>
+              <button class="btn-go" data-open-modal="join-channel">Go</button>
+          </div>
+          
+          <div class="task-card" data-task-id="watch-video" data-reward="1" data-duration="15">
             <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
             <div class="task-details">
               <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
-              <p class="reward">+ ৳3 বোনাস</p>
+              <p class="reward">+ ৳1 বোনাস</p>
             </div>
             <button class="btn-go" data-open-modal="watch-video">Go</button>
           </div>
@@ -119,6 +129,26 @@
   </a>
 </nav>
 
+  <div id="modal-join-channel" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <div class="modal-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+      </div>
+      <div class="modal-header">
+        <h3>চ্যানেলে জয়েন করুন</h3>
+        <p class="modal-reward">আপনি পাবেন ৳5</p>
+      </div>
+      <div class="modal-body">
+        <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটনে ক্লিক করুন।</p>
+      </div>
+      <div class="modal-actions">
+        <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
+        <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
+      </div>
+    </div>
+  </div>
+
   <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-dialog">
@@ -127,10 +157,10 @@
         </div>
       <div class="modal-header">
         <h3>ভিডিও দেখুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳3</p>
+        <p class="modal-reward">আপনি পাবেন ৳1</p>
       </div>
       <div class="modal-body">
-        <p>পুরো ভিডিওটি দেখুন (১৫ সেকেন্ড)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
+        <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
@@ -139,10 +169,8 @@
     </div>
   </div>
 
+  <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
   <script>
-    // এখানে আপনার script.js এর শুধুমাত্র টাস্ক-সম্পর্কিত এবং UI আপডেটের লজিক থাকবে।
-    // সম্পূর্ণ কার্যকারিতা পেতে, আপনাকে অবশ্যই আপনার মূল script.js ফাইলটিকে আপডেট করতে হবে (যেমনটা আমি আগের উত্তরে দিয়েছিলাম)।
-
     const $ = (selector, parent = document) => parent.querySelector(selector);
     const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
 
@@ -189,8 +217,19 @@
                today.getDate() === otherDate.getDate();
     };
 
+    function getCompletedTasksToday() {
+        // Only count 'watch-video' tasks completed today
+        let todayCompletedCount = 0;
+        for (const taskId in tasksState) {
+            if (taskId === 'watch-video' && tasksState[taskId].status === 'completed' && isToday(tasksState[taskId].completed_at)) {
+                todayCompletedCount++;
+            }
+        }
+        return todayCompletedCount;
+    }
+
     function syncTasksAndStats() {
-      let todayCompletedCount = 0;
+      let todayCompletedCount = getCompletedTasksToday();
       
       tasksFromDOM.forEach(task => {
         if (!tasksState[task.id]) {
@@ -201,15 +240,38 @@
         const isCompleted = taskState.status === "completed";
         
         if (isCompleted) {
-          task.goButton.textContent = "Done";
-          task.goButton.disabled = true;
-          if (isToday(taskState.completed_at)) {
-              todayCompletedCount++;
+          // Check for one-time task completion (Telegram)
+          if (task.id === 'join-channel') {
+            task.goButton.textContent = "Done";
+            task.goButton.disabled = true;
+          }
+          
+          // Check for video task completion (Daily Limit Reached or Done Today)
+          if (task.id === 'watch-video') {
+            if (todayCompletedCount >= DAILY_TASK_LIMIT) {
+                task.goButton.textContent = "Limit End";
+                task.goButton.disabled = true;
+            } else {
+                // If not done 20 times, allow it to be done again
+                task.goButton.textContent = "Go";
+                task.goButton.disabled = false;
+                // Reset status to pending so that multiple clicks are possible
+                taskState.status = "pending"; 
+            }
           }
         } else {
+          // Task not completed yet
           task.goButton.textContent = "Go";
-          task.goButton.disabled = false;
+          
+          // Apply limit check for video task
+          if (task.id === 'watch-video' && todayCompletedCount >= DAILY_TASK_LIMIT) {
+              task.goButton.textContent = "Limit End";
+              task.goButton.disabled = true;
+          } else {
+              task.goButton.disabled = false;
+          }
         }
+        
       });
       store.set(STORE_KEYS.tasks, tasksState);
       updateTaskLimitUI(todayCompletedCount);
@@ -223,13 +285,46 @@
     function completeTask(taskId) {
       const taskState = tasksState[taskId];
       const taskDef = tasksFromDOM.find(t => t.id === taskId);
+      const todayCompletedCount = getCompletedTasksToday();
 
-      if (taskState.status === "completed" || !taskDef) return;
-      if (taskDef.id === 'watch-video' && tasksFromDOM.find(t => t.id === 'watch-video').goButton.textContent === 'Go') return; // টাস্ক শুরু না হলে ব্লক করবে
+      if (!taskDef) return;
       
+      // Strict Limits Check
+      if (taskId === 'join-channel') {
+          if (taskState.status === "completed") {
+              alert("এই টাস্কটি (টেলিগ্রাম জয়েন) একবারই সম্পন্ন করা যাবে।");
+              return;
+          }
+      }
+      
+      if (taskId === 'watch-video') {
+          // Check if the user is trying to complete a task after the strict limit
+          if (todayCompletedCount >= DAILY_TASK_LIMIT) {
+              alert(`আজকের টাস্ক লিমিট (${DAILY_TASK_LIMIT} টি) শেষ। এর বেশি দেখতে পারবেন না।`);
+              return;
+          }
+          
+          // Ensure ad was started/finished before completing
+          const modal = $(`#modal-watch-video`);
+          const startBtn = modal.querySelector('[data-action="start-video"]');
+          if (startBtn.textContent !== 'Finished') {
+             alert('ভিডিওটি এখনো দেখা হয়নি, বা বিজ্ঞাপন লোড হচ্ছে।');
+             return;
+          }
+      }
+
+      // Completion Logic
       taskState.status = "completed";
       taskState.completed_at = Date.now();
+      
+      // Update balance based on taskDef reward
       balance += taskDef.reward;
+      
+      // For watch-video, if less than the limit, reset status so user can do it again
+      if (taskId === 'watch-video' && todayCompletedCount < DAILY_TASK_LIMIT - 1) { 
+          taskState.status = "pending"; // Reset for next watch
+      }
+
 
       store.set(STORE_KEYS.tasks, tasksState);
       store.set(STORE_KEYS.balance, balance);
@@ -237,7 +332,7 @@
       syncTasksAndStats();
     }
 
-    // --- Modal Logic ---
+    // --- Modal Logic (Updated for Monetag) ---
 
     function openModal(modalId) {
       const modal = $(`#modal-${modalId}`);
@@ -264,25 +359,34 @@
       }
     }
 
-    function startVideoTimer(startBtn) {
-      const duration = Number(startBtn.dataset.duration || 15);
-      let timeLeft = duration;
-      
-      startBtn.disabled = true;
-
-      videoTimer = setInterval(() => {
-        timeLeft--;
-        startBtn.textContent = `Waiting ${timeLeft}s...`;
-        
-        if (timeLeft <= 0) {
-          clearInterval(videoTimer);
-          videoTimer = null;
-          startBtn.textContent = "Finished";
-          const modal = startBtn.closest(".modal");
-          const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-          completeBtn.disabled = false;
+    /**
+     * Replaces startVideoTimer with Monetag Rewarded Interstitial logic.
+     */
+    function startMonetagAd(startBtn) {
+        if (typeof show_10002890 !== 'function') {
+            alert("বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
+            startBtn.disabled = false;
+            startBtn.textContent = 'Watch Now';
+            return;
         }
-      }, 1000);
+
+        startBtn.disabled = true;
+        startBtn.textContent = 'Ad Loading...';
+
+        show_10002890().then(() => {
+            // Ad shown successfully - Give the user the reward completion capability
+            startBtn.textContent = "Finished";
+            const modal = startBtn.closest(".modal");
+            const completeBtn = modal.querySelector('[data-action="confirm-task"]');
+            completeBtn.disabled = false;
+            alert('বিজ্ঞাপন দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
+        }).catch((error) => {
+            // Ad showing failed
+            startBtn.disabled = false;
+            startBtn.textContent = 'Watch Now';
+            console.error('Monetag Ad Error:', error);
+            alert('বিজ্ঞাপনটি লোড হতে পারেনি। আবার চেষ্টা করুন।');
+        });
     }
 
     function bindEvents() {
@@ -300,7 +404,7 @@
         }
 
         const startVideoBtn = e.target.closest('[data-action="start-video"]');
-        if (startVideoBtn && !startVideoBtn.disabled) startVideoTimer(startVideoBtn);
+        if (startVideoBtn && !startVideoBtn.disabled) startMonetagAd(startVideoBtn);
       });
     }
     

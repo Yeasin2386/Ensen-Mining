@@ -72,7 +72,7 @@
       
       <section class="balance-card-wrapper">
         <div class="task-limit-card">
-          <div class="balance-label"><span>আজকের টাস্ক লিমিট</span></div>
+          <div class="balance-label"><span>আজকের ভিডিও টাস্ক</span></div>
           <p class="balance-amount"><span id="tasks-today-page">0/20</span></p>
         </div>
       </section>
@@ -206,7 +206,7 @@
         goButton: card.querySelector(".btn-go"),
     }));
 
-    // --- Core Functions (Simplified for Task Page) ---
+    // --- Core Functions (Task Page Specific) ---
 
     function isToday(ts) {
         if (!ts) return false;
@@ -218,7 +218,6 @@
     };
 
     function getCompletedTasksToday() {
-        // Only count 'watch-video' tasks completed today
         let todayCompletedCount = 0;
         for (const taskId in tasksState) {
             if (taskId === 'watch-video' && tasksState[taskId].status === 'completed' && isToday(tasksState[taskId].completed_at)) {
@@ -228,6 +227,9 @@
         return todayCompletedCount;
     }
 
+    /**
+     * FIX APPLIED: Made syncTasksAndStats more robust for multi-completion tasks.
+     */
     function syncTasksAndStats() {
       let todayCompletedCount = getCompletedTasksToday();
       
@@ -239,39 +241,29 @@
         const taskState = tasksState[task.id];
         const isCompleted = taskState.status === "completed";
         
-        if (isCompleted) {
-          // Check for one-time task completion (Telegram)
-          if (task.id === 'join-channel') {
-            task.goButton.textContent = "Done";
-            task.goButton.disabled = true;
-          }
-          
-          // Check for video task completion (Daily Limit Reached or Done Today)
-          if (task.id === 'watch-video') {
+        if (task.id === 'join-channel') {
+            if (isCompleted) {
+                task.goButton.textContent = "Done";
+                task.goButton.disabled = true;
+            } else {
+                task.goButton.textContent = "Go";
+                task.goButton.disabled = false;
+            }
+        }
+        
+        if (task.id === 'watch-video') {
             if (todayCompletedCount >= DAILY_TASK_LIMIT) {
                 task.goButton.textContent = "Limit End";
                 task.goButton.disabled = true;
+                // Since limit is reached, permanently set status to completed (until day reset)
+                if (taskState.status !== 'completed') taskState.status = 'completed';
             } else {
-                // If not done 20 times, allow it to be done again
+                // Allow the task to be done again if limit not reached
                 task.goButton.textContent = "Go";
                 task.goButton.disabled = false;
-                // Reset status to pending so that multiple clicks are possible
-                taskState.status = "pending"; 
+                taskState.status = "pending"; // Ensure status is pending for the next count
             }
-          }
-        } else {
-          // Task not completed yet
-          task.goButton.textContent = "Go";
-          
-          // Apply limit check for video task
-          if (task.id === 'watch-video' && todayCompletedCount >= DAILY_TASK_LIMIT) {
-              task.goButton.textContent = "Limit End";
-              task.goButton.disabled = true;
-          } else {
-              task.goButton.disabled = false;
-          }
         }
-        
       });
       store.set(STORE_KEYS.tasks, tasksState);
       updateTaskLimitUI(todayCompletedCount);
@@ -282,6 +274,9 @@
       if (taskLimitEl) taskLimitEl.textContent = `${todayCount}/${DAILY_TASK_LIMIT}`;
     }
 
+    /**
+     * FIX APPLIED: Added strict Monetag ad check to prevent incorrect completion and counter reset.
+     */
     function completeTask(taskId) {
       const taskState = tasksState[taskId];
       const taskDef = tasksFromDOM.find(t => t.id === taskId);
@@ -304,35 +299,32 @@
               return;
           }
           
-          // Ensure ad was started/finished before completing
+          // --- AD COMPLETION CHECK (CRITICAL) ---
           const modal = $(`#modal-watch-video`);
           const startBtn = modal.querySelector('[data-action="start-video"]');
           if (startBtn.textContent !== 'Finished') {
-             alert('ভিডিওটি এখনো দেখা হয়নি, বা বিজ্ঞাপন লোড হচ্ছে।');
+             alert('ভিডিওটি সম্পূর্ণ দেখা হয়নি বা বিজ্ঞাপন লোড হচ্ছে। "Watch Now" বাটনে ক্লিক করে বিজ্ঞাপনটি শেষ করুন।');
              return;
           }
       }
 
       // Completion Logic
-      taskState.status = "completed";
+      taskState.status = "completed"; // Temporarily set to completed to count the current click
       taskState.completed_at = Date.now();
       
-      // Update balance based on taskDef reward
+      // Update balance
       balance += taskDef.reward;
       
-      // For watch-video, if less than the limit, reset status so user can do it again
-      if (taskId === 'watch-video' && todayCompletedCount < DAILY_TASK_LIMIT - 1) { 
-          taskState.status = "pending"; // Reset for next watch
-      }
-
-
+      // Save state
       store.set(STORE_KEYS.tasks, tasksState);
       store.set(STORE_KEYS.balance, balance);
 
+      // Re-sync tasks. syncTasksAndStats will immediately set 'watch-video' status back to "pending" 
+      // if the limit is not reached, allowing the user to click 'Go' again.
       syncTasksAndStats();
     }
 
-    // --- Modal Logic (Updated for Monetag) ---
+    // --- Modal Logic (Monetag) ---
 
     function openModal(modalId) {
       const modal = $(`#modal-${modalId}`);
@@ -359,9 +351,6 @@
       }
     }
 
-    /**
-     * Replaces startVideoTimer with Monetag Rewarded Interstitial logic.
-     */
     function startMonetagAd(startBtn) {
         if (typeof show_10002890 !== 'function') {
             alert("বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
@@ -374,14 +363,12 @@
         startBtn.textContent = 'Ad Loading...';
 
         show_10002890().then(() => {
-            // Ad shown successfully - Give the user the reward completion capability
             startBtn.textContent = "Finished";
             const modal = startBtn.closest(".modal");
             const completeBtn = modal.querySelector('[data-action="confirm-task"]');
             completeBtn.disabled = false;
             alert('বিজ্ঞাপন দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
         }).catch((error) => {
-            // Ad showing failed
             startBtn.disabled = false;
             startBtn.textContent = 'Watch Now';
             console.error('Monetag Ad Error:', error);
@@ -419,4 +406,4 @@
 
   </script>
 </body>
-</html>
+        </html>

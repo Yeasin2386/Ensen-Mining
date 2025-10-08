@@ -29,15 +29,77 @@
     }
     .task-limit-card .balance-amount {
         font-family: var(--font-heading);
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 700;
-        margin-top: 5px;
-        line-height: 1;
+        line-height: 1.2;
+        color: var(--bg-surface);
     }
+    .task-list {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .task-card {
+        background-color: var(--bg-surface);
+        padding: var(--spacing);
+        border-radius: var(--radius-md);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .task-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-grow: 1;
+    }
+    .task-info h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        color: var(--text-primary);
+    }
+    .task-info p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+    }
+    .task-icon {
+        width: 36px;
+        height: 36px;
+        color: var(--accent-primary);
+        flex-shrink: 0;
+    }
+    .btn-go {
+        padding: 10px 18px;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--success-color);
+        color: var(--bg-surface);
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        flex-shrink: 0;
+    }
+    .btn-go:hover:not(:disabled) {
+        background-color: #1E914F;
+    }
+    .btn-go:disabled {
+        background-color: #E9ECEF;
+        color: #ADB5BD;
+        cursor: not-allowed;
+    }
+    
+    /* Navigation Active State */
     .bottom-nav a[href="task.html"] {
         color: var(--accent-primary) !important;
     }
   </style>
+  
+  <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
+  
 </head>
 <body>
   
@@ -55,78 +117,92 @@
       <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
         <img src="../image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
       </a>
-      <h1 class="app-title">টাস্ক</h1>
-      <a href="../settings.html" class="header-btn" aria-label="সেটিংস">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      </a>
+      <div class="header-info">
+        <p class="balance-label">Current Balance</p>
+        <p class="balance-amount">৳<span id="balance-amount">0.00</span></p>
+      </div>
     </header>
 
     <main class="app-main">
-      
-      <section class="balance-card-wrapper">
-        <div class="task-limit-card">
-          <div class="balance-label"><span>আজকের ভিডিও টাস্ক</span></div>
-          <p class="balance-amount"><span id="task-limit-display">0/20</span></p>
-        </div>
-      </section>
 
-      <section class="tasks-section">
-        <h3 class="section-title">টাস্ক</h3>
-        <div class="task-list">
-          
-          <div class="task-card" data-task-id="watch-video" data-reward="1">
-            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
-            <div class="task-details">
-              <h4>ভিডিও দেখে আয় করুন</h4>
-              <p class="reward">+ ৳1 বোনাস</p>
-            </div>
-            <button class="btn-go" data-open-modal="watch-video">Go</button>
-          </div>
-          
-          <div class="task-card" data-task-id="join-channel" data-reward="5">
-              <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
-              <div class="task-details">
-                <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
-                <p class="reward">+ ৳5 বোনাস (এককালীন)</p>
+      <div class="task-limit-card">
+        <p class="balance-label">Today's Completed Tasks</p>
+        <p class="balance-amount"><span id="task-limit-display">0/20</span></p>
+      </div>
+
+      <section class="task-list">
+
+        <div class="task-card" data-task-id="watch-video">
+            <div class="task-info">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="task-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
+              <div>
+                <h4>Watch Video Ads</h4>
+                <p>Watch a short video ad and earn ৳1.00.</p>
               </div>
-              <button class="btn-go" disabled>Done</button>
-          </div>
+            </div>
+            <button class="btn-go" data-open-modal="modal-watch-video" data-task-type="video">Go</button>
         </div>
+        
+        <div class="task-card">
+            <div class="task-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="task-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-6 3h12a2.25 2.25 0 012.25 2.25v6.75a2.25 2.25 0 01-2.25 2.25h-12A2.25 2.25 0 013 21v-6.75a2.25 2.25 0 012.25-2.25z" /></svg>
+                <div>
+                    <h4>Dummy Task 2</h4>
+                    <p>Coming Soon. Earn ৳1.50.</p>
+                </div>
+            </div>
+            <button class="btn-go" disabled>Coming Soon</button>
+        </div>
+        
+        <div class="task-card">
+            <div class="task-info">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="task-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h.008v.008H12V7.5zm0 3h.008v.008H12v-.008zm0 3h.008v.008H12v-.008zM3.75 6a2.25 2.25 0 012.25-2.25h12A2.25 2.25 0 0120.25 6v12a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM6 10.5h12v7.5H6v-7.5z" /></svg>
+                <div>
+                    <h4>Dummy Task 3</h4>
+                    <p>Coming Soon. Earn ৳0.75.</p>
+                </div>
+            </div>
+            <button class="btn-go" disabled>Coming Soon</button>
+        </div>
+
       </section>
+      
     </main>
 
     <nav class="bottom-nav">
       <a href="../index.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.95-8.95c.4-.4.89-.6 1.4-.6s1.01.2 1.4.6l8.95 8.95c.4.4.6.9.6 1.4v7.1c0 1.2-.8 2-2 2H4.25c-1.2 0-2-.8-2-2V13.4c0-.5.2-1 .6-1.4z" /><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 15.75h4.5v4.5h-4.5z" /></svg>
         <span>Home</span>
       </a>
-      <a href="task.html" class="nav-item active" aria-current="page">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <a href="task.html" class="nav-item active">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3m-3 0h3m-3 0V9m3 0V9m-4.5 9h9a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0013.5 4.5h-9A2.25 2.25 0 002.25 6.75v9A2.25 2.25 0 004.5 18z" /></svg>
         <span>Task</span>
       </a>
-      <a href="tutorial.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
-        <span>Tutorial</span>
-      </a>
-      <a href="referral.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-        </svg>
-        <span>Referral</span>
-      </a>
       <a href="withdraw.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625c0-1.036-.84-1.875-1.875-1.875h-1.5A1.875 1.875 0 0014.25 9.75v.231M19.5 14.25L12 21.75l-7.5-7.5m15 7.5L12 21.75l-7.5-7.5m4.5-5.625h.008v.008H9v-.008zM12 6.75h.008v.008H12V6.75z" /></svg>
         <span>Withdraw</span>
       </a>
     </nav>
+
+    <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-dialog">
+          <div class="modal-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
+          </div>
+          <h3 class="modal-header">Video Task</h3>
+          <p class="modal-reward">Reward: ৳1.00</p>
+          <div class="modal-body">
+              <p>বিজ্ঞাপনটি সম্পূর্ণ দেখার পরই আপনার অ্যাকাউন্টে পুরষ্কার যোগ করা হবে। অনুগ্রহ করে অ্যাড চলাকালীন পেজ বন্ধ করবেন না।</p>
+          </div>
+          <div class="modal-actions">
+              <button class="btn-primary" data-action="start-video">Watch Now</button> 
+              <button class="btn-secondary" data-close-modal>Close</button>
+          </div>
+      </div>
+    </div>
   </div>
   
-  <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
-  <script defer src="../script.js"></script>
+  <script src="../script.js"></script>
 </body>
 </html>

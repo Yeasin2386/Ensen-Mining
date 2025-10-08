@@ -28,83 +28,107 @@
   <a href="index.html" class="header-logo" aria-label="হোমপেজ">
     <img src="image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
   </a>
-  <h1 class="app-title">Grand</h1>
-  <a href="settings.html" class="header-btn" aria-label="সেটিংস">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  </a>
+  <div class="header-user-info">
+    <span class="user-id" id="user-username">@loading</span>
+    <h3 class="user-name" id="user-name">Loading User</h3>
+  </div>
+  <div class="header-avatar">
+    <img src="assets/avatar-placeholder.png" alt="User Avatar" id="user-avatar" />
+  </div>
 </header>
-
-    <main class="app-main">
+    
+    <main class="app-content">
       
-      <section class="user-info">
-        <img id="user-avatar" class="avatar" src="assets/avatar-placeholder.png" alt="প্রোফাইল ছবি" />
-        <div>
-          <h2 id="user-name" class="user-name">ইউজারের নাম</h2>
-          <p id="user-username" class="user-handle">@username</p>
-        </div>
-      </section>
+<section class="balance-section">
+  <div class="balance-card">
+    <h4 class="balance-label">Current Balance</h4>
+    <h2 class="balance-amount">৳<span id="balance-amount">0.00</span></h2>
+    <a href="other system/withdraw.html" class="btn-balance-action">Withdraw</a>
+  </div>
+</section>
 
-      <section class="balance-card-wrapper">
-        <div class="balance-card">
-          <div class="balance-label"><span>আপনার ব্যালেন্স</span></div>
-          <p class="balance-amount">৳<span id="balance-amount">0.00</span></p>
-        </div>
-      </section>
+<section class="stats-section">
+  <div class="stats-card">
+    
+    <div class="stat-item">
+        <h4 class="stat-label">Tasks Today</h4>
+        <h2 class="stat-amount" id="tasks-today">0/20</h2> 
+    </div>
+    
+    <div class="stat-item">
+        <h4 class="stat-label">Total Referrals</h4>
+        <h2 class="stat-amount" id="referrals-count">0</h2>
+    </div>
+    
+  </div>
+</section>
 
-      <section class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-value" id="tasks-today">0/20</div>
-          <div class="stat-label">আজকের টাস্ক</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-value" id="referrals-count">0</div>
-          <div class="stat-label">মোট রেফারেল</div>
-        </div>
-      </section>
+<section class="tasks-section">
+  <h3 class="section-title">Daily Task</h3>
+  
+  <div class="task-card" data-task-id="watch-video">
+    <div class="task-info">
+      <div class="task-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
+      </div>
+      <div class="task-details">
+        <h4 class="task-title">Watch Video Ad</h4>
+        <p class="task-reward">Reward: ৳1.00</p>
+      </div>
+    </div>
+    <button class="btn-go" data-open-modal="watch-video">Go</button>
+  </div>
+  
+  <h3 class="section-title mt-4">Other Tasks</h3>
+  
+  <div class="task-card" data-task-id="join-channel">
+    <div class="task-info">
+      <div class="task-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 6.75h18a2.25 2.25 0 002.25-2.25v-8.25a2.25 2.25 0 00-2.25-2.25h-18A2.25 2.25 0 003 6.75v8.25a2.25 2.25 0 002.25 2.25z" /></svg>
+      </div>
+      <div class="task-details">
+        <h4 class="task-title">Join Telegram Channel</h4>
+        <p class="task-reward">Reward: ৳5.00 (One time)</p>
+      </div>
+    </div>
+    <a href="https://t.me/your_channel_link" target="_blank" class="btn-go">Go</a>
+  </div>
+  
+  <a href="other system/task.html" class="btn-view-all">View All 20 Tasks</a>
+</section>
 
-      <section class="tasks-section">
-        <h3 class="section-title">ডেইলি টাস্ক</h3>
-        <div class="task-list">
-          
-          <div class="task-card" data-task-id="watch-video" data-reward="1" data-duration="15">
-            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
-            <div class="task-details">
-              <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
-              <p class="reward">+ ৳1 বোনাস</p>
-            </div>
-            <button class="btn-go" data-open-modal="watch-video">Go</button>
-          </div>
-        </div>
-      </section>
     </main>
-
+    
     <nav class="bottom-nav">
-  <a href="index.html" class="nav-item active" aria-current="page">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
+  <a href="index.html" class="nav-item active">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.149-.439 1.588 0L21.75 12M4.5 9.75v10.125a3 3 0 003 3h8.25a3 3 0 003-3V9.75M8.25 21.75h7.5" />
+    </svg>
     <span>Home</span>
   </a>
   <a href="other system/task.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
     <span>Task</span>
   </a>
+  <a href="other system/withdraw.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <span>Withdraw</span>
+  </a>
   <a href="other system/tutorial.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5l-6 6m0 0l-6-6m6 6V3" />
+    </svg>
     <span>Tutorial</span>
   </a>
   <a href="other system/referral.html" class="nav-item">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 6.75h18a2.25 2.25 0 002.25-2.25v-8.25a2.25 2.25 0 00-2.25-2.25h-18A2.25 2.25 0 003 6.75v8.25a2.25 2.25 0 002.25 2.25z" />
     </svg>
     <span>Referral</span>
-  </a>
-  <a href="other system/withdraw.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-    </svg>
-    <span>Withdraw</span>
   </a>
 </nav>
 
@@ -112,23 +136,23 @@
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-dialog">
         <div class="modal-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
         </div>
-      <div class="modal-header">
-        <h3>ভিডিও দেখুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳1</p>
-      </div>
-      <div class="modal-body">
-        <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
-        <button class="btn-primary" data-action="confirm-task" data-task="watch-video">Complete</button>
-      </div>
+        <div class="modal-header">
+            <h3>দৈনিক ভিডিও টাস্ক</h3>
+            <span class="modal-reward">পুরষ্কার: ৳1.00</span>
+        </div>
+        <div class="modal-body">
+            <p>পুরষ্কার পেতে হলে আপনাকে ভিডিও বিজ্ঞাপনটি সম্পূর্ণ দেখতে হবে। ভিডিও শেষ হওয়ার পর "Complete" বাটনটি সক্রিয় হবে।</p>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-primary" data-action="start-video">Watch Now</button>
+            <button class="btn-secondary" data-action="confirm-task" data-task="watch-video" disabled>Complete</button>
+        </div>
     </div>
   </div>
 
   <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
-  <script defer src="script.js"></script>
+  <script src="script.js"></script>
 </body>
-  </html>
+</html>

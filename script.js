@@ -2,14 +2,18 @@
   Grand App - v3 (Final Home)
   Main JavaScript file for the home screen.
   
-  UPDATED LOGIC: 
-  - Shared Daily Task Limit (20) for all pages.
-  - Home Page (index.html) is restricted to the first task (1/20).
-  - CRITICAL FIX: Daily Reset logic implemented based on timestamp.
-  - Professional, Monetag-free alert messages implemented.
+  Updates:
+  - Daily video task reward set to ৳1.00.
+  - Manual 15s timer replaced by Ad SDK call.
+  
+  *** ইউজার রিকুয়েস্ট অনুযায়ী পরিবর্তনসমূহ: ***
+  1. টাস্ক লিমিট: হোম এবং টাস্ক পেজ উভয়ের জন্য মোট ২০টি।
+  2. হোম পেজ টাস্ক: দিনে একবারই সম্পন্ন করা যাবে (মোট ২০টির মধ্যে)।
+  3. পপআপ মেসেজ: আরও প্রফেশনাল এবং স্পষ্ট করা হয়েছে।
+  4. ডেইলি রিসেট: রাত ১২টায় স্বয়ংক্রিয় রিসেট।
 */
 
-// Using an IIFE (Immediately Invoked Function Expression) to avoid polluting the global scope.
+// Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
 (() => {
   "use strict";
 
@@ -28,259 +32,213 @@
     tasksToday: $("#tasks-today"), // Home page stat
     referralsCount: $("#referrals-count"),
     modals: { video: $("#modal-watch-video") },
+    homeTaskBtn: $('[data-task-btn]'), // Button on index.html
   };
 
   // --- 3. State Management & localStorage ---
   const STORE_KEYS = {
     balance: "grand_balance_v3",
-    tasks: "grand_tasks_v3", // This will now hold the daily task count
+    tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
-  };
-
-  const store = {
-    get: (key, fallback = null) => {
-      try {
-        const value = localStorage.getItem(key);
-        return value ? JSON.parse(value) : fallback;
-      } catch (e) {
-        return fallback;
-      }
-    },
-    set: (key, value) => {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {
-        console.error("Failed to save to localStorage", e);
-      }
-    },
-  };
-
-  let balance = store.get(STORE_KEYS.balance, 0);
-  let tasksState = store.get(STORE_KEYS.tasks, {});
-  // CRITICAL CHANGE: The daily limit is now a single, shared value (20)
-  const DAILY_TASK_LIMIT = 20; 
-  
-  const TASK_REWARDS = {
-    'join-channel': 5.00, 
-    'watch-video': 1.00, 
+    // New key to track home page task completion for the day
+    homeTaskDone: "grand_home_task_done_v3",
   };
   
-  const tasksFromDOM = $$(".task-card").map(card => ({
-    id: card.dataset.taskId,
-    reward: TASK_REWARDS[card.dataset.taskId] || 0,
-    duration: card.dataset.duration ? Number(card.dataset.duration) : null,
-    goButton: card.querySelector(".btn-go"),
-  }));
-  
-  /**
-   * Checks if the given timestamp is for today (for daily reset).
-   */
-  const isToday = (ts) => {
-      if (!ts) return false;
-      const today = new Date();
-      const otherDate = new Date(ts);
-      return today.getFullYear() === otherDate.getFullYear() &&
-             today.getMonth() === otherDate.getMonth() &&
-             today.getDate() === otherDate.getDate();
+  const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
+  const TASK_REWARD = 1.00;
+  const USER_INFO = {
+    name: "A. K. Yeasin",
+    username: "@yeasinkhan",
+    avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
   };
 
-  /**
-   * **UPDATED:** Checks the count of completed video tasks for today.
-   * Resets the count if a new day has started (daily reset logic).
-   */
-  function getCompletedTasksToday() {
-      const videoTaskState = tasksState['watch-video'] || {};
-      
-      // Check if the last completion time is NOT today
-      if (!videoTaskState.completed_at || !isToday(videoTaskState.completed_at)) {
-          // Reset the count for the new day
-          tasksState['watch-video'] = { status: "pending", completed_at: null, count: 0 };
-          return 0; 
-      }
-      
-      // Return the current count (default to 0 if count property is missing)
-      return videoTaskState.count || 0;
-  }
-
-  // --- 4. Core Functions ---
-
-  function handlePreloader() {
-    setTimeout(() => {
-      els.preloader.classList.add("hidden");
-      els.app.setAttribute("aria-hidden", "false");
-    }, 1500);
-  }
-  
-  function initUser() {
-    updateUserInfo({
-        name: "Guest User",
-        username: "guest",
-        avatarUrl: "assets/avatar-placeholder.png",
-    });
-  }
-
-  function updateUserInfo(user) {
-    if (els.userName) els.userName.textContent = user.name;
-    if (els.userUsername) els.userUsername.textContent = `@${user.username}`;
-    if (els.userAvatar && user.avatarUrl) els.userAvatar.src = user.avatarUrl;
-  }
-  
-  /**
-   * **UPDATED** - Synchronizes tasks for the home page (now checks shared limit).
-   */
-  function syncTasksAndStats() {
-    let todayCompletedCount = getCompletedTasksToday();
+  function getState() {
+    const today = new new Date().toDateString();
     
-    tasksFromDOM.forEach(task => {
-      if (!tasksState[task.id]) {
-        tasksState[task.id] = { status: "pending", completed_at: null };
-      }
-      
-      if (task.id === 'watch-video') {
-        // Shared Logic: If total limit is reached (20/20), disable Go button
-        if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-            task.goButton.textContent = "Limit End";
-            task.goButton.disabled = true;
-        } 
-        // Home Page Specific Logic: Disable after the first completion (1/20)
-        else if (todayCompletedCount >= 1) {
-            task.goButton.textContent = "Done";
-            task.goButton.disabled = true;
+    // Get existing state or set defaults
+    let balance = parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
+    let referrals = parseInt(localStorage.getItem(STORE_KEYS.referrals)) || 0;
+    
+    let tasksState = JSON.parse(localStorage.getItem(STORE_KEYS.tasks)) || { date: today, completed: 0 };
+    let homeTaskDoneState = JSON.parse(localStorage.getItem(STORE_KEYS.homeTaskDone)) || { date: today, done: false };
+
+    // --- Daily Reset Logic (New Day Check) ---
+    if (tasksState.date !== today) {
+      tasksState = { date: today, completed: 0 };
+    }
+    if (homeTaskDoneState.date !== today) {
+      homeTaskDoneState = { date: today, done: false };
+    }
+
+    return { balance, referrals, tasksState, homeTaskDoneState };
+  }
+
+  function saveState(state) {
+    localStorage.setItem(STORE_KEYS.balance, state.balance.toFixed(2));
+    localStorage.setItem(STORE_KEYS.referrals, state.referrals);
+    localStorage.setItem(STORE_KEYS.tasks, JSON.stringify(state.tasksState));
+    localStorage.setItem(STORE_KEYS.homeTaskDone, JSON.stringify(state.homeTaskDoneState));
+  }
+  
+  // --- 4. UI/Data Sync Functions ---
+
+  function updateUI(state) {
+    if (els.userName) els.userName.textContent = USER_INFO.name;
+    if (els.userUsername) els.userUsername.textContent = USER_INFO.username;
+    if (els.userAvatar) els.userAvatar.src = USER_INFO.avatar;
+
+    if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
+    if (els.referralsCount) els.referralsCount.textContent = state.referrals;
+    
+    // Update Task Counter on Home Page and Task Page
+    const taskCounterText = `${state.tasksState.completed}/${TASK_LIMIT}`;
+    
+    // For Home Page (index.html)
+    if (els.tasksToday) {
+      els.tasksToday.textContent = taskCounterText;
+    }
+    
+    // For Task Page (task.html)
+    const taskLimitDisplay = $("#task-limit-display");
+    if (taskLimitDisplay) {
+        taskLimitDisplay.textContent = taskCounterText;
+    }
+
+    // --- Task completion logic and button state ---
+    const isLimitReached = state.tasksState.completed >= TASK_LIMIT;
+    const startVideoBtn = $('[data-action="start-video"]'); // General task button (Task.html and Modal)
+
+    // A. Handle General Task Button (Task.html/Modal)
+    if (startVideoBtn) {
+        if (isLimitReached) {
+            startVideoBtn.disabled = true;
+            startVideoBtn.textContent = 'দৈনিক লিমিট শেষ';
+        } else {
+             startVideoBtn.disabled = false;
+             startVideoBtn.textContent = 'Watch Now';
         }
-        else {
-            // Task is available (0/20)
-            task.goButton.textContent = "Go";
-            task.goButton.disabled = false;
+    }
+    
+    // B. Handle Home Page Daily Task Button (index.html)
+    if (els.homeTaskBtn) {
+        if (isLimitReached) {
+             els.homeTaskBtn.disabled = true;
+             els.homeTaskBtn.textContent = 'দৈনিক লিমিট শেষ';
+        } else if (state.homeTaskDoneState.done) {
+             // Home task completed for today, but general limit not reached
+             els.homeTaskBtn.disabled = true;
+             els.homeTaskBtn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
+        } else {
+             // Home task available
+             els.homeTaskBtn.disabled = false;
+             els.homeTaskBtn.textContent = 'Watch & Earn';
         }
-      }
-    });
-
-    store.set(STORE_KEYS.tasks, tasksState);
-    updateStatsUI(todayCompletedCount); 
+    }
   }
 
-  function updateStatsUI(todayCount) {
-    if (els.balanceAmount) els.balanceAmount.textContent = balance.toFixed(2);
-    
-    // CRITICAL CHANGE: Show shared 0/20 limit
-    if (els.tasksToday) els.tasksToday.textContent = todayCount + '/' + DAILY_TASK_LIMIT;
-    
-    if (els.referralsCount) els.referralsCount.textContent = store.get(STORE_KEYS.referrals, 0);
-  }
+  // --- 5. Core App Logic ---
 
-  /**
-   * **UPDATED** - Completion logic with strict limits and professional messages.
-   */
-  function completeTask(taskId) {
-    let todayCompletedCount = getCompletedTasksToday();
-    const videoTaskState = tasksState['watch-video'] = tasksState['watch-video'] || { status: "pending", completed_at: null, count: 0 };
+  function completeTask(taskType) {
+    let state = getState();
 
-    // --- 1. TOTAL LIMIT CHECK (Shared for all pages) ---
-    if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-        // Professional message for total limit end
-        alert(`দুঃখিত! আজকের (${DAILY_TASK_LIMIT}টি) ভিডিও টাস্কের লিমিট শেষ হয়েছে। নতুন টাস্কের জন্য অপেক্ষা করুন।`);
+    // 1. **CRITICAL:** Check the total limit again
+    if (state.tasksState.completed >= TASK_LIMIT) {
+      alert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
+      return;
+    }
+    
+    // 2. **NEW LOGIC:** Check if the task being completed is the HOME TASK
+    if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
+        alert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
         return;
     }
-
-    if (taskId === 'watch-video') {
-        // --- 2. HOME PAGE (FIRST TASK ONLY) CHECK ---
-        if (document.URL.includes('index.html') && todayCompletedCount >= 1) {
-            // Professional message for Home Page Daily Bonus
-            alert('আপনার আজকের দৈনিক বোনাস টাস্কটি ইতিমধ্যেই সম্পন্ন হয়েছে। অনুগ্রহ করে আগামীকাল (২৪ ঘন্টা পর) আবার চেষ্টা করুন।');
-            return;
-        }
-        
-        // --- 3. AD COMPLETION CHECK (CRITICAL) ---
-        const modal = $("#modal-watch-video");
-        const startBtn = modal.querySelector('[data-action="start-video"]');
-        if (startBtn.textContent !== 'Finished') {
-           alert('ভিডিওটি সম্পূর্ণ দেখা হয়নি বা বিজ্ঞাপন লোড হচ্ছে। "Watch Now" বাটনে ক্লিক করে বিজ্ঞাপনটি শেষ করুন।');
-           return;
-        }
+    
+    // 3. Update Balance
+    state.balance += TASK_REWARD;
+    
+    // 4. Update Task Count
+    state.tasksState.completed += 1;
+    
+    // 5. Update Home Task State if applicable
+    if (taskType === 'home-daily') {
+        state.homeTaskDoneState.done = true;
+        state.homeTaskDoneState.date = new Date().toDateString(); // Update date to ensure no immediate re-completion
     }
     
-    // --- Completion Logic ---
-    
-    // Increment the shared count and update the status
-    if (taskId === 'watch-video') {
-        videoTaskState.count = todayCompletedCount + 1;
-        videoTaskState.completed_at = Date.now(); // Update timestamp for daily reset
-        videoTaskState.status = (videoTaskState.count >= DAILY_TASK_LIMIT) ? "completed" : "pending";
-    } else if (taskId === 'join-channel') {
-         // One-time task logic remains
-         tasksState[taskId] = { status: "completed", completed_at: Date.now() };
-    }
-    
-    // Use the defined rewards for balance update
-    balance += TASK_REWARDS[taskId]; 
+    // 6. Save and Update UI
+    saveState(state);
+    updateUI(state);
 
-    store.set(STORE_KEYS.tasks, tasksState);
-    store.set(STORE_KEYS.balance, balance);
-
-    // After successful completion, close the modal
-    const modal = $(`#modal-${taskId}`);
-    if(modal) closeModal(modal);
-
-    syncTasksAndStats();
+    // Provide professional feedback
+    alert(`অসাধারণ! টাস্ক সফলভাবে সম্পন্ন হয়েছে। আপনার অ্যাকাউন্টে ৳${TASK_REWARD.toFixed(2)} যোগ করা হয়েছে।`);
   }
-
-  // --- 5. Modal & Task-Specific Logic (Professional Messages) ---
   
-  let videoTimer = null; 
-
-  function openModal(modalId) {
-    const modal = $(`#modal-${modalId}`);
+  function openModal(id, taskType) {
+    const modal = $(`#${id}`);
     if (!modal) return;
-    modal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-
-    if (modalId === "watch-video") {
-      const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-      const startBtn = modal.querySelector('[data-action="start-video"]');
-      completeBtn.disabled = true;
-      startBtn.disabled = false;
-      startBtn.textContent = "Watch Now";
+    
+    let state = getState();
+    
+    // Check total limit before opening modal
+    if (state.tasksState.completed >= TASK_LIMIT) {
+        alert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
+        return;
     }
+    
+    // Check home task limit if opening from the home button
+    if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
+        alert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
+        return;
+    }
+    
+    // Attach the task type to the confirm button inside the modal
+    const confirmBtn = modal.querySelector('[data-action="confirm-task"]');
+    if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.setAttribute('data-task', taskType || 'video'); // Default to 'video' for task.html, 'home-daily' for index.html
+    }
+
+    modal.setAttribute("aria-hidden", "false");
+    els.app.setAttribute("aria-hidden", "true");
   }
 
   function closeModal(modal) {
     if (!modal) return;
     modal.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    if (videoTimer) {
-      clearInterval(videoTimer);
-      videoTimer = null;
-    }
+    els.app.setAttribute("aria-hidden", "false");
   }
-  
-  /**
-   * **UPDATED:** Monetag Ad call (Monetag-free professional messages)
-   */
+
+
+  // Function to simulate ad start and handle completion
   function startMonetagAd(startBtn) {
-      // Check if SDK function is loaded
-      if (typeof show_10002890 !== 'function') {
-          alert("বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
-          startBtn.disabled = false;
-          startBtn.textContent = 'Watch Now';
-          return;
+      const modal = startBtn.closest('.modal');
+      startBtn.disabled = true;
+      startBtn.textContent = 'বিজ্ঞাপন লোড হচ্ছে...'; // Professional text
+
+      // Simulating the Monetag SDK call (Monetag.show_10002890.showAd())
+      // Assuming the SDK is loaded in index.html/task.html head/body
+      
+      // Safety check for SDK (replace with your actual SDK check if needed)
+      if (typeof Monetag === 'undefined' || !Monetag.show_10002890 || typeof Monetag.show_10002890.showAd !== 'function') {
+           console.error("Ad SDK is not fully loaded. Retrying...");
+           startBtn.disabled = false;
+           startBtn.textContent = 'Watch Now';
+           alert('বিজ্ঞাপনটি লোড হতে পারেনি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+           return;
       }
 
-      startBtn.disabled = true;
-      startBtn.textContent = 'Ad Loading...';
-
-      show_10002890().then(() => {
-          startBtn.textContent = "Finished";
-          const modal = startBtn.closest(".modal");
+      // *** Ad SDK Call ***
+      Monetag.show_10002890.showAd().then(() => { 
+          // Ad finished/closed - Professional alert
           const completeBtn = modal.querySelector('[data-action="confirm-task"]');
           completeBtn.disabled = false;
-          // Professional, Monetag-free success message
-          alert('ভিডিওটি সফলভাবে দেখা হয়েছে! টাস্কটি সম্পূর্ণ করতে এখন "Complete" বাটনে ক্লিক করুন।');
+          alert('বিজ্ঞাপন দেখা সম্পন্ন হয়েছে। এখন "Complete" বাটনে ক্লিক করে টাস্কটি নিশ্চিত করুন।');
       }).catch((error) => {
+          // Ad failed to load - Professional alert
           startBtn.disabled = false;
           startBtn.textContent = 'Watch Now';
-          console.error('Monetag Ad Error:', error);
-          // Professional, Monetag-free error message
-          alert('ভিডিওটি লোড করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+          console.error('Ad Loading Error:', error);
+          alert('বিজ্ঞাপন লোড করার সময় একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
       });
   }
 
@@ -290,7 +248,11 @@
   function bindEvents() {
     document.addEventListener("click", (e) => {
       const openModalBtn = e.target.closest("[data-open-modal]");
-      if (openModalBtn) openModal(openModalBtn.dataset.openModal);
+      if (openModalBtn) {
+          // Pass the task-type if available, e.g., from the home page button
+          const taskType = openModalBtn.dataset.taskType; 
+          openModal(openModalBtn.dataset.openModal, taskType);
+      }
       
       const closeModalBtn = e.target.closest("[data-close-modal]");
       if (closeModalBtn) closeModal(closeModalBtn.closest(".modal"));
@@ -298,6 +260,7 @@
       const confirmBtn = e.target.closest('[data-action="confirm-task"]');
       if (confirmBtn && !confirmBtn.disabled) {
         completeTask(confirmBtn.dataset.task);
+        closeModal(confirmBtn.closest(".modal"));
       }
 
       const startVideoBtn = e.target.closest('[data-action="start-video"]');
@@ -315,9 +278,13 @@
   // --- 7. Initialization ---
   
   function init() {
-    handlePreloader();
-    initUser();
-    syncTasksAndStats();
+    // Hide preloader
+    if (els.preloader) els.preloader.classList.add("hidden");
+    if (els.app) els.app.setAttribute("aria-hidden", "false");
+
+    // Load and render initial data
+    const initialState = getState();
+    updateUI(initialState);
     bindEvents();
   }
   

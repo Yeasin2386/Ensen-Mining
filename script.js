@@ -2,15 +2,12 @@
   Grand App - v3 (Final Home)
   Main JavaScript file for the home screen.
   
-  Updates:
-  - Daily video task reward set to ৳1.00.
-  - Manual 15s timer replaced by Ad SDK call.
-  
-  *** ইউজার রিকুয়েস্ট অনুযায়ী পরিবর্তনসমূহ: ***
+  *** আপডেটের সারসংক্ষেপ: ***
   1. টাস্ক লিমিট: হোম এবং টাস্ক পেজ উভয়ের জন্য মোট ২০টি।
   2. হোম পেজ টাস্ক: দিনে একবারই সম্পন্ন করা যাবে (মোট ২০টির মধ্যে)।
   3. পপআপ মেসেজ: আরও প্রফেশনাল এবং স্পষ্ট করা হয়েছে।
   4. ডেইলি রিসেট: রাত ১২টায় স্বয়ংক্রিয় রিসেট।
+  5. Ad Loading Logic: Monetag SDK লোড হওয়ার সেফটি চেক যুক্ত।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -53,7 +50,8 @@
   };
 
   function getState() {
-    const today = new new Date().toDateString();
+    // Current date for daily reset check
+    const today = new Date().toDateString();
     
     // Get existing state or set defaults
     let balance = parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
@@ -63,6 +61,7 @@
     let homeTaskDoneState = JSON.parse(localStorage.getItem(STORE_KEYS.homeTaskDone)) || { date: today, done: false };
 
     // --- Daily Reset Logic (New Day Check) ---
+    // If the date changes, reset completed tasks and home task status
     if (tasksState.date !== today) {
       tasksState = { date: today, completed: 0 };
     }
@@ -106,7 +105,7 @@
 
     // --- Task completion logic and button state ---
     const isLimitReached = state.tasksState.completed >= TASK_LIMIT;
-    const startVideoBtn = $('[data-action="start-video"]'); // General task button (Task.html and Modal)
+    const startVideoBtn = $('[data-action="start-video"]'); // General task button (Modal)
 
     // A. Handle General Task Button (Task.html/Modal)
     if (startVideoBtn) {
@@ -141,13 +140,13 @@
   function completeTask(taskType) {
     let state = getState();
 
-    // 1. **CRITICAL:** Check the total limit again
+    // 1. CRITICAL: Check the total limit again
     if (state.tasksState.completed >= TASK_LIMIT) {
       alert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
       return;
     }
     
-    // 2. **NEW LOGIC:** Check if the task being completed is the HOME TASK
+    // 2. NEW LOGIC: Check if the task being completed is the HOME TASK
     if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
         alert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
         return;
@@ -156,13 +155,13 @@
     // 3. Update Balance
     state.balance += TASK_REWARD;
     
-    // 4. Update Task Count
+    // 4. Update Task Count (Increments the shared 0/20 limit)
     state.tasksState.completed += 1;
     
     // 5. Update Home Task State if applicable
     if (taskType === 'home-daily') {
         state.homeTaskDoneState.done = true;
-        state.homeTaskDoneState.date = new Date().toDateString(); // Update date to ensure no immediate re-completion
+        state.homeTaskDoneState.date = new Date().toDateString(); // Ensure date is updated
     }
     
     // 6. Save and Update UI
@@ -195,7 +194,7 @@
     const confirmBtn = modal.querySelector('[data-action="confirm-task"]');
     if (confirmBtn) {
         confirmBtn.disabled = true;
-        confirmBtn.setAttribute('data-task', taskType || 'video'); // Default to 'video' for task.html, 'home-daily' for index.html
+        confirmBtn.setAttribute('data-task', taskType || 'video'); // Pass task type
     }
 
     modal.setAttribute("aria-hidden", "false");
@@ -209,25 +208,22 @@
   }
 
 
-  // Function to simulate ad start and handle completion
+  // Function to start the Monetag ad and handle completion
   function startMonetagAd(startBtn) {
       const modal = startBtn.closest('.modal');
       startBtn.disabled = true;
       startBtn.textContent = 'বিজ্ঞাপন লোড হচ্ছে...'; // Professional text
 
-      // Simulating the Monetag SDK call (Monetag.show_10002890.showAd())
-      // Assuming the SDK is loaded in index.html/task.html head/body
-      
-      // Safety check for SDK (replace with your actual SDK check if needed)
+      // Check if Monetag SDK is loaded (Crucial for ad loading)
       if (typeof Monetag === 'undefined' || !Monetag.show_10002890 || typeof Monetag.show_10002890.showAd !== 'function') {
            console.error("Ad SDK is not fully loaded. Retrying...");
            startBtn.disabled = false;
            startBtn.textContent = 'Watch Now';
-           alert('বিজ্ঞাপনটি লোড হতে পারেনি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+           alert('বিজ্ঞাপন সিস্টেম লোড হচ্ছে, অনুগ্রহ করে আবার চেষ্টা করুন।');
            return;
       }
 
-      // *** Ad SDK Call ***
+      // *** Monetag SDK Call ***
       Monetag.show_10002890.showAd().then(() => { 
           // Ad finished/closed - Professional alert
           const completeBtn = modal.querySelector('[data-action="confirm-task"]');

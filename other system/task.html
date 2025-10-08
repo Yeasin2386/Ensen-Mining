@@ -28,16 +28,16 @@
         font-weight: 600;
         color: var(--text-primary);
         opacity: 0.8;
-        font-size: 1rem;
-        margin-bottom: 5px;
+        font-size: 0.9rem;
     }
     .task-limit-card .balance-amount {
-        font-size: 2.2rem;
-        font-weight: 800;
         font-family: var(--font-heading);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-top: 5px;
+        line-height: 1;
     }
-    
-    /* Navigation Active State */
+    /* টাস্ক পেজে টাস্ক নেভিগেশন আইটেম সক্রিয় করতে */
     .bottom-nav a[href="task.html"] {
         color: var(--accent-primary) !important;
     }
@@ -56,110 +56,124 @@
   <div id="app" class="app" aria-hidden="true">
     
     <header class="app-header">
-      <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
-        <img src="../image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
-      </a>
-      <h3 class="page-title">All Tasks</h3>
-      <a href="../index.html" class="header-action-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.149-.439 1.588 0L21.75 12M4.5 9.75v10.125a3 3 0 003 3h8.25a3 3 0 003-3V9.75M8.25 21.75h7.5" /></svg>
-      </a>
-    </header>
-    
-    <main class="app-content">
+  <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
+    <img src="../image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
+  </a>
+  <h1 class="app-title">টাস্ক</h1>
+  <a href="../settings.html" class="header-btn" aria-label="সেটিংস">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </a>
+</header>
+
+    <main class="app-main">
       
-      <section class="task-limit-section">
+      <section class="balance-card-wrapper">
         <div class="task-limit-card">
-          <h4 class="balance-label">Total Tasks Today</h4>
-          <h2 class="balance-amount" id="tasks-today-page">0/20</h2>
+          <div class="balance-label"><span>আজকের ভিডিও টাস্ক</span></div>
+          <p class="balance-amount"><span id="tasks-today-page">0/20</span></p>
         </div>
       </section>
 
-      <section class="tasks-list-section mt-4">
-
-        <h3 class="section-title">Video Tasks (Daily)</h3>
-        
-        <div class="task-card" data-task-id="watch-video" data-reward="1.00">
-          <div class="task-info">
-            <div class="task-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
-            </div>
-            <div class="task-details">
-              <h4 class="task-title">Watch Video Ad</h4>
-              <p class="task-reward">Reward: ৳1.00 (Repeatable)</p>
-            </div>
+      <section class="tasks-section">
+        <h3 class="section-title">টাস্ক</h3>
+        <div class="task-list">
+          
+          <div class="task-card" data-task-id="join-channel" data-reward="5">
+              <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
+              <div class="task-details">
+                <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
+                <p class="reward">+ ৳5 বোনাস (এককালীন)</p>
+              </div>
+              <button class="btn-go" data-open-modal="join-channel">Go</button>
           </div>
-          <button class="btn-go" data-open-modal="watch-video">Go</button>
-        </div>
-        
-        <h3 class="section-title mt-4">One-Time Tasks</h3>
-        
-        <div class="task-card" data-task-id="join-channel" data-reward="5.00">
-          <div class="task-info">
-            <div class="task-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 6.75h18a2.25 2.25 0 002.25-2.25v-8.25a2.25 2.25 0 00-2.25-2.25h-18A2.25 2.25 0 003 6.75v8.25a2.25 2.25 0 002.25 2.25z" /></svg>
-            </div>
+          
+          <div class="task-card" data-task-id="watch-video" data-reward="1" data-duration="15">
+            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
             <div class="task-details">
-              <h4 class="task-title">Join Telegram Channel</h4>
-              <p class="task-reward">Reward: ৳5.00 (One time)</p>
+              <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
+              <p class="reward">+ ৳1 বোনাস</p>
             </div>
+            <button class="btn-go" data-open-modal="watch-video">Go</button>
           </div>
-          <a href="https://t.me/your_channel_link" target="_blank" class="btn-go">Go</a>
         </div>
-        
       </section>
-
     </main>
-    
-    <nav class="bottom-nav">
-      <a href="../index.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.149-.439 1.588 0L21.75 12M4.5 9.75v10.125a3 3 0 003 3h8.25a3 3 0 003-3V9.75M8.25 21.75h7.5" /></svg>
-        <span>Home</span>
-      </a>
-      <a href="task.html" class="nav-item active">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>Task</span>
-      </a>
-      <a href="withdraw.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>Withdraw</span>
-      </a>
-      <a href="tutorial.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5l-6 6m0 0l-6-6m6 6V3" /></svg>
-        <span>Tutorial</span>
-      </a>
-      <a href="referral.html" class="nav-item">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 6.75h18a2.25 2.25 0 002.25-2.25v-8.25a2.25 2.25 0 00-2.25-2.25h-18A2.25 2.25 0 003 6.75v8.25a2.25 2.25 0 002.25 2.25z" /></svg>
-        <span>Referral</span>
-      </a>
-    </nav>
-    
-    <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-        <div class="modal-backdrop" data-close-modal></div>
-        <div class="modal-dialog">
-            <div class="modal-icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.328l5.603 3.113z" /></svg>
-            </div>
-            <div class="modal-header">
-                <h3>দৈনিক ভিডিও টাস্ক</h3>
-                <span class="modal-reward">পুরষ্কার: ৳1.00</span>
-            </div>
-            <div class="modal-body">
-                <p>পুরষ্কার পেতে হলে আপনাকে ভিডিও বিজ্ঞাপনটি সম্পূর্ণ দেখতে হবে। ভিডিও শেষ হওয়ার পর "Complete" বাটনটি সক্রিয় হবে।</p>
-            </div>
-            <div class="modal-actions">
-                <button class="btn-primary" data-action="start-video">Watch Now</button>
-                <button class="btn-secondary" data-action="confirm-task" data-task="watch-video" disabled>Complete</button>
-            </div>
-        </div>
-    </div>
 
+    <nav class="bottom-nav">
+  <a href="../index.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
+    <span>Home</span>
+  </a>
+  <a href="task.html" class="nav-item active" aria-current="page">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <span>Task</span>
+  </a>
+  <a href="tutorial.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+    <span>Tutorial</span>
+  </a>
+  <a href="referral.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+    </svg>
+    <span>Referral</span>
+  </a>
+  <a href="withdraw.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+    </svg>
+    <span>Withdraw</span>
+  </a>
+</nav>
+
+  <div id="modal-join-channel" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+      <div class="modal-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
+      </div>
+      <div class="modal-header">
+        <h3>চ্যানেলে জয়েন করুন</h3>
+        <p class="modal-reward">আপনি পাবেন ৳5</p>
+      </div>
+      <div class="modal-body">
+        <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটনে ক্লিক করুন।</p>
+      </div>
+      <div class="modal-actions">
+        <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
+        <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-dialog">
+        <div class="modal-icon-wrapper">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+        </div>
+      <div class="modal-header">
+        <h3>ভিডিও দেখুন</h3>
+        <p class="modal-reward">আপনি পাবেন ৳1</p>
+      </div>
+      <div class="modal-body">
+        <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
+        <button class="btn-primary" data-action="confirm-task" data-task="watch-video" disabled>Complete</button>
+      </div>
+    </div>
+  </div>
 
   <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
   <script>
     const $ = (selector, parent = document) => parent.querySelector(selector);
     const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
 
-    // CRITICAL CHANGE: The daily limit is now a single, shared value (20)
     const STORE_KEYS = { balance: "grand_balance_v3", tasks: "grand_tasks_v3" };
     const DAILY_TASK_LIMIT = 20;
 
@@ -203,22 +217,14 @@
                today.getDate() === otherDate.getDate();
     };
 
-    /**
-     * **UPDATED:** Checks the count of completed video tasks for today.
-     * Resets the count if a new day has started (daily reset logic).
-     */
     function getCompletedTasksToday() {
-        const videoTaskState = tasksState['watch-video'] || {};
-        
-        // Check if the last completion time is NOT today
-        if (!videoTaskState.completed_at || !isToday(videoTaskState.completed_at)) {
-            // Reset the count for the new day
-            tasksState['watch-video'] = { status: "pending", completed_at: null, count: 0 };
-            return 0; 
+        let todayCompletedCount = 0;
+        for (const taskId in tasksState) {
+            if (taskId === 'watch-video' && tasksState[taskId].status === 'completed' && isToday(tasksState[taskId].completed_at)) {
+                todayCompletedCount++;
+            }
         }
-        
-        // Return the current count (default to 0 if count property is missing)
-        return videoTaskState.count || 0;
+        return todayCompletedCount;
     }
 
     /**
@@ -232,10 +238,12 @@
           tasksState[task.id] = { status: "pending", completed_at: null };
         }
         
-        // Task Page Logic: Only check total limit (no restriction on the first task)
-        if (task.id === 'watch-video') {
-            if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-                task.goButton.textContent = "Limit End";
+        const taskState = tasksState[task.id];
+        const isCompleted = taskState.status === "completed";
+        
+        if (task.id === 'join-channel') {
+            if (isCompleted) {
+                task.goButton.textContent = "Done";
                 task.goButton.disabled = true;
             } else {
                 task.goButton.textContent = "Go";
@@ -243,13 +251,17 @@
             }
         }
         
-        // Handle one-time tasks (e.g., join-channel)
-        if (task.id === 'join-channel') {
-            const taskState = tasksState[task.id] || { status: "pending" };
-            if (taskState.status === 'completed') {
-                task.goButton.textContent = "Done";
+        if (task.id === 'watch-video') {
+            if (todayCompletedCount >= DAILY_TASK_LIMIT) {
+                task.goButton.textContent = "Limit End";
                 task.goButton.disabled = true;
-                task.goButton.href = "#";
+                // Since limit is reached, permanently set status to completed (until day reset)
+                if (taskState.status !== 'completed') taskState.status = 'completed';
+            } else {
+                // Allow the task to be done again if limit not reached
+                task.goButton.textContent = "Go";
+                task.goButton.disabled = false;
+                taskState.status = "pending"; // Ensure status is pending for the next count
             }
         }
       });
@@ -263,22 +275,27 @@
     }
 
     /**
-     * **UPDATED:** Completion logic with strict limits and professional messages.
+     * FIX APPLIED: Added strict Monetag ad check to prevent incorrect completion and counter reset.
      */
     function completeTask(taskId) {
+      const taskState = tasksState[taskId];
       const taskDef = tasksFromDOM.find(t => t.id === taskId);
-      let todayCompletedCount = getCompletedTasksToday();
-      const videoTaskState = tasksState['watch-video'] = tasksState['watch-video'] || { status: "pending", completed_at: null, count: 0 };
-
+      const todayCompletedCount = getCompletedTasksToday();
 
       if (!taskDef) return;
       
       // Strict Limits Check
+      if (taskId === 'join-channel') {
+          if (taskState.status === "completed") {
+              alert("এই টাস্কটি (টেলিগ্রাম জয়েন) একবারই সম্পন্ন করা যাবে।");
+              return;
+          }
+      }
+      
       if (taskId === 'watch-video') {
-          // --- 1. TOTAL LIMIT CHECK (Shared for all pages) ---
+          // Check if the user is trying to complete a task after the strict limit
           if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-              // Professional message for total limit end
-              alert(`দুঃখিত! আজকের (${DAILY_TASK_LIMIT}টি) ভিডিও টাস্কের লিমিট শেষ হয়েছে। নতুন টাস্কের জন্য অপেক্ষা করুন।`);
+              alert(`আজকের টাস্ক লিমিট (${DAILY_TASK_LIMIT} টি) শেষ। এর বেশি দেখতে পারবেন না।`);
               return;
           }
           
@@ -289,22 +306,11 @@
              alert('ভিডিওটি সম্পূর্ণ দেখা হয়নি বা বিজ্ঞাপন লোড হচ্ছে। "Watch Now" বাটনে ক্লিক করে বিজ্ঞাপনটি শেষ করুন।');
              return;
           }
-      } else if (taskId === 'join-channel') {
-           const taskState = tasksState[taskId] || {};
-           if (taskState.status === 'completed') {
-              alert('এই টাস্কটি একবারই সম্পন্ন করা যায়, যা আপনি ইতিমধ্যেই করে ফেলেছেন।');
-              return;
-           }
       }
 
       // Completion Logic
-      if (taskId === 'watch-video') {
-          videoTaskState.count = todayCompletedCount + 1; // Increment the shared count
-          videoTaskState.completed_at = Date.now(); // Update timestamp for daily reset
-          videoTaskState.status = (videoTaskState.count >= DAILY_TASK_LIMIT) ? "completed" : "pending";
-      } else if (taskId === 'join-channel') {
-          tasksState[taskId] = { status: "completed", completed_at: Date.now() };
-      }
+      taskState.status = "completed"; // Temporarily set to completed to count the current click
+      taskState.completed_at = Date.now();
       
       // Update balance
       balance += taskDef.reward;
@@ -313,13 +319,13 @@
       store.set(STORE_KEYS.tasks, tasksState);
       store.set(STORE_KEYS.balance, balance);
 
-      // Close modal after successful completion.
-      closeModal($(`#modal-${taskId}`));
+      // Re-sync tasks. syncTasksAndStats will immediately set 'watch-video' status back to "pending" 
+      // if the limit is not reached, allowing the user to click 'Go' again.
       syncTasksAndStats();
     }
 
-    // --- Modal Logic (Professional Messages) ---
-    
+    // --- Modal Logic (Monetag) ---
+
     function openModal(modalId) {
       const modal = $(`#modal-${modalId}`);
       if (!modal) return;
@@ -361,17 +367,15 @@
             const modal = startBtn.closest(".modal");
             const completeBtn = modal.querySelector('[data-action="confirm-task"]');
             completeBtn.disabled = false;
-            // Professional, Monetag-free success message
-            alert('ভিডিওটি সফলভাবে দেখা হয়েছে! টাস্কটি সম্পূর্ণ করতে এখন "Complete" বাটনে ক্লিক করুন।');
+            alert('বিজ্ঞাপন দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
         }).catch((error) => {
             startBtn.disabled = false;
             startBtn.textContent = 'Watch Now';
             console.error('Monetag Ad Error:', error);
-            // Professional, Monetag-free error message
-            alert('ভিডিওটি লোড করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।');
+            alert('বিজ্ঞাপনটি লোড হতে পারেনি। আবার চেষ্টা করুন।');
         });
     }
-    
+
     function bindEvents() {
       document.addEventListener("click", (e) => {
         const openModalBtn = e.target.closest("[data-open-modal]");
@@ -383,6 +387,7 @@
         const confirmBtn = e.target.closest('[data-action="confirm-task"]');
         if (confirmBtn && !confirmBtn.disabled) {
           completeTask(confirmBtn.dataset.task);
+          closeModal(confirmBtn.closest(".modal"));
         }
 
         const startVideoBtn = e.target.closest('[data-action="start-video"]');
@@ -398,6 +403,7 @@
     }
     
     document.addEventListener("DOMContentLoaded", init);
+
   </script>
 </body>
-</html>
+        </html>

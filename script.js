@@ -206,6 +206,9 @@
         videoTaskState.count = todayCompletedCount + 1;
         videoTaskState.completed_at = Date.now(); // Update timestamp for daily reset
         videoTaskState.status = (videoTaskState.count >= DAILY_TASK_LIMIT) ? "completed" : "pending";
+    } else if (taskId === 'join-channel') {
+         // One-time task logic remains
+         tasksState[taskId] = { status: "completed", completed_at: Date.now() };
     }
     
     // Use the defined rewards for balance update
@@ -213,6 +216,10 @@
 
     store.set(STORE_KEYS.tasks, tasksState);
     store.set(STORE_KEYS.balance, balance);
+
+    // After successful completion, close the modal
+    const modal = $(`#modal-${taskId}`);
+    if(modal) closeModal(modal);
 
     syncTasksAndStats();
   }
@@ -291,8 +298,6 @@
       const confirmBtn = e.target.closest('[data-action="confirm-task"]');
       if (confirmBtn && !confirmBtn.disabled) {
         completeTask(confirmBtn.dataset.task);
-        // Do NOT close modal here, let the completeTask function check if task is done or limited
-        // closeModal(confirmBtn.closest(".modal")); // Removed this line
       }
 
       const startVideoBtn = e.target.closest('[data-action="start-video"]');

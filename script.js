@@ -3,11 +3,13 @@
   Main JavaScript file for the home screen.
   
   *** আপডেটের সারসংক্ষেপ: ***
-  1. টাস্ক লিমিট: হোম এবং টাস্ক পেজ উভয়ের জন্য মোট ২০টি।
-  2. হোম পেজ টাস্ক: দিনে একবারই সম্পন্ন করা যাবে (মোট ২০টির মধ্যে)।
-  3. পপআপ মেসেজ: আরও প্রফেশনাল এবং স্পষ্ট করা হয়েছে।
-  4. ডেইলি রিসেট: রাত ১২টায় স্বয়ংক্রিয় রিসেট।
-  5. Ad Loading Logic FIX: বিজ্ঞাপনের SDK লোড হওয়ার সেফটি চেক আরও শক্তিশালী করা হয়েছে।
+  1. Monetag Integration FIX: Rewarded Interstitial (show_10002890) কল লজিক আপডেট করা হয়েছে।
+  2. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
+  3. UI Cleanup: মডাল থেকে অপ্রয়োজনীয় 'Confirm Task' বাটন লজিক মুছে ফেলা হয়েছে।
+  
+  *** আপনার সমস্যার সমাধান (Modified Code): ***
+  - startVideoAd: এখন সরাসরি show_10002890() কল করে এবং .then() এ completeTask() কল করে।
+  - openModal/bindEvents: 'confirm-task' লজিক বাদ দেওয়া হয়েছে।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -28,8 +30,7 @@
     balanceAmount: $("#balance-amount"),
     tasksToday: $("#tasks-today"), // Home page stat
     referralsCount: $("#referrals-count"),
-    modals: { video: $("#modal-watch-video") },
-    homeTaskBtn: $('[data-task-btn]'), // Button on index.html
+    homeTaskBtn: $('[data-task-type="home-daily"]'), 
   };
 
   // --- 3. State Management & localStorage ---
@@ -37,7 +38,6 @@
     balance: "grand_balance_v3",
     tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
-    // New key to track home page task completion for the day
     homeTaskDone: "grand_home_task_done_v3",
   };
   
@@ -55,18 +55,15 @@
   }
 
   function getState() {
-    // Current date for daily reset check
     const today = new Date().toDateString();
     
-    // Get existing state or set defaults
     let balance = parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
     let referrals = parseInt(localStorage.getItem(STORE_KEYS.referrals)) || 0;
     
     let tasksState = JSON.parse(localStorage.getItem(STORE_KEYS.tasks)) || { date: today, completed: 0 };
     let homeTaskDoneState = JSON.parse(localStorage.getItem(STORE_KEYS.homeTaskDone)) || { date: today, done: false };
 
-    // --- Daily Reset Logic (New Day Check) ---
-    // If the date changes, reset completed tasks and home task status
+    // --- Daily Reset Logic ---
     if (tasksState.date !== today) {
       tasksState = { date: today, completed: 0 };
     }
@@ -94,7 +91,6 @@
     if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
     if (els.referralsCount) els.referralsCount.textContent = state.referrals;
     
-    // Update Task Counter on Home Page and Task Page
     const taskCounterText = `${state.tasksState.completed}/${TASK_LIMIT}`;
     
     // For Home Page (index.html)
@@ -110,34 +106,42 @@
 
     // --- Task completion logic and button state ---
     const isLimitReached = state.tasksState.completed >= TASK_LIMIT;
-    const startVideoBtn = $('[data-action="start-video"]'); // General task button (Modal)
+    const taskGoButtons = $$('.task-card[data-task-id="watch-video"] .btn-go');
+    const homeTaskBtn = els.homeTaskBtn;
 
-    // A. Handle General Task Button (Task.html/Modal)
-    if (startVideoBtn) {
+    // Handle home page specific button
+    if (homeTaskBtn) {
+        const isHomeTaskDone = state.homeTaskDoneState.done;
+        
         if (isLimitReached) {
-            startVideoBtn.disabled = true;
-            startVideoBtn.textContent = 'দৈনিক লিমিট শেষ';
+            homeTaskBtn.disabled = true;
+            homeTaskBtn.textContent = 'দৈনিক লিমিট শেষ';
+        } else if (isHomeTaskDone) {
+             homeTaskBtn.disabled = true;
+             homeTaskBtn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
         } else {
-             startVideoBtn.disabled = false;
-             startVideoBtn.textContent = 'Watch Now';
+             homeTaskBtn.disabled = false;
+             homeTaskBtn.textContent = 'Watch & Earn';
         }
     }
+
+    // Handle task page buttons (using the generic selector)
+    taskGoButtons.forEach(btn => {
+        // Only apply logic to buttons that are NOT the home page button
+        const isHomeTask = btn.dataset.taskType === 'home-daily';
+        
+        if (isLimitReached) {
+            btn.disabled = true;
+            btn.textContent = 'দৈনিক লিমিট শেষ';
+        } else if (isHomeTask && state.homeTaskDoneState.done) {
+             btn.disabled = true;
+             btn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
+        } else {
+             btn.disabled = false;
+             btn.textContent = isHomeTask ? 'Watch & Earn' : 'Go';
+        }
+    });
     
-    // B. Handle Home Page Daily Task Button (index.html)
-    if (els.homeTaskBtn) {
-        if (isLimitReached) {
-             els.homeTaskBtn.disabled = true;
-             els.homeTaskBtn.textContent = 'দৈনিক লিমিট শেষ';
-        } else if (state.homeTaskDoneState.done) {
-             // Home task completed for today, but general limit not reached
-             els.homeTaskBtn.disabled = true;
-             els.homeTaskBtn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
-        } else {
-             // Home task available
-             els.homeTaskBtn.disabled = false;
-             els.homeTaskBtn.textContent = 'Watch & Earn';
-        }
-    }
   }
 
   // --- 5. Core App Logic ---
@@ -147,13 +151,15 @@
 
     // 1. CRITICAL: Check the total limit again
     if (state.tasksState.completed >= TASK_LIMIT) {
-      showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
+      // Alert is already given in startVideoAd's initial check, but for safety:
+      showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ।");
       return;
     }
     
-    // 2. NEW LOGIC: Check if the task being completed is the HOME TASK
+    // 2. Check if the task being completed is the HOME TASK
     if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
-        showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
+        // Alert is already given in startVideoAd's initial check, but for safety:
+        showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন।");
         return;
     }
     
@@ -174,6 +180,7 @@
     updateUI(state);
 
     // Provide professional feedback
+    // This alert is now triggered only on successful reward
     showCustomAlert(`অসাধারণ! টাস্ক সফলভাবে সম্পন্ন হয়েছে। আপনার অ্যাকাউন্টে ৳${TASK_REWARD.toFixed(2)} যোগ করা হয়েছে। 🎉`);
   }
   
@@ -183,24 +190,30 @@
     
     let state = getState();
     
-    // Check total limit before opening modal
+    // Pre-check limits before opening modal
     if (state.tasksState.completed >= TASK_LIMIT) {
         showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
         return;
     }
     
-    // Check home task limit if opening from the home button
     if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
         showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
         return;
     }
     
-    // Attach the task type to the confirm button inside the modal
-    const confirmBtn = modal.querySelector('[data-action="confirm-task"]');
-    if (confirmBtn) {
-        confirmBtn.disabled = true;
-        confirmBtn.setAttribute('data-task', taskType || 'video'); // Pass task type
+    // Get the start button inside the modal
+    const startBtn = modal.querySelector('[data-action="start-video"]');
+    
+    if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = 'Watch Now';
+        // Pass the task type to the start button for use in startVideoAd
+        startBtn.setAttribute('data-task', taskType || 'video'); 
     }
+    
+    // IMPORTANT: Hide the old 'Confirm' button as reward is now automatic
+    const confirmBtn = modal.querySelector('[data-action="confirm-task"]');
+    if(confirmBtn) confirmBtn.style.display = 'none'; 
 
     modal.setAttribute("aria-hidden", "false");
     els.app.setAttribute("aria-hidden", "true");
@@ -210,42 +223,56 @@
     if (!modal) return;
     modal.setAttribute("aria-hidden", "true");
     els.app.setAttribute("aria-hidden", "false");
+    
+    // Reset modal button state when closing
+    const startBtn = modal.querySelector('[data-action="start-video"]');
+    if (startBtn) {
+        startBtn.disabled = false;
+        startBtn.textContent = 'Watch Now';
+    }
   }
 
 
-  // Function to start the Video Ad and handle completion
-  function startVideoAd(startBtn) { // Renamed to a generic name
+  // Function to start the Video Ad and handle completion (UPDATED FOR MONETAG show_10002890)
+  function startVideoAd(startBtn) {
       const modal = startBtn.closest('.modal');
-      startBtn.disabled = true;
-      startBtn.textContent = 'বিজ্ঞাপন লোড হচ্ছে...'; // Professional text
+      const taskType = startBtn.dataset.task; // Get task type
 
-      // Check if the main Ad SDK object is loaded (using Monetag as the internal reference)
-      if (typeof Monetag === 'undefined') {
+      // Check limits again just in case
+      let state = getState();
+      if (state.tasksState.completed >= TASK_LIMIT || (taskType === 'home-daily' && state.homeTaskDoneState.done)) {
+          startBtn.disabled = false;
+          startBtn.textContent = 'Watch Now';
+          showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ।");
+          return;
+      }
+      
+      startBtn.disabled = true;
+      startBtn.textContent = 'বিজ্ঞাপন লোড হচ্ছে...'; 
+
+      // Check if the Monetag Rewarded Interstitial function is available
+      if (typeof show_10002890 !== 'function') {
            startBtn.disabled = false;
            startBtn.textContent = 'Watch Now';
            showCustomAlert('বিজ্ঞাপন সিস্টেম এখনও লোড হয়নি। অনুগ্রহ করে পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।');
-           console.error("Ad SDK is not loaded.");
+           console.error("Monetag SDK function show_10002890 is not available.");
            return;
       }
       
-      // Check if the specific ad unit method is available
-      const adUnit = Monetag.show_10002890;
-      if (!adUnit || typeof adUnit.showAd !== 'function') {
-           startBtn.disabled = false;
-           startBtn.textContent = 'Watch Now';
-           showCustomAlert('এই মুহূর্তে কোনো বিজ্ঞাপন নেই। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা কিছুক্ষন পরে আবার চেষ্টা করুন।');
-           console.error("Ad unit (show_10002890) is not ready.");
-           return;
-      }
-
       // *** Ad SDK Call ***
-      adUnit.showAd().then(() => { 
-          // Ad finished/closed - Professional alert
-          const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-          completeBtn.disabled = false;
-          showCustomAlert('বিজ্ঞাপন দেখা সম্পন্ন হয়েছে। এখন "Complete" বাটনে ক্লিক করে টাস্কটি নিশ্চিত করুন। ✅');
+      show_10002890().then(() => { 
+          // 1. Reward the user directly (Ad finished successfully)
+          completeTask(taskType); 
+          
+          startBtn.textContent = 'টাস্ক সম্পন্ন হলো! 🎉'; // Temporary feedback on the button
+          
+          // 2. Close the modal after a short delay for final feedback
+          setTimeout(() => {
+             closeModal(modal);
+          }, 1500); 
+          
       }).catch((error) => {
-          // Ad failed to load - Professional alert
+          // Ad failed to load (no reward given)
           startBtn.disabled = false;
           startBtn.textContent = 'Watch Now';
           console.error('Video Ad Loading Error:', error);
@@ -258,24 +285,20 @@
   
   function bindEvents() {
     document.addEventListener("click", (e) => {
+      // 1. OPEN MODAL
       const openModalBtn = e.target.closest("[data-open-modal]");
       if (openModalBtn) {
-          // Pass the task-type if available, e.g., from the home page button
           const taskType = openModalBtn.dataset.taskType; 
           openModal(openModalBtn.dataset.openModal, taskType);
       }
       
+      // 2. CLOSE MODAL
       const closeModalBtn = e.target.closest("[data-close-modal]");
       if (closeModalBtn) closeModal(closeModalBtn.closest(".modal"));
       
-      const confirmBtn = e.target.closest('[data-action="confirm-task"]');
-      if (confirmBtn && !confirmBtn.disabled) {
-        completeTask(confirmBtn.dataset.task);
-        closeModal(confirmBtn.closest(".modal"));
-      }
-
+      // 3. START VIDEO AD
       const startVideoBtn = e.target.closest('[data-action="start-video"]');
-      if (startVideoBtn && !startVideoBtn.disabled) startVideoAd(startVideoBtn); // Updated function call
+      if (startVideoBtn && !startVideoBtn.disabled) startVideoAd(startVideoBtn);
     });
 
     document.addEventListener("keydown", (e) => {

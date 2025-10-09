@@ -325,3 +325,42 @@
   document.addEventListener("DOMContentLoaded", init);
 
 })();
+
+// ... তোমার আগের কোড অপরিবর্তিত থাকবে ... 
+
+(() => {
+  "use strict";
+
+  // --- 1. Helper Functions ---
+  const $ = (selector, parent = document) => parent.querySelector(selector);
+
+  // শুধুমাত্র নাম, user-username বাদ
+  const USER_INFO = {
+    name: "A. K. Yeasin" // এখানে ইউজারের নাম বসাও
+  };
+
+  // initials avatar generator
+  function getInitials(name) {
+    return name.split(' ').map(word => word[0]).join('').toUpperCase();
+  }
+
+  // --- 4. UI/Data Sync Functions ---
+  function updateUI(state) {
+    const userNameEl = $("#user-name");
+    if (userNameEl) userNameEl.textContent = USER_INFO.name;
+
+    // initials avatar বসাও
+    const avatarEl = $("#avatar-circle");
+    if (avatarEl) avatarEl.textContent = getInitials(USER_INFO.name);
+
+    // ... আগের কোড (ব্যালেন্স, টাস্ক, রেফারেল ইত্যাদি) ...
+    const balanceAmount = $("#balance-amount");
+    if (balanceAmount) balanceAmount.textContent = state.balance.toFixed(2);
+    const referralsCount = $("#referrals-count");
+    if (referralsCount) referralsCount.textContent = state.referrals;
+    const tasksToday = $("#tasks-today");
+    if (tasksToday) tasksToday.textContent = `${state.tasksState.completed}/${20}`;
+  }
+
+  // ... আগের কোড অপরিবর্তিত ...
+})();

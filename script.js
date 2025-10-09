@@ -1,27 +1,30 @@
 // --- Telegram MiniApp/WebApp: User profile info from Telegram ---
 
-// Helper: get initials from name
 function getInitials(name) {
   return name.split(' ').map(word => word[0]).join('').toUpperCase();
 }
 
-// Set Telegram user's name and initials avatar
 function setTelegramProfile() {
-  // Ensure Telegram WebApp API is loaded and user info is available
-  if (
-    window.Telegram &&
-    Telegram.WebApp &&
-    Telegram.WebApp.initDataUnsafe &&
-    Telegram.WebApp.initDataUnsafe.user
-  ) {
-    const user = Telegram.WebApp.initDataUnsafe.user;
-    const fullName = user.first_name + (user.last_name ? (' ' + user.last_name) : '');
-    const userNameEl = document.getElementById('user-name');
-    if (userNameEl) userNameEl.textContent = fullName;
-    const avatarEl = document.getElementById('avatar-circle');
-    if (avatarEl) avatarEl.textContent = getInitials(fullName);
-  } else {
-    // fallback (for desktop preview or outside Telegram)
+  try {
+    if (
+      window.Telegram &&
+      Telegram.WebApp &&
+      Telegram.WebApp.initDataUnsafe &&
+      Telegram.WebApp.initDataUnsafe.user
+    ) {
+      const user = Telegram.WebApp.initDataUnsafe.user;
+      const fullName = user.first_name + (user.last_name ? (' ' + user.last_name) : '');
+      const userNameEl = document.getElementById('user-name');
+      if (userNameEl) userNameEl.textContent = fullName;
+      const avatarEl = document.getElementById('avatar-circle');
+      if (avatarEl) avatarEl.textContent = getInitials(fullName);
+    } else {
+      const userNameEl = document.getElementById('user-name');
+      if (userNameEl) userNameEl.textContent = "ইউজারের নাম";
+      const avatarEl = document.getElementById('avatar-circle');
+      if (avatarEl) avatarEl.textContent = "ইন";
+    }
+  } catch(e) {
     const userNameEl = document.getElementById('user-name');
     if (userNameEl) userNameEl.textContent = "ইউজারের নাম";
     const avatarEl = document.getElementById('avatar-circle');
@@ -29,26 +32,27 @@ function setTelegramProfile() {
   }
 }
 
+// --- Main app logic ---
 document.addEventListener("DOMContentLoaded", function() {
-  // Set Telegram profile (name + initials avatar)
+  // Preloader hide & app show
+  var preloader = document.getElementById('preloader');
+  var app = document.getElementById('app');
+  if(preloader) preloader.classList.add("hidden");
+  if(app) app.setAttribute("aria-hidden", "false");
   setTelegramProfile();
 
-  // ----------- BELOW: Your previous preloader/app logic -----------
+  // ---- নিচে আগের টাস্ক, ব্যালেন্স, মডাল, ইত্যাদি কিপ করো ----
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
   const els = {
-    preloader: $("#preloader"),
-    app: $("#app"),
     balanceAmount: $("#balance-amount"),
     tasksToday: $("#tasks-today"),
     referralsCount: $("#referrals-count"),
   };
-
   const STORE_KEYS = {
     balance: "grand_balance_v3",
     tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
-    homeTaskDone: "grand_home_task_done_v3",
   };
   const TASK_LIMIT = 20;
   const TASK_REWARD = 1.00;
@@ -93,13 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const modal = document.getElementById(id);
     if (!modal) return;
     modal.setAttribute("aria-hidden", "false");
-    els.app.setAttribute("aria-hidden", "true");
+    app.setAttribute("aria-hidden", "true");
   }
 
   function closeModal(modal) {
     if (!modal) return;
     modal.setAttribute("aria-hidden", "true");
-    els.app.setAttribute("aria-hidden", "false");
+    app.setAttribute("aria-hidden", "false");
   }
 
   function startVideoAd(startBtn) {
@@ -149,13 +153,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  function init() {
-    if (els.preloader) els.preloader.classList.add("hidden");
-    if (els.app) els.app.setAttribute("aria-hidden", "false");
-    const initialState = getState();
-    updateUI(initialState);
-    bindEvents();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
+  const state = getState();
+  updateUI(state);
+  bindEvents();
 });

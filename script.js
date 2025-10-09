@@ -283,7 +283,7 @@
         const mv = $('#modal-' + modalId);
         if (mv) {
           let startBtn = mv.querySelector('[data-action="start-video"]');
-          if (startBtn) startBtn.dataset.task = btn.dataset.taskType || 'home-daily';
+          if (startBtn) startBtn.dataset.task = btn.dataset.taskType || (isHome ? 'home-daily' : 'video-task');
         }
       }
     });
@@ -292,7 +292,7 @@
     document.addEventListener('click', function(e){
       const btn = e.target.closest('[data-action="start-video"]');
       if (btn && !btn.disabled) {
-        handleVideoAd(btn.dataset.task || 'home-daily');
+        handleVideoAd(btn.dataset.task || (isHome ? 'home-daily' : 'video-task'));
       }
     });
 
@@ -319,8 +319,15 @@
 
   function init() {
     // Preloader hide
-    if ($("#preloader")) $("#preloader").classList.add("hidden");
-    if ($("#app")) $("#app").setAttribute("aria-hidden", "false");
+    if ($("#preloader")) {
+      setTimeout(() => {
+        $("#preloader").classList.add("hidden");
+        if ($("#app")) $("#app").setAttribute("aria-hidden", "false");
+      }, 5000); // ৫ সেকেন্ড শো করবে
+    }
+    else if ($("#app")) {
+      $("#app").setAttribute("aria-hidden", "false");
+    }
 
     // User info/profile
     loadUserInfo();

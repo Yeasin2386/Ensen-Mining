@@ -409,3 +409,21 @@ h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.2; }
     transition: none !important;
   }
 }
+
+/* ... তোমার আগের style.css অপরিবর্তিত থাকবে ... */
+
+/* শুধু এটুকু নতুন যোগ করো, অথবা ফাইলের শেষে দাও */
+.avatar-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #93f9b9, #1d976c);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin-right: 16px;
+}

@@ -1,327 +1,353 @@
-/*
-  Grand App - v3 (Final Home)
-  Main JavaScript file for the home screen.
-  
-  *** আপডেটের সারসংক্ষেপ: ***
-  1. Monetag Integration FIX: Rewarded Interstitial (show_10002890) কল লজিক আপডেট করা হয়েছে।
-  2. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
-  3. UI Cleanup: মডাল থেকে অপ্রয়োজনীয় 'Confirm Task' বাটন লজিক মুছে ফেলা হয়েছে।
-  
-  *** আপনার সমস্যার সমাধান (Modified Code): ***
-  - startVideoAd: এখন সরাসরি show_10002890() কল করে এবং .then() এ completeTask() কল করে।
-  - openModal/bindEvents: 'confirm-task' লজিক বাদ দেওয়া হয়েছে।
-*/
+// Grand App - Single JS for Home (index.html) & Task (task.html)
+// All UI, limit, user info, image select, daily/task logic
 
-// Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
-(() => {
+(function () {
   "use strict";
 
-  // --- 1. Helper Functions ---
-  const $ = (selector, parent = document) => parent.querySelector(selector);
-  const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
+  // Profile images (10) to use for selection
+  const PROFILE_IMAGES = [
+    "image/profile1.png",
+    "image/profile2.png",
+    "image/profile3.png",
+    "image/profile4.png",
+    "image/profile5.png",
+    "image/profile6.png",
+    "image/profile7.png",
+    "image/profile8.png",
+    "image/profile9.png",
+    "image/profile10.png"
+  ];
 
-  // --- 2. DOM Element Cache ---
-  const els = {
-    preloader: $("#preloader"),
-    app: $("#app"),
-    userName: $("#user-name"),
-    userUsername: $("#user-username"),
-    userAvatar: $("#user-avatar"),
-    balanceAmount: $("#balance-amount"),
-    tasksToday: $("#tasks-today"), // Home page stat
-    referralsCount: $("#referrals-count"),
-    homeTaskBtn: $('[data-task-type="home-daily"]'), 
-  };
-
-  // --- 3. State Management & localStorage ---
+  // LocalStorage Keys
   const STORE_KEYS = {
     balance: "grand_balance_v3",
     tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
-    homeTaskDone: "grand_home_task_done_v3",
+    homeTask: "grand_home_task_v3",
+    homeTaskDate: "grand_home_task_date",
+    profileImg: "grand_profile_img",
+    username: "grand_username",
+    name: "grand_name",
+    joinChannel: "grand_join_channel",
+    videoTask: "grand_video_task_v3"
   };
-  
-  const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
-  const TASK_REWARD = 1.00;
-  const USER_INFO = {
-    name: "A. K. Yeasin",
-    username: "@yeasinkhan",
-    avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
-  };
-  
-  // Custom alert function (to keep consistency without structural changes)
-  function showCustomAlert(message) {
-    alert(message);
+
+  // Utility
+  const $ = (selector, parent = document) => parent.querySelector(selector);
+  const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
+
+  // Detect which page
+  const path = window.location.pathname.replace(/\\/g, '/');
+  const isHome = /index\.html$|\/$/.test(path);
+  const isTask = /task\.html$/.test(path);
+
+  // ---------- USER INFO ----------
+
+  // Load user info from Telegram or LocalStorage
+  function loadUserInfo() {
+    let name = localStorage.getItem(STORE_KEYS.name) || "ইউজারের নাম";
+    let username = localStorage.getItem(STORE_KEYS.username) || "@username";
+
+    // Telegram Mini App থেকে ইনফো (নতুন ইউজার হলে)
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+      const user = window.Telegram.WebApp.initDataUnsafe.user;
+      if (user.first_name) {
+        name = user.first_name + (user.last_name ? ' ' + user.last_name : '');
+        localStorage.setItem(STORE_KEYS.name, name);
+      }
+      if (user.username) {
+        username = '@' + user.username;
+        localStorage.setItem(STORE_KEYS.username, username);
+      }
+    }
+    // UI তে বসানো
+    if ($("#user-name")) $("#user-name").textContent = name;
+    if ($("#user-username")) $("#user-username").textContent = username;
   }
 
-  function getState() {
-    const today = new Date().toDateString();
-    
-    let balance = parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
-    let referrals = parseInt(localStorage.getItem(STORE_KEYS.referrals)) || 0;
-    
-    let tasksState = JSON.parse(localStorage.getItem(STORE_KEYS.tasks)) || { date: today, completed: 0 };
-    let homeTaskDoneState = JSON.parse(localStorage.getItem(STORE_KEYS.homeTaskDone)) || { date: today, done: false };
-
-    // --- Daily Reset Logic ---
-    if (tasksState.date !== today) {
-      tasksState = { date: today, completed: 0 };
-    }
-    if (homeTaskDoneState.date !== today) {
-      homeTaskDoneState = { date: today, done: false };
-    }
-
-    return { balance, referrals, tasksState, homeTaskDoneState };
+  // Profile image load/set
+  function loadProfileImg() {
+    let img = localStorage.getItem(STORE_KEYS.profileImg) || PROFILE_IMAGES[0];
+    if ($("#user-avatar")) $("#user-avatar").src = img;
   }
 
-  function saveState(state) {
-    localStorage.setItem(STORE_KEYS.balance, state.balance.toFixed(2));
-    localStorage.setItem(STORE_KEYS.referrals, state.referrals);
-    localStorage.setItem(STORE_KEYS.tasks, JSON.stringify(state.tasksState));
-    localStorage.setItem(STORE_KEYS.homeTaskDone, JSON.stringify(state.homeTaskDoneState));
+  function setProfileImg(img) {
+    localStorage.setItem(STORE_KEYS.profileImg, img);
+    loadProfileImg();
   }
-  
-  // --- 4. UI/Data Sync Functions ---
 
-  function updateUI(state) {
-    if (els.userName) els.userName.textContent = USER_INFO.name;
-    if (els.userUsername) els.userUsername.textContent = USER_INFO.username;
-    if (els.userAvatar) els.userAvatar.src = USER_INFO.avatar;
+  // Name Edit Modal
+  function setupNameEdit() {
+    const editBtn = $("#edit-name-btn");
+    const modal = $("#edit-name-modal");
+    const input = $("#edit-name-input");
+    const saveBtn = $("#save-name-btn");
 
-    if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
-    if (els.referralsCount) els.referralsCount.textContent = state.referrals;
-    
-    const taskCounterText = `${state.tasksState.completed}/${TASK_LIMIT}`;
-    
-    // For Home Page (index.html)
-    if (els.tasksToday) {
-      els.tasksToday.textContent = taskCounterText;
-    }
-    
-    // For Task Page (task.html)
-    const taskLimitDisplay = $("#task-limit-display");
-    if (taskLimitDisplay) {
-        taskLimitDisplay.textContent = taskCounterText;
-    }
-
-    // --- Task completion logic and button state ---
-    const isLimitReached = state.tasksState.completed >= TASK_LIMIT;
-    const taskGoButtons = $$('.task-card[data-task-id="watch-video"] .btn-go');
-    const homeTaskBtn = els.homeTaskBtn;
-
-    // Handle home page specific button
-    if (homeTaskBtn) {
-        const isHomeTaskDone = state.homeTaskDoneState.done;
-        
-        if (isLimitReached) {
-            homeTaskBtn.disabled = true;
-            homeTaskBtn.textContent = 'দৈনিক লিমিট শেষ';
-        } else if (isHomeTaskDone) {
-             homeTaskBtn.disabled = true;
-             homeTaskBtn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
-        } else {
-             homeTaskBtn.disabled = false;
-             homeTaskBtn.textContent = 'Watch & Earn';
+    if (editBtn && modal && input && saveBtn) {
+      editBtn.onclick = () => {
+        modal.setAttribute('aria-hidden', 'false');
+        input.value = $("#user-name").textContent;
+        input.focus();
+      };
+      saveBtn.onclick = () => {
+        const val = input.value.trim();
+        if (val.length > 1) {
+          localStorage.setItem(STORE_KEYS.name, val);
+          $("#user-name").textContent = val;
+          modal.setAttribute('aria-hidden', 'true');
         }
+      };
+      modal.querySelector('.modal-backdrop').onclick = () => modal.setAttribute('aria-hidden', 'true');
     }
-
-    // Handle task page buttons (using the generic selector)
-    taskGoButtons.forEach(btn => {
-        // Only apply logic to buttons that are NOT the home page button
-        const isHomeTask = btn.dataset.taskType === 'home-daily';
-        
-        if (isLimitReached) {
-            btn.disabled = true;
-            btn.textContent = 'দৈনিক লিমিট শেষ';
-        } else if (isHomeTask && state.homeTaskDoneState.done) {
-             btn.disabled = true;
-             btn.textContent = 'আজকের ডেইলি টাস্ক সম্পন্ন';
-        } else {
-             btn.disabled = false;
-             btn.textContent = isHomeTask ? 'Watch & Earn' : 'Go';
-        }
-    });
-    
   }
 
-  // --- 5. Core App Logic ---
+  // Profile Image Select Modal
+  function setupProfileImgSelect() {
+    const avatar = $("#user-avatar");
+    const modal = $("#profile-pic-modal");
+    const list = $("#profile-pic-list");
 
-  function completeTask(taskType) {
-    let state = getState();
+    if (avatar && modal && list) {
+      avatar.style.cursor = "pointer";
+      avatar.onclick = () => {
+        modal.setAttribute('aria-hidden', 'false');
+        list.innerHTML = "";
+        PROFILE_IMAGES.forEach(img => {
+          const imgEl = document.createElement('img');
+          imgEl.src = img;
+          imgEl.style.width = "56px";
+          imgEl.style.height = "56px";
+          imgEl.style.borderRadius = "50%";
+          imgEl.style.cursor = "pointer";
+          imgEl.style.border = img === localStorage.getItem(STORE_KEYS.profileImg) ? '2px solid #C9A741' : '2px solid transparent';
+          imgEl.onclick = () => {
+            setProfileImg(img);
+            modal.setAttribute('aria-hidden', 'true');
+          };
+          list.appendChild(imgEl);
+        });
+      };
+      modal.querySelector('.modal-backdrop').onclick = () => modal.setAttribute('aria-hidden', 'true');
+    }
+  }
 
-    // 1. CRITICAL: Check the total limit again
-    if (state.tasksState.completed >= TASK_LIMIT) {
-      // Alert is already given in startVideoAd's initial check, but for safety:
-      showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ।");
+  // ---------- BALANCE ----------
+
+  function getBalance() {
+    return parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
+  }
+  function setBalance(val) {
+    localStorage.setItem(STORE_KEYS.balance, val.toFixed(2));
+    if ($("#balance-amount")) $("#balance-amount").textContent = val.toFixed(2);
+  }
+
+  // ---------- DAILY HOME TASK ----------
+
+  // Each day only 1 video allowed in Home
+  function getHomeTaskState() {
+    let state = localStorage.getItem(STORE_KEYS.homeTask);
+    let date = localStorage.getItem(STORE_KEYS.homeTaskDate);
+    return {
+      done: state === "done" && date === getToday(),
+      date: date || ""
+    };
+  }
+  function completeHomeTask() {
+    localStorage.setItem(STORE_KEYS.homeTask, "done");
+    localStorage.setItem(STORE_KEYS.homeTaskDate, getToday());
+  }
+  function resetHomeTaskIfNeeded() {
+    let date = localStorage.getItem(STORE_KEYS.homeTaskDate);
+    if (date !== getToday()) {
+      localStorage.removeItem(STORE_KEYS.homeTask);
+      localStorage.setItem(STORE_KEYS.homeTaskDate, getToday());
+    }
+  }
+
+  // ---------- VIDEO TASK (TASK PAGE) ----------
+
+  // 20 video task per day, reset at 12AM
+  function getVideoTaskState() {
+    let state = localStorage.getItem(STORE_KEYS.videoTask);
+    try { state = JSON.parse(state) || {}; } catch { state = {}; }
+    if (!state.date || state.date !== getToday()) {
+      state = { date: getToday(), count: 0 };
+      localStorage.setItem(STORE_KEYS.videoTask, JSON.stringify(state));
+    }
+    return state;
+  }
+  function incrementVideoTask() {
+    let state = getVideoTaskState();
+    state.count = Math.min(20, (state.count || 0) + 1);
+    localStorage.setItem(STORE_KEYS.videoTask, JSON.stringify(state));
+  }
+
+  // ---------- TASKS COUNTER UI UPDATE ----------
+
+  function updateCounters() {
+    if ($("#tasks-today")) {
+      // Home: show video task progress (task page's counter)
+      let count = getVideoTaskState().count || 0;
+      $("#tasks-today").textContent = `${count}/20`;
+    }
+    if ($("#tasks-today-page")) {
+      // Task page: show video task progress
+      let count = getVideoTaskState().count || 0;
+      $("#tasks-today-page").textContent = `${count}/20`;
+    }
+  }
+
+  // ---------- VIDEO AD HANDLER (HOME + TASK PAGE) ----------
+
+  function handleVideoAd(taskType) {
+    // taskType: 'home-daily', 'video-task'
+    // Home: allow only if not done today, Task page: allow if count < 20
+    if (taskType === 'home-daily') {
+      resetHomeTaskIfNeeded();
+      if (getHomeTaskState().done) {
+        alert("আপনি আজকের ডেইলি টাস্কটি ইতোমধ্যে সম্পন্ন করেছেন! নতুন করে পেতে ২৪ ঘণ্টা অপেক্ষা করুন।");
+        return;
+      }
+    }
+    if (taskType === 'video-task') {
+      let state = getVideoTaskState();
+      if (state.count >= 20) {
+        alert("আজকের ভিডিও টাস্কের লিমিট শেষ! নতুন দিনে আবার চেষ্টা করুন।");
+        return;
+      }
+    }
+    // Monetag SDK check
+    if (typeof show_10002890 !== 'function') {
+      alert("বিজ্ঞাপন সিস্টেম লোড হচ্ছে, একটু অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
       return;
     }
-    
-    // 2. Check if the task being completed is the HOME TASK
-    if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
-        // Alert is already given in startVideoAd's initial check, but for safety:
-        showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন।");
-        return;
-    }
-    
-    // 3. Update Balance
-    state.balance += TASK_REWARD;
-    
-    // 4. Update Task Count (Increments the shared 0/20 limit)
-    state.tasksState.completed += 1;
-    
-    // 5. Update Home Task State if applicable
-    if (taskType === 'home-daily') {
-        state.homeTaskDoneState.done = true;
-        state.homeTaskDoneState.date = new Date().toDateString(); // Ensure date is updated
-    }
-    
-    // 6. Save and Update UI
-    saveState(state);
-    updateUI(state);
 
-    // Provide professional feedback
-    // This alert is now triggered only on successful reward
-    showCustomAlert(`অসাধারণ! টাস্ক সফলভাবে সম্পন্ন হয়েছে। আপনার অ্যাকাউন্টে ৳${TASK_REWARD.toFixed(2)} যোগ করা হয়েছে। 🎉`);
-  }
-  
-  function openModal(id, taskType) {
-    const modal = $(`#${id}`);
-    if (!modal) return;
-    
-    let state = getState();
-    
-    // Pre-check limits before opening modal
-    if (state.tasksState.completed >= TASK_LIMIT) {
-        showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ। আগামীকাল আবার চেষ্টা করুন।");
-        return;
-    }
-    
-    if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
-        showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন। পরবর্তী টাস্কের জন্য ২৪ ঘণ্টা অপেক্ষা করুন।");
-        return;
-    }
-    
-    // Get the start button inside the modal
-    const startBtn = modal.querySelector('[data-action="start-video"]');
-    
-    if (startBtn) {
-        startBtn.disabled = false;
-        startBtn.textContent = 'Watch Now';
-        // Pass the task type to the start button for use in startVideoAd
-        startBtn.setAttribute('data-task', taskType || 'video'); 
-    }
-    
-    // IMPORTANT: Hide the old 'Confirm' button as reward is now automatic
-    const confirmBtn = modal.querySelector('[data-action="confirm-task"]');
-    if(confirmBtn) confirmBtn.style.display = 'none'; 
+    // Disable all video buttons during ad
+    $$('[data-action="start-video"]').forEach(b=>b.disabled=true);
 
-    modal.setAttribute("aria-hidden", "false");
-    els.app.setAttribute("aria-hidden", "true");
-  }
-
-  function closeModal(modal) {
-    if (!modal) return;
-    modal.setAttribute("aria-hidden", "true");
-    els.app.setAttribute("aria-hidden", "false");
-    
-    // Reset modal button state when closing
-    const startBtn = modal.querySelector('[data-action="start-video"]');
-    if (startBtn) {
-        startBtn.disabled = false;
-        startBtn.textContent = 'Watch Now';
-    }
-  }
-
-
-  // Function to start the Video Ad and handle completion (UPDATED FOR MONETAG show_10002890)
-  function startVideoAd(startBtn) {
-      const modal = startBtn.closest('.modal');
-      const taskType = startBtn.dataset.task; // Get task type
-
-      // Check limits again just in case
-      let state = getState();
-      if (state.tasksState.completed >= TASK_LIMIT || (taskType === 'home-daily' && state.homeTaskDoneState.done)) {
-          startBtn.disabled = false;
-          startBtn.textContent = 'Watch Now';
-          showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ।");
-          return;
+    // Start video ad
+    show_10002890().then(() => {
+      // Success, reward
+      let reward = 1.00;
+      if (taskType === 'home-daily') {
+        completeHomeTask();
+        setBalance(getBalance() + reward);
+        alert("অভিনন্দন! ডেইলি টাস্ক সম্পন্ন হয়েছে, ৳1 পেয়েছেন।");
+      } else if (taskType === 'video-task') {
+        incrementVideoTask();
+        setBalance(getBalance() + reward);
+        alert("অভিনন্দন! টাস্ক সম্পন্ন হয়েছে, ৳1 পেয়েছেন।");
       }
-      
-      startBtn.disabled = true;
-      startBtn.textContent = 'বিজ্ঞাপন লোড হচ্ছে...'; 
-
-      // Check if the Monetag Rewarded Interstitial function is available
-      if (typeof show_10002890 !== 'function') {
-           startBtn.disabled = false;
-           startBtn.textContent = 'Watch Now';
-           showCustomAlert('বিজ্ঞাপন সিস্টেম এখনও লোড হয়নি। অনুগ্রহ করে পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।');
-           console.error("Monetag SDK function show_10002890 is not available.");
-           return;
-      }
-      
-      // *** Ad SDK Call ***
-      show_10002890().then(() => { 
-          // 1. Reward the user directly (Ad finished successfully)
-          completeTask(taskType); 
-          
-          startBtn.textContent = 'টাস্ক সম্পন্ন হলো! 🎉'; // Temporary feedback on the button
-          
-          // 2. Close the modal after a short delay for final feedback
-          setTimeout(() => {
-             closeModal(modal);
-          }, 1500); 
-          
-      }).catch((error) => {
-          // Ad failed to load (no reward given)
-          startBtn.disabled = false;
-          startBtn.textContent = 'Watch Now';
-          console.error('Video Ad Loading Error:', error);
-          showCustomAlert('দুঃখিত, এই মুহূর্তে বিজ্ঞাপন লোড করা সম্ভব হয়নি। দয়া করে কয়েক সেকেন্ড পরে আবার চেষ্টা করুন। 😔');
-      });
+      updateCounters();
+    }).catch(() => {
+      alert("বিজ্ঞাপন লোড হয়নি, আবার চেষ্টা করুন।");
+    }).finally(() => {
+      $$('[data-action="start-video"]').forEach(b=>b.disabled=false);
+      closeAllModals();
+      updateCounters();
+    });
   }
 
+  // ---------- JOIN CHANNEL TASK (TASK PAGE) ----------
 
-  // --- 6. Event Listeners ---
-  
+  function handleJoinChannelTask() {
+    if (localStorage.getItem(STORE_KEYS.joinChannel) === "done") {
+      alert("আপনি ইতোমধ্যে চ্যানেলে জয়েন টাস্কটি সম্পন্ন করেছেন।");
+      return false;
+    }
+    setBalance(getBalance() + 5);
+    localStorage.setItem(STORE_KEYS.joinChannel, "done");
+    alert("অভিনন্দন! টেলিগ্রাম চ্যানেলে জয়েন করার জন্য ৳5 পেয়েছেন।");
+    return true;
+  }
+
+  // ---------- MODALS, EVENTS, INIT ----------
+
+  function openModal(id) {
+    const modal = $('#' + id);
+    if (modal) modal.setAttribute('aria-hidden', 'false');
+  }
+  function closeAllModals() {
+    $$('.modal').forEach(m=>m.setAttribute('aria-hidden','true'));
+  }
+
+  // -- Event Binding --
   function bindEvents() {
-    document.addEventListener("click", (e) => {
-      // 1. OPEN MODAL
-      const openModalBtn = e.target.closest("[data-open-modal]");
-      if (openModalBtn) {
-          const taskType = openModalBtn.dataset.taskType; 
-          openModal(openModalBtn.dataset.openModal, taskType);
+    // Video watch button (home/task)
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-open-modal]');
+      if (btn) {
+        const modalId = btn.dataset.openModal;
+        openModal('modal-' + modalId);
+        // Set task-type on start-video btn
+        const mv = $('#modal-' + modalId);
+        if (mv) {
+          let startBtn = mv.querySelector('[data-action="start-video"]');
+          if (startBtn) startBtn.dataset.task = btn.dataset.taskType || 'home-daily';
+        }
       }
-      
-      // 2. CLOSE MODAL
-      const closeModalBtn = e.target.closest("[data-close-modal]");
-      if (closeModalBtn) closeModal(closeModalBtn.closest(".modal"));
-      
-      // 3. START VIDEO AD
-      const startVideoBtn = e.target.closest('[data-action="start-video"]');
-      if (startVideoBtn && !startVideoBtn.disabled) startVideoAd(startVideoBtn);
     });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const activeModal = $('[aria-hidden="false"].modal');
-        if (activeModal) closeModal(activeModal);
+    // Video ad start
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-action="start-video"]');
+      if (btn && !btn.disabled) {
+        handleVideoAd(btn.dataset.task || 'home-daily');
+      }
+    });
+
+    // Close modal
+    document.addEventListener('click', function(e){
+      const closeBtn = e.target.closest('[data-close-modal]');
+      if (closeBtn) {
+        closeAllModals();
+      }
+    });
+
+    // Join channel complete (task page)
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-action="confirm-task"][data-task="join-channel"]');
+      if (btn) {
+        if (handleJoinChannelTask()) {
+          closeAllModals();
+        }
       }
     });
   }
-  
-  // --- 7. Initialization ---
-  
-  function init() {
-    // Hide preloader
-    if (els.preloader) els.preloader.classList.add("hidden");
-    if (els.app) els.app.setAttribute("aria-hidden", "false");
 
-    // Load and render initial data
-    const initialState = getState();
-    updateUI(initialState);
+  // ---------- INITIALIZE ----------
+
+  function init() {
+    // Preloader hide
+    if ($("#preloader")) $("#preloader").classList.add("hidden");
+    if ($("#app")) $("#app").setAttribute("aria-hidden", "false");
+
+    // User info/profile
+    loadUserInfo();
+    loadProfileImg();
+    setupProfileImgSelect();
+    setupNameEdit();
+
+    // Balance
+    setBalance(getBalance());
+
+    // Reset home task if new day
+    resetHomeTaskIfNeeded();
+
+    // Task counter
+    updateCounters();
+
+    // Bind events
     bindEvents();
   }
-  
+
+  // Date helpers
+  function getToday() {
+    // Always returns YYYY-MM-DD in local time
+    const d = new Date();
+    return d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0') + '-' + d.getDate().toString().padStart(2,'0');
+  }
+
   document.addEventListener("DOMContentLoaded", init);
 
 })();

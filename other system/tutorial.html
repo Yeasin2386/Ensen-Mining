@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#F8F5EF" />
+  <title>Grand — Tutorial</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../style.css" /> 
+  <style>
+    /* শুধু Tutorial পেজের জন্য দরকারি CSS (Navigation Active State) */
+    .bottom-nav a[href="tutorial.html"] {
+        color: var(--accent-primary) !important;
+    }
+    
+    /* Tutorial Video Card Styling - IMPROVED */
+    .tutorial-card {
+        background-color: var(--bg-surface);
+        padding: var(--spacing);
+        border-radius: var(--radius-md);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+        margin-bottom: 20px;
+    }
+
+    .tutorial-card .video-placeholder {
+        /* নতুন স্টাইল: ভিডিও প্লেয়ারের মতো লুক */
+        background-color: #1a1a1a; /* Dark background for video screen */
+        height: 180px;
+        border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* ভিডিও আইকন এবং টেক্সট */
+    .video-placeholder h4 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        z-index: 10;
+        padding-top: 5px;
+    }
+    
+    /* প্লে বাটন আইকন */
+    .video-placeholder .play-icon {
+        width: 60px;
+        height: 60px;
+        color: white;
+        fill: white;
+        border-radius: 50%;
+        background-color: rgba(201, 167, 65, 0.85); /* Accent color with opacity */
+        padding: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        transition: transform 0.2s;
+    }
+
+    .tutorial-card .btn-watch {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        font-weight: 700;
+        text-align: center;
+        background-color: var(--success-color);
+        color: var(--bg-surface);
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-decoration: none; /* Make the button look like a link */
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <h1 class="preloader-brand">Grand</h1>
+      <div class="preloader-progress"><div class="preloader-progress-bar"></div></div>
+      <p class="preloader-powered">powered by Yeasin Group</p>
+    </div>
+  </div>
+
+  <div id="app" class="app" aria-hidden="true">
+    
+    <header class="app-header">
+  <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
+    <img src="../image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
+  </a>
+  <h1 class="app-title">টিউটোরিয়াল</h1>
+  <a href="../settings.html" class="header-btn" aria-label="সেটিংস">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </a>
+</header>
+
+    <main class="app-main">
+      
+      <section class="tasks-section">
+        <h3 class="section-title">কিভাবে কাজ করবেন (টিউটোরিয়াল)</h3>
+        <div class="tutorial-card">
+            <div class="video-placeholder">
+                <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.5 5.653c0-1.426 1.529-2.38 2.87-1.628l11.53 6.917c1.177.708 1.177 2.365 0 3.073l-11.53 6.917c-1.341.752-2.87-.204-2.87-1.628V5.653z" clip-rule="evenodd" />
+                </svg>
+                <h4>সম্পূর্ণ টিউটোরিয়াল ভিডিও</h4>
+            </div>
+            <a href="https://youtu.be/your_tutorial_video" target="_blank" class="btn-watch">ভিডিও দেখুন</a>
+        </div>
+      </section>
+
+      <section class="tasks-section">
+        <h3 class="section-title">জরুরী লিঙ্ক ও সাপোর্ট</h3>
+        <div class="task-list">
+          <div class="task-card">
+            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
+            <div class="task-details">
+              <h4>টেলিগ্রাম গ্রুপে জয়েন হোন</h4>
+              <p class="reward">প্রশ্ন-উত্তর ও সাহায্যের জন্য</p>
+            </div>
+            <a href="https://t.me/your_telegram_group" target="_blank" class="btn-go" style="background-color: var(--accent-primary);">Go</a>
+          </div>
+
+          <div class="task-card">
+            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
+            <div class="task-details">
+              <h4>টেলিগ্রাম চ্যানেলে জয়েন হোন</h4>
+              <p class="reward">গুরুত্বপূর্ণ আপডেট পেতে</p>
+            </div>
+            <a href="https://t.me/your_telegram_channel" target="_blank" class="btn-go" style="background-color: var(--accent-primary);">Go</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="bottom-nav">
+  <a href="../index.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
+    <span>Home</span>
+  </a>
+  <a href="task.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+    <span>Task</span>
+  </a>
+  <a href="tutorial.html" class="nav-item active" aria-current="page">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+    <span>Tutorial</span>
+  </a>
+  <a href="referral.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+    </svg>
+    <span>Referral</span>
+  </a>
+  <a href="withdraw.html" class="nav-item">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+    </svg>
+    <span>Withdraw</span>
+  </a>
+</nav>
+
+  </div>
+
+  <script>
+    // এখানে শুধু প্রি-লোডার (Preloader) লুকানোর জন্য সামান্য JS যুক্ত করা হলো।
+    function init() {
+      // Preloader hide logic
+      const preloader = document.getElementById("preloader");
+      const app = document.getElementById("app");
+      if (preloader) preloader.classList.add("hidden");
+      if (app) app.setAttribute("aria-hidden", "false");
+    }
+    
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

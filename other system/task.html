@@ -5,43 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#F8F5EF" />
   <title>Grand — Task</title>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
   <link rel="stylesheet" href="../style.css" /> 
-  <style>
-    /* এখানে শুধু task.html এর জন্য যদি কোনো নতুন CSS লাগে, তা যুক্ত করা হবে।
-    আপনার মূল ডিজাইন style.css থেকে আসবে।
-    */
-    .task-limit-card {
-        background: var(--accent-primary);
-        color: var(--text-primary);
-        padding: 20px;
-        border-radius: var(--radius-lg);
-        text-align: center;
-        margin-top: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    }
-    .task-limit-card .balance-label {
-        font-weight: 600;
-        color: var(--text-primary);
-        opacity: 0.8;
-        font-size: 0.9rem;
-    }
-    .task-limit-card .balance-amount {
-        font-family: var(--font-heading);
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-top: 5px;
-        line-height: 1;
-    }
-    /* টাস্ক পেজে টাস্ক নেভিগেশন আইটেম সক্রিয় করতে */
-    .bottom-nav a[href="task.html"] {
-        color: var(--accent-primary) !important;
-    }
-  </style>
 </head>
 <body>
   
@@ -56,17 +23,17 @@
   <div id="app" class="app" aria-hidden="true">
     
     <header class="app-header">
-  <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
-    <img src="../image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png" alt="Grand Logo" />
-  </a>
-  <h1 class="app-title">টাস্ক</h1>
-  <a href="../settings.html" class="header-btn" aria-label="সেটিংস">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.48.398.668 1.03.26 1.431l-1.296 2.247a1.125 1.125 0 01-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.333.183-.582.495-.645.87l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.37-.49l-1.296-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 01-.26-1.431l1.296-2.247a1.125 1.125 0 011.37-.49l1.217.456c.355.133.75.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.645-.87l.213-1.28z" />
-      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  </a>
-</header>
+      <a href="../index.html" class="header-logo" aria-label="হোমপেজ">
+        <img src="../image/profile1.png" id="user-avatar" alt="Grand Logo" />
+      </a>
+      <h1 class="app-title">টাস্ক</h1>
+      <a href="../settings.html" class="header-btn" aria-label="সেটিংস">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257..."/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </a>
+    </header>
 
     <main class="app-main">
       
@@ -81,329 +48,101 @@
         <h3 class="section-title">টাস্ক</h3>
         <div class="task-list">
           
-          <div class="task-card" data-task-id="join-channel" data-reward="5">
-              <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg></div>
-              <div class="task-details">
-                <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
-                <p class="reward">+ ৳5 বোনাস (এককালীন)</p>
-              </div>
-              <button class="btn-go" data-open-modal="join-channel">Go</button>
-          </div>
-          
+          <!-- ভিডিও অ্যাড টাস্ক উপরে -->
           <div class="task-card" data-task-id="watch-video" data-reward="1" data-duration="15">
-            <div class="task-icon-wrapper"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg></div>
+            <div class="task-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 ..."/></svg>
+            </div>
             <div class="task-details">
               <h4>১৫ সেকেন্ডের ভিডিও দেখুন</h4>
               <p class="reward">+ ৳1 বোনাস</p>
             </div>
-            <button class="btn-go" data-open-modal="watch-video">Go</button>
+            <button class="btn-go" data-open-modal="watch-video" data-task-type="video-task">Go</button>
+          </div>
+          
+          <!-- টেলিগ্রাম জয়েন টাস্ক নিচে -->
+          <div class="task-card" data-task-id="join-channel" data-reward="5">
+            <div class="task-icon-wrapper">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59..."/></svg>
+            </div>
+            <div class="task-details">
+              <h4>টেলিগ্রাম চ্যানেলে জয়েন</h4>
+              <p class="reward">+ ৳5 বোনাস (এককালীন)</p>
+            </div>
+            <button class="btn-go" data-open-modal="join-channel">Go</button>
           </div>
         </div>
       </section>
     </main>
 
     <nav class="bottom-nav">
-  <a href="../index.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" /><path d="M12 5.432l8.159 8.159c.026.026.05.054.07.084v6.101A2.25 2.25 0 0117.75 22H6.25a2.25 2.25 0 01-2.25-2.25v-6.101c.02-.03.044-.058.07-.084L12 5.432z" /></svg>
-    <span>Home</span>
-  </a>
-  <a href="task.html" class="nav-item active" aria-current="page">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-    <span>Task</span>
-  </a>
-  <a href="tutorial.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
-    <span>Tutorial</span>
-  </a>
-  <a href="referral.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-    </svg>
-    <span>Referral</span>
-  </a>
-  <a href="withdraw.html" class="nav-item">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
-    </svg>
-    <span>Withdraw</span>
-  </a>
-</nav>
+      <a href="../index.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a..."/></svg>
+        <span>Home</span>
+      </a>
+      <a href="task.html" class="nav-item active" aria-current="page">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>Task</span>
+      </a>
+      <a href="tutorial.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006..."/></svg>
+        <span>Tutorial</span>
+      </a>
+      <a href="referral.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.31..."/>
+        </svg>
+        <span>Referral</span>
+      </a>
+      <a href="withdraw.html" class="nav-item">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h..."/>
+        </svg>
+        <span>Withdraw</span>
+      </a>
+    </nav>
 
-  <div id="modal-join-channel" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-dialog">
-      <div class="modal-icon-wrapper">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" /></svg>
-      </div>
-      <div class="modal-header">
-        <h3>চ্যানেলে জয়েন করুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳5</p>
-      </div>
-      <div class="modal-body">
-        <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটনে ক্লিক করুন।</p>
-      </div>
-      <div class="modal-actions">
-        <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
-        <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="modal-watch-video" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-backdrop" data-close-modal></div>
-    <div class="modal-dialog">
+    <!-- ভিডিও টাস্ক, টেলিগ্রাম জয়েন টাস্কের জন্য পপ-আপ -->
+    <div id="modal-watch-video" class="modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-dialog">
         <div class="modal-icon-wrapper">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112z" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 ..."/></svg>
         </div>
-      <div class="modal-header">
-        <h3>ভিডিও দেখুন</h3>
-        <p class="modal-reward">আপনি পাবেন ৳1</p>
+        <div class="modal-header">
+          <h3>ভিডিও দেখুন</h3>
+          <p class="modal-reward">আপনি পাবেন ৳1</p>
+        </div>
+        <div class="modal-body">
+          <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে অটো রিওয়ার্ড পাবেন।</p>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" data-action="start-video" data-duration="15" data-task="video-task">Watch Now</button>
+        </div>
       </div>
-      <div class="modal-body">
-        <p>পুরো ভিডিওটি দেখুন (Monetag বিজ্ঞাপন)। দেখা শেষ হলে 'Complete' বাটনটি সক্রিয় হবে।</p>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" data-action="start-video" data-duration="15">Watch Now</button>
-        <button class="btn-primary" data-action="confirm-task" data-task="watch-video" disabled>Complete</button>
+    </div>
+    <div id="modal-join-channel" class="modal" aria-hidden="true">
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-dialog">
+        <div class="modal-icon-wrapper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59..."/></svg>
+        </div>
+        <div class="modal-header">
+          <h3>চ্যানেলে জয়েন করুন</h3>
+          <p class="modal-reward">আপনি পাবেন ৳5</p>
+        </div>
+        <div class="modal-body">
+          <p>নিচের বাটনে ক্লিক করে আমাদের টেলিগ্রাম চ্যানেলে যোগ দিন। কাজ শেষে 'Complete' বাটন ক্লিক করুন।</p>
+        </div>
+        <div class="modal-actions">
+          <a href="https://t.me/your_channel" target="_blank" class="btn-secondary">Open Telegram</a>
+          <button class="btn-primary" data-action="confirm-task" data-task="join-channel">Complete</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <script src="../script.js"></script>
   <script src='//libtl.com/sdk.js' data-zone='10002890' data-sdk='show_10002890'></script>
-  <script>
-    const $ = (selector, parent = document) => parent.querySelector(selector);
-    const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
-
-    const STORE_KEYS = { balance: "grand_balance_v3", tasks: "grand_tasks_v3" };
-    const DAILY_TASK_LIMIT = 20;
-
-    const store = {
-      get: (key, fallback = null) => {
-        try {
-          const value = localStorage.getItem(key);
-          return value ? JSON.parse(value) : fallback;
-        } catch (e) {
-          return fallback;
-        }
-      },
-      set: (key, value) => {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-        } catch (e) {
-          console.error("Failed to save to localStorage", e);
-        }
-      },
-    };
-
-    let balance = store.get(STORE_KEYS.balance, 0);
-    let tasksState = store.get(STORE_KEYS.tasks, {});
-    let videoTimer = null;
-    
-    const tasksFromDOM = $$(".task-card").map(card => ({
-        id: card.dataset.taskId,
-        reward: Number(card.dataset.reward || 0),
-        duration: card.dataset.duration ? Number(card.dataset.duration) : null,
-        goButton: card.querySelector(".btn-go"),
-    }));
-
-    // --- Core Functions (Task Page Specific) ---
-
-    function isToday(ts) {
-        if (!ts) return false;
-        const today = new Date();
-        const otherDate = new Date(ts);
-        return today.getFullYear() === otherDate.getFullYear() &&
-               today.getMonth() === otherDate.getMonth() &&
-               today.getDate() === otherDate.getDate();
-    };
-
-    function getCompletedTasksToday() {
-        let todayCompletedCount = 0;
-        for (const taskId in tasksState) {
-            if (taskId === 'watch-video' && tasksState[taskId].status === 'completed' && isToday(tasksState[taskId].completed_at)) {
-                todayCompletedCount++;
-            }
-        }
-        return todayCompletedCount;
-    }
-
-    /**
-     * FIX APPLIED: Made syncTasksAndStats more robust for multi-completion tasks.
-     */
-    function syncTasksAndStats() {
-      let todayCompletedCount = getCompletedTasksToday();
-      
-      tasksFromDOM.forEach(task => {
-        if (!tasksState[task.id]) {
-          tasksState[task.id] = { status: "pending", completed_at: null };
-        }
-        
-        const taskState = tasksState[task.id];
-        const isCompleted = taskState.status === "completed";
-        
-        if (task.id === 'join-channel') {
-            if (isCompleted) {
-                task.goButton.textContent = "Done";
-                task.goButton.disabled = true;
-            } else {
-                task.goButton.textContent = "Go";
-                task.goButton.disabled = false;
-            }
-        }
-        
-        if (task.id === 'watch-video') {
-            if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-                task.goButton.textContent = "Limit End";
-                task.goButton.disabled = true;
-                // Since limit is reached, permanently set status to completed (until day reset)
-                if (taskState.status !== 'completed') taskState.status = 'completed';
-            } else {
-                // Allow the task to be done again if limit not reached
-                task.goButton.textContent = "Go";
-                task.goButton.disabled = false;
-                taskState.status = "pending"; // Ensure status is pending for the next count
-            }
-        }
-      });
-      store.set(STORE_KEYS.tasks, tasksState);
-      updateTaskLimitUI(todayCompletedCount);
-    }
-
-    function updateTaskLimitUI(todayCount) {
-      const taskLimitEl = $("#tasks-today-page");
-      if (taskLimitEl) taskLimitEl.textContent = `${todayCount}/${DAILY_TASK_LIMIT}`;
-    }
-
-    /**
-     * FIX APPLIED: Added strict Monetag ad check to prevent incorrect completion and counter reset.
-     */
-    function completeTask(taskId) {
-      const taskState = tasksState[taskId];
-      const taskDef = tasksFromDOM.find(t => t.id === taskId);
-      const todayCompletedCount = getCompletedTasksToday();
-
-      if (!taskDef) return;
-      
-      // Strict Limits Check
-      if (taskId === 'join-channel') {
-          if (taskState.status === "completed") {
-              alert("এই টাস্কটি (টেলিগ্রাম জয়েন) একবারই সম্পন্ন করা যাবে।");
-              return;
-          }
-      }
-      
-      if (taskId === 'watch-video') {
-          // Check if the user is trying to complete a task after the strict limit
-          if (todayCompletedCount >= DAILY_TASK_LIMIT) {
-              alert(`আজকের টাস্ক লিমিট (${DAILY_TASK_LIMIT} টি) শেষ। এর বেশি দেখতে পারবেন না।`);
-              return;
-          }
-          
-          // --- AD COMPLETION CHECK (CRITICAL) ---
-          const modal = $(`#modal-watch-video`);
-          const startBtn = modal.querySelector('[data-action="start-video"]');
-          if (startBtn.textContent !== 'Finished') {
-             alert('ভিডিওটি সম্পূর্ণ দেখা হয়নি বা বিজ্ঞাপন লোড হচ্ছে। "Watch Now" বাটনে ক্লিক করে বিজ্ঞাপনটি শেষ করুন।');
-             return;
-          }
-      }
-
-      // Completion Logic
-      taskState.status = "completed"; // Temporarily set to completed to count the current click
-      taskState.completed_at = Date.now();
-      
-      // Update balance
-      balance += taskDef.reward;
-      
-      // Save state
-      store.set(STORE_KEYS.tasks, tasksState);
-      store.set(STORE_KEYS.balance, balance);
-
-      // Re-sync tasks. syncTasksAndStats will immediately set 'watch-video' status back to "pending" 
-      // if the limit is not reached, allowing the user to click 'Go' again.
-      syncTasksAndStats();
-    }
-
-    // --- Modal Logic (Monetag) ---
-
-    function openModal(modalId) {
-      const modal = $(`#modal-${modalId}`);
-      if (!modal) return;
-      modal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
-
-      if (modalId === "watch-video") {
-        const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-        const startBtn = modal.querySelector('[data-action="start-video"]');
-        completeBtn.disabled = true;
-        startBtn.disabled = false;
-        startBtn.textContent = "Watch Now";
-      }
-    }
-
-    function closeModal(modal) {
-      if (!modal) return;
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-      if (videoTimer) {
-        clearInterval(videoTimer);
-        videoTimer = null;
-      }
-    }
-
-    function startMonetagAd(startBtn) {
-        if (typeof show_10002890 !== 'function') {
-            alert("বিজ্ঞাপন লোড হচ্ছে, কিছুক্ষণ অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
-            startBtn.disabled = false;
-            startBtn.textContent = 'Watch Now';
-            return;
-        }
-
-        startBtn.disabled = true;
-        startBtn.textContent = 'Ad Loading...';
-
-        show_10002890().then(() => {
-            startBtn.textContent = "Finished";
-            const modal = startBtn.closest(".modal");
-            const completeBtn = modal.querySelector('[data-action="confirm-task"]');
-            completeBtn.disabled = false;
-            alert('বিজ্ঞাপন দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
-        }).catch((error) => {
-            startBtn.disabled = false;
-            startBtn.textContent = 'Watch Now';
-            console.error('Monetag Ad Error:', error);
-            alert('বিজ্ঞাপনটি লোড হতে পারেনি। আবার চেষ্টা করুন।');
-        });
-    }
-
-    function bindEvents() {
-      document.addEventListener("click", (e) => {
-        const openModalBtn = e.target.closest("[data-open-modal]");
-        if (openModalBtn) openModal(openModalBtn.dataset.openModal);
-        
-        const closeModalBtn = e.target.closest("[data-close-modal]");
-        if (closeModalBtn) closeModal(closeModalBtn.closest(".modal"));
-        
-        const confirmBtn = e.target.closest('[data-action="confirm-task"]');
-        if (confirmBtn && !confirmBtn.disabled) {
-          completeTask(confirmBtn.dataset.task);
-          closeModal(confirmBtn.closest(".modal"));
-        }
-
-        const startVideoBtn = e.target.closest('[data-action="start-video"]');
-        if (startVideoBtn && !startVideoBtn.disabled) startMonetagAd(startVideoBtn);
-      });
-    }
-    
-    function init() {
-      $("#preloader").classList.add("hidden");
-      $("#app").setAttribute("aria-hidden", "false");
-      syncTasksAndStats();
-      bindEvents();
-    }
-    
-    document.addEventListener("DOMContentLoaded", init);
-
-  </script>
 </body>
-        </html>
+</html>

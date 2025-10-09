@@ -1,10 +1,10 @@
 // Grand App - Single JS for Home (index.html) & Task (task.html)
-// All UI, limit, user info, image select, daily/task logic
+// All UI, limit, user info, image select, daily/task logic, preloader, navigation timing, popup, etc.
 
 (function () {
   "use strict";
 
-  // Profile images (10) to use for selection
+  // 1. Profile images (10)
   const PROFILE_IMAGES = [
     "image/profile1.png",
     "image/profile2.png",
@@ -18,7 +18,7 @@
     "image/profile10.png"
   ];
 
-  // LocalStorage Keys
+  // 2. LocalStorage Keys
   const STORE_KEYS = {
     balance: "grand_balance_v3",
     tasks: "grand_tasks_v3",
@@ -32,22 +32,21 @@
     videoTask: "grand_video_task_v3"
   };
 
-  // Utility
+  // 3. DOM Helpers
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
 
-  // Detect which page
+  // 4. Page Detection
   const path = window.location.pathname.replace(/\\/g, '/');
   const isHome = /index\.html$|\/$/.test(path);
   const isTask = /task\.html$/.test(path);
 
-  // ---------- USER INFO ----------
+  // 5. User Info/Profile ----------------------
 
   // Load user info from Telegram or LocalStorage
   function loadUserInfo() {
     let name = localStorage.getItem(STORE_KEYS.name) || "ইউজারের নাম";
     let username = localStorage.getItem(STORE_KEYS.username) || "@username";
-
     // Telegram Mini App থেকে ইনফো (নতুন ইউজার হলে)
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
       const user = window.Telegram.WebApp.initDataUnsafe.user;
@@ -64,18 +63,15 @@
     if ($("#user-name")) $("#user-name").textContent = name;
     if ($("#user-username")) $("#user-username").textContent = username;
   }
-
   // Profile image load/set
   function loadProfileImg() {
     let img = localStorage.getItem(STORE_KEYS.profileImg) || PROFILE_IMAGES[0];
     if ($("#user-avatar")) $("#user-avatar").src = img;
   }
-
   function setProfileImg(img) {
     localStorage.setItem(STORE_KEYS.profileImg, img);
     loadProfileImg();
   }
-
   // Name Edit Modal
   function setupNameEdit() {
     const editBtn = $("#edit-name-btn");
@@ -100,7 +96,6 @@
       modal.querySelector('.modal-backdrop').onclick = () => modal.setAttribute('aria-hidden', 'true');
     }
   }
-
   // Profile Image Select Modal
   function setupProfileImgSelect() {
     const avatar = $("#user-avatar");
@@ -131,8 +126,7 @@
     }
   }
 
-  // ---------- BALANCE ----------
-
+  // 6. BALANCE ----------------------
   function getBalance() {
     return parseFloat(localStorage.getItem(STORE_KEYS.balance)) || 0.00;
   }
@@ -141,9 +135,7 @@
     if ($("#balance-amount")) $("#balance-amount").textContent = val.toFixed(2);
   }
 
-  // ---------- DAILY HOME TASK ----------
-
-  // Each day only 1 video allowed in Home
+  // 7. DAILY HOME TASK (index.html) ----------------------
   function getHomeTaskState() {
     let state = localStorage.getItem(STORE_KEYS.homeTask);
     let date = localStorage.getItem(STORE_KEYS.homeTaskDate);
@@ -164,9 +156,7 @@
     }
   }
 
-  // ---------- VIDEO TASK (TASK PAGE) ----------
-
-  // 20 video task per day, reset at 12AM
+  // 8. VIDEO TASK (TASK PAGE, 20/day) ----------------------
   function getVideoTaskState() {
     let state = localStorage.getItem(STORE_KEYS.videoTask);
     try { state = JSON.parse(state) || {}; } catch { state = {}; }
@@ -182,26 +172,53 @@
     localStorage.setItem(STORE_KEYS.videoTask, JSON.stringify(state));
   }
 
-  // ---------- TASKS COUNTER UI UPDATE ----------
-
+  // 9. TASK COUNTER UI ----------------------
   function updateCounters() {
     if ($("#tasks-today")) {
-      // Home: show video task progress (task page's counter)
       let count = getVideoTaskState().count || 0;
       $("#tasks-today").textContent = `${count}/20`;
     }
     if ($("#tasks-today-page")) {
-      // Task page: show video task progress
       let count = getVideoTaskState().count || 0;
       $("#tasks-today-page").textContent = `${count}/20`;
     }
   }
 
-  // ---------- VIDEO AD HANDLER (HOME + TASK PAGE) ----------
+  // 10. PRELOADER SYSTEM ----------------------
+  function showPreloader(duration = 1500) {
+    const preloader = $("#preloader");
+    const app = $("#app");
+    if (preloader) {
+      preloader.classList.remove("hidden");
+      app && app.setAttribute("aria-hidden", "true");
+      setTimeout(() => {
+        preloader.classList.add("hidden");
+        app && app.setAttribute("aria-hidden", "false");
+      }, duration);
+    }
+  }
+  function initPreloader() {
+    if (!sessionStorage.getItem("grand_first_load")) {
+      sessionStorage.setItem("grand_first_load", "1");
+      showPreloader(5000);
+    } else {
+      showPreloader(1500);
+    }
+  }
 
+  // 11. MODALS ----------------------
+  function openModal(id) {
+    const modal = $('#' + id);
+    if (modal) modal.setAttribute('aria-hidden', 'false');
+  }
+  function closeAllModals() {
+    $$('.modal').forEach(m=>m.setAttribute('aria-hidden','true'));
+  }
+
+  // 12. VIDEO AD HANDLER (HOME + TASK PAGE) ----------------------
+  // এখন শুধু Watch Now->Ad->Complete->reward (auto না)
   function handleVideoAd(taskType) {
     // taskType: 'home-daily', 'video-task'
-    // Home: allow only if not done today, Task page: allow if count < 20
     if (taskType === 'home-daily') {
       resetHomeTaskIfNeeded();
       if (getHomeTaskState().done) {
@@ -216,40 +233,42 @@
         return;
       }
     }
-    // Monetag SDK check
     if (typeof show_10002890 !== 'function') {
       alert("বিজ্ঞাপন সিস্টেম লোড হচ্ছে, একটু অপেক্ষা করুন বা পেজ রিফ্রেশ করুন।");
       return;
     }
+    // Watch now ক্লিকে disable, এড শেষ হলে Complete Enable
+    const modal = $("#modal-watch-video");
+    const completeBtn = modal?.querySelector('[data-action="confirm-task"][data-task="watch-video"]');
+    const watchBtn = modal?.querySelector('[data-action="start-video"]');
+    if (watchBtn) watchBtn.disabled = true;
+    if (completeBtn) completeBtn.disabled = true;
 
-    // Disable all video buttons during ad
-    $$('[data-action="start-video"]').forEach(b=>b.disabled=true);
-
-    // Start video ad
     show_10002890().then(() => {
-      // Success, reward
-      let reward = 1.00;
-      if (taskType === 'home-daily') {
-        completeHomeTask();
-        setBalance(getBalance() + reward);
-        alert("অভিনন্দন! ডেইলি টাস্ক সম্পন্ন হয়েছে, ৳1 পেয়েছেন।");
-      } else if (taskType === 'video-task') {
-        incrementVideoTask();
-        setBalance(getBalance() + reward);
-        alert("অভিনন্দন! টাস্ক সম্পন্ন হয়েছে, ৳1 পেয়েছেন।");
-      }
-      updateCounters();
+      if (completeBtn) completeBtn.disabled = false;
+      if (watchBtn) watchBtn.disabled = false;
+      alert('ভিডিও দেখা শেষ! এখন "Complete" বাটনে ক্লিক করুন।');
     }).catch(() => {
-      alert("বিজ্ঞাপন লোড হয়নি, আবার চেষ্টা করুন।");
-    }).finally(() => {
-      $$('[data-action="start-video"]').forEach(b=>b.disabled=false);
-      closeAllModals();
-      updateCounters();
+      if (watchBtn) watchBtn.disabled = false;
+      alert("বিজ্ঞাপন লোড হয়নি!");
     });
   }
+  // Complete ক্লিকে টাকা/লিমিট বাড়াবে (automatic না)
+  function handleCompleteVideoTask() {
+    let state = getVideoTaskState();
+    if (state.count >= 20) {
+      alert("আজকের ভিডিও টাস্কের লিমিট শেষ!");
+      return false;
+    }
+    incrementVideoTask();
+    setBalance(getBalance() + 1);
+    alert("অভিনন্দন! টাস্ক সম্পন্ন হয়েছে, ৳1 পেয়েছেন।");
+    updateCounters();
+    closeAllModals();
+    return true;
+  }
 
-  // ---------- JOIN CHANNEL TASK (TASK PAGE) ----------
-
+  // 13. JOIN CHANNEL TASK (TASK PAGE) ----------------------
   function handleJoinChannelTask() {
     if (localStorage.getItem(STORE_KEYS.joinChannel) === "done") {
       alert("আপনি ইতোমধ্যে চ্যানেলে জয়েন টাস্কটি সম্পন্ন করেছেন।");
@@ -258,20 +277,12 @@
     setBalance(getBalance() + 5);
     localStorage.setItem(STORE_KEYS.joinChannel, "done");
     alert("অভিনন্দন! টেলিগ্রাম চ্যানেলে জয়েন করার জন্য ৳5 পেয়েছেন।");
+    updateCounters();
+    closeAllModals();
     return true;
   }
 
-  // ---------- MODALS, EVENTS, INIT ----------
-
-  function openModal(id) {
-    const modal = $('#' + id);
-    if (modal) modal.setAttribute('aria-hidden', 'false');
-  }
-  function closeAllModals() {
-    $$('.modal').forEach(m=>m.setAttribute('aria-hidden','true'));
-  }
-
-  // -- Event Binding --
+  // 14. EVENTS ----------------------
   function bindEvents() {
     // Video watch button (home/task)
     document.addEventListener('click', function(e){
@@ -287,7 +298,6 @@
         }
       }
     });
-
     // Video ad start
     document.addEventListener('click', function(e){
       const btn = e.target.closest('[data-action="start-video"]');
@@ -295,62 +305,54 @@
         handleVideoAd(btn.dataset.task || (isHome ? 'home-daily' : 'video-task'));
       }
     });
-
-    // Close modal
+    // Complete ভিডিও টাস্ক
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-action="confirm-task"][data-task="watch-video"]');
+      if (btn && !btn.disabled) {
+        handleCompleteVideoTask();
+      }
+    });
+    // Join channel complete (task page)
+    document.addEventListener('click', function(e){
+      const btn = e.target.closest('[data-action="confirm-task"][data-task="join-channel"]');
+      if (btn && !btn.disabled) {
+        handleJoinChannelTask();
+      }
+    });
+    // Modal close
     document.addEventListener('click', function(e){
       const closeBtn = e.target.closest('[data-close-modal]');
       if (closeBtn) {
         closeAllModals();
       }
     });
-
-    // Join channel complete (task page)
-    document.addEventListener('click', function(e){
-      const btn = e.target.closest('[data-action="confirm-task"][data-task="join-channel"]');
-      if (btn) {
-        if (handleJoinChannelTask()) {
-          closeAllModals();
+    // নেভিগেশন লিংক ক্লিক: Home↔Task
+    $$(".bottom-nav .nav-item").forEach(nav => {
+      nav.addEventListener("click", function(e) {
+        const href = nav.getAttribute("href");
+        if (href && (href.includes("task.html") || href.includes("index.html"))) {
+          e.preventDefault();
+          showPreloader(1500);
+          setTimeout(() => { window.location.href = href; }, 1500);
         }
-      }
+      });
     });
   }
 
-  // ---------- INITIALIZE ----------
-
+  // 15. INITIALIZE ----------------------
   function init() {
-    // Preloader hide
-    if ($("#preloader")) {
-      setTimeout(() => {
-        $("#preloader").classList.add("hidden");
-        if ($("#app")) $("#app").setAttribute("aria-hidden", "false");
-      }, 5000); // ৫ সেকেন্ড শো করবে
-    }
-    else if ($("#app")) {
-      $("#app").setAttribute("aria-hidden", "false");
-    }
-
-    // User info/profile
+    initPreloader();
     loadUserInfo();
     loadProfileImg();
     setupProfileImgSelect();
     setupNameEdit();
-
-    // Balance
     setBalance(getBalance());
-
-    // Reset home task if new day
     resetHomeTaskIfNeeded();
-
-    // Task counter
     updateCounters();
-
-    // Bind events
     bindEvents();
   }
-
   // Date helpers
   function getToday() {
-    // Always returns YYYY-MM-DD in local time
     const d = new Date();
     return d.getFullYear() + '-' + (d.getMonth()+1).toString().padStart(2,'0') + '-' + d.getDate().toString().padStart(2,'0');
   }

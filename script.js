@@ -3,13 +3,14 @@
   Main JavaScript file for the home screen.
   
   *** আপডেটের সারসংক্ষেপ: ***
-  1. Monetag Integration FIX: Rewarded Interstitial (show_10002890) কল লজিক আপডেট করা হয়েছে।
-  2. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
-  3. UI Cleanup: মডাল থেকে অপ্রয়োজনীয় 'Confirm Task' বাটন লজিক মুছে ফেলা হয়েছে।
+  1. Telegram User Data Integration: Telegram.WebApp থেকে নাম ও ইউজারনেম নেওয়া হয়েছে।
+  2. Dynamic Avatar System: ইউজারের নাম থেকে আদ্যক্ষর ও ডায়নামিক কালার জেনারেট করে UI-তে বসানো হয়েছে।
+  3. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
   
   *** আপনার সমস্যার সমাধান (Modified Code): ***
-  - startVideoAd: এখন সরাসরি show_10002890() কল করে এবং .then() এ completeTask() কল করে।
-  - openModal/bindEvents: 'confirm-task' লজিক বাদ দেওয়া হয়েছে।
+  - Static USER_INFO অবজেক্ট সরানো হয়েছে।
+  - নতুন ফাংশন: getHashColor, getUserInitials, getTelegramUserData যোগ করা হয়েছে।
+  - updateUI ফাংশন আপডেট করা হয়েছে Telegram ডেটা ব্যবহারের জন্য।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -20,13 +21,64 @@
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
 
+  // --- NEW: Dynamic Color Generation for Avatar ---
+  function getHashColor(str) {
+    let hash = 0;
+    // Hash the string
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    // Generate HSL color (light and soft tones)
+    let hue = hash % 360; 
+    let saturation = 50; // Less vibrant
+    let lightness = 55;  // Slightly bright
+    
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  }
+  
+  // --- NEW: Get User Initials ---
+  function getUserInitials(firstName, lastName) {
+      const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : '';
+      const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
+      return `${firstInitial}${lastInitial}`;
+  }
+  
+  // --- NEW: Load Telegram User Data ---
+  function getTelegramUserData() {
+    let userData = {
+      id: 0,
+      first_name: "ইউজারের",
+      last_name: "নাম",
+      username: "username",
+    };
+
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+        userData.id = tgUser.id;
+        userData.first_name = tgUser.first_name || "ইউজার";
+        userData.last_name = tgUser.last_name || "";
+        userData.username = tgUser.username ? `@${tgUser.username}` : "(No Username)";
+    } else {
+        // Fallback for testing outside Telegram Mini App environment
+        console.warn("Telegram WebApp data not found. Using fallback data.");
+    }
+    
+    // Process Initials and Color
+    userData.initials = getUserInitials(userData.first_name, userData.last_name);
+    // Use the full name or ID for a consistent color hash
+    userData.avatarColor = getHashColor(`${userData.first_name}${userData.last_name}${userData.id}`); 
+    
+    return userData;
+  }
+  
+
   // --- 2. DOM Element Cache ---
   const els = {
     preloader: $("#preloader"),
     app: $("#app"),
     userName: $("#user-name"),
     userUsername: $("#user-username"),
-    userAvatar: $("#user-avatar"),
+    userAvatar: $("#user-avatar"), // এখন এটি একটি div
     balanceAmount: $("#balance-amount"),
     tasksToday: $("#tasks-today"), // Home page stat
     referralsCount: $("#referrals-count"),
@@ -43,11 +95,13 @@
   
   const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
   const TASK_REWARD = 1.00;
-  const USER_INFO = {
-    name: "A. K. Yeasin",
-    username: "@yeasinkhan",
-    avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
-  };
+  
+  // ** পুরানো USER_INFO অবজেক্টের আর দরকার নেই, এটি এখন getTelegramUserData থেকে আসবে **
+  // const USER_INFO = {
+  //   name: "A. K. Yeasin",
+  //   username: "@yeasinkhan",
+  //   avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
+  // };
   
   // Custom alert function (to keep consistency without structural changes)
   function showCustomAlert(message) {
@@ -84,9 +138,18 @@
   // --- 4. UI/Data Sync Functions ---
 
   function updateUI(state) {
-    if (els.userName) els.userName.textContent = USER_INFO.name;
-    if (els.userUsername) els.userUsername.textContent = USER_INFO.username;
-    if (els.userAvatar) els.userAvatar.src = USER_INFO.avatar;
+    // ** আপডেট: টেলিগ্রাম ডেটা লোড করা **
+    const USER_DATA = getTelegramUserData();
+
+    // Use USER_DATA for displaying Name and Username
+    if (els.userName) els.userName.textContent = `${USER_DATA.first_name} ${USER_DATA.last_name}`.trim();
+    if (els.userUsername) els.userUsername.textContent = USER_DATA.username;
+    
+    // ** আপডেট: ডায়নামিক অ্যাভাটার রেন্ডার করা **
+    if (els.userAvatar) {
+        els.userAvatar.textContent = USER_DATA.initials;
+        els.userAvatar.style.backgroundColor = USER_DATA.avatarColor;
+    }
 
     if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
     if (els.referralsCount) els.referralsCount.textContent = state.referrals;
@@ -145,20 +208,19 @@
   }
 
   // --- 5. Core App Logic ---
+  // completeTask, openModal, closeModal, startVideoAd functions are unchanged
 
   function completeTask(taskType) {
     let state = getState();
 
     // 1. CRITICAL: Check the total limit again
     if (state.tasksState.completed >= TASK_LIMIT) {
-      // Alert is already given in startVideoAd's initial check, but for safety:
       showCustomAlert("দুঃখিত, আপনার আজকের দৈনিক টাস্কের লিমিট শেষ।");
       return;
     }
     
     // 2. Check if the task being completed is the HOME TASK
     if (taskType === 'home-daily' && state.homeTaskDoneState.done) {
-        // Alert is already given in startVideoAd's initial check, but for safety:
         showCustomAlert("আপনি আজকের ডেইলি টাস্কটি একবার সম্পন্ন করেছেন।");
         return;
     }
@@ -180,7 +242,6 @@
     updateUI(state);
 
     // Provide professional feedback
-    // This alert is now triggered only on successful reward
     showCustomAlert(`অসাধারণ! টাস্ক সফলভাবে সম্পন্ন হয়েছে। আপনার অ্যাকাউন্টে ৳${TASK_REWARD.toFixed(2)} যোগ করা হয়েছে। 🎉`);
   }
   

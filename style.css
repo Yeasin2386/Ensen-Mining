@@ -417,6 +417,13 @@ h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.2; }
   object-fit: cover;
 }
 
+/* ========== 8. NEW DYNAMIC AVATAR STYLES (REQUIRED FOR JS UPDATE) ========== */
+
+/* অ্যাভাটার ইমেজের জন্য স্টাইল ওভাররাইড */
+.avatar:not(.dynamic-avatar) {
+  object-fit: cover;
+}
+
 /* ডায়নামিক প্রোফাইল অ্যাভাটার (নতুন যুক্ত) */
 .dynamic-avatar {
   /* ডিফল্ট ইমেজ স্টাইলকে ওভাররাইড করা */

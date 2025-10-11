@@ -409,3 +409,24 @@ h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.2; }
     transition: none !important;
   }
 }
+
+/* ========== 8. NEW DYNAMIC AVATAR STYLES (REQUIRED FOR JS UPDATE) ========== */
+
+/* অ্যাভাটার ইমেজের জন্য স্টাইল ওভাররাইড */
+.avatar:not(.dynamic-avatar) {
+  object-fit: cover;
+}
+
+/* ডায়নামিক প্রোফাইল অ্যাভাটার (নতুন যুক্ত) */
+.dynamic-avatar {
+  /* ডিফল্ট ইমেজ স্টাইলকে ওভাররাইড করা */
+  display: grid;
+  place-items: center;
+  /* ফন্ট স্টাইল */
+  font-family: var(--font-body);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff; /* টেক্সট সাদা হবে */
+  /* placeholder.png এর বর্ডার/শ্যাডো ধরে রাখা */
+  background-color: var(--text-secondary); /* ডিফল্ট ব্যাকগ্রাউন্ড */
+}

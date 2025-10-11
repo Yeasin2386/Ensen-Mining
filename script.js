@@ -23,18 +23,24 @@
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
-    // Generate HSL color (light and soft tones)
+    // Generate HSL color (light and soft tones - as requested)
     let hue = hash % 360; 
-    let saturation = 50; // Less vibrant
-    let lightness = 55;  // Slightly bright
+    let saturation = 50; 
+    let lightness = 55;  
     
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
   
   // --- NEW: Get User Initials ---
   function getUserInitials(firstName, lastName) {
+      // Ensure the initials are only A-Z
       const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : '';
       const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : '';
+      
+      // If there is no last name, just use the first initial twice for a fuller look (e.g., AA)
+      if (firstInitial && !lastInitial) {
+          return `${firstInitial}${firstInitial}`;
+      }
       return `${firstInitial}${lastInitial}`;
   }
   
@@ -44,23 +50,25 @@
       id: 0,
       first_name: "ইউজারের",
       last_name: "নাম",
-      username: "@username", // Updated fallback username format
+      username: "@username", 
     };
 
-    // Check if Telegram WebApp is initialized and user data is available
-    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
-        const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
-        
-        userData.id = tgUser.id;
-        // FIX: Ensure both first_name and last_name are correctly retrieved.
+    // FIX: Accessing window.Telegram.WebApp must be done carefully in Mini Apps
+    const tgApp = window.Telegram && window.Telegram.WebApp;
+    const tgUser = tgApp && tgApp.initDataUnsafe && tgApp.initDataUnsafe.user;
+
+    if (tgUser) {
+        // Data is available from Telegram
+        userData.id = tgUser.id || 0;
+        // The core fix ensures we check for null/undefined strings
         userData.first_name = tgUser.first_name || "ইউজার";
         userData.last_name = tgUser.last_name || "";
         
-        // FIX: Ensure username is displayed with '@' if available, or a fallback is used.
+        // FIX: Displaying the username with @ if it exists
         userData.username = tgUser.username ? `@${tgUser.username}` : "(No Username)"; 
     } else {
-        // Fallback for testing outside Telegram Mini App environment
-        console.warn("Telegram WebApp data not found. Using fallback data.");
+        // Fallback for local testing or if Telegram WebApp is not fully initialized
+        console.warn("Telegram WebApp data not found. Using fallback data. Ensure app is run inside Telegram.");
     }
     
     // Process Initials and Color
@@ -78,9 +86,9 @@
     app: $("#app"),
     userName: $("#user-name"),
     userUsername: $("#user-username"),
-    userAvatar: $("#user-avatar"), // এখন এটি একটি div
+    userAvatar: $("#user-avatar"), 
     balanceAmount: $("#balance-amount"),
-    tasksToday: $("#tasks-today"), // Home page stat
+    tasksToday: $("#tasks-today"), 
     referralsCount: $("#referrals-count"),
     homeTaskBtn: $('[data-task-type="home-daily"]'), 
   };
@@ -93,10 +101,9 @@
     homeTaskDone: "grand_home_task_done_v3",
   };
   
-  const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
+  const TASK_LIMIT = 20; 
   const TASK_REWARD = 1.00;
   
-  // Custom alert function (to keep consistency without structural changes)
   function showCustomAlert(message) {
     alert(message);
   }
@@ -135,7 +142,6 @@
     const USER_DATA = getTelegramUserData();
 
     // Display Name and Username
-    // trim() ব্যবহার করা হয়েছে যাতে শুধুমাত্র first_name থাকলে অতিরিক্ত স্পেস না থাকে
     const fullName = `${USER_DATA.first_name} ${USER_DATA.last_name}`.trim();
     if (els.userName) els.userName.textContent = fullName || "ইউজার"; 
     if (els.userUsername) els.userUsername.textContent = USER_DATA.username;

@@ -325,3 +325,91 @@
   document.addEventListener("DOMContentLoaded", init);
 
 })();
+
+/*
+  Grand App - Telegram Integrated Avatar Update
+  ---------------------------------------------
+  - Real Telegram WebApp integration (initDataUnsafe.user)
+  - Auto-generated avatar when photo_url missing
+  - Unique pastel color per user (username / id hash)
+*/
+
+(() => {
+  "use strict";
+
+  const $ = (s, p = document) => p.querySelector(s);
+
+  // === 1. Telegram user loader ===
+  function getTelegramUser() {
+    if (window.Telegram && window.Telegram.WebApp) {
+      const user = window.Telegram.WebApp.initDataUnsafe?.user;
+      if (user) return user;
+    }
+    return null;
+  }
+
+  // === 2. Color + initials avatar generator ===
+  function createInitialAvatar(first, last, seedValue) {
+    const initials =
+      (first?.charAt(0)?.toUpperCase() || "") +
+      (last?.charAt(0)?.toUpperCase() || "");
+
+    // simple hash → hue
+    const seed = String(seedValue || initials);
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++)
+      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+    const hue = Math.abs(hash) % 360;
+    const bg = `hsl(${hue}, 70%, 70%)`;
+
+    const el = document.createElement("div");
+    el.style.width = "64px";
+    el.style.height = "64px";
+    el.style.borderRadius = "50%";
+    el.style.display = "grid";
+    el.style.placeItems = "center";
+    el.style.fontWeight = "700";
+    el.style.fontSize = "1.5rem";
+    el.style.color = "#fff";
+    el.style.backgroundColor = bg;
+    el.textContent = initials || "?";
+    return el;
+  }
+
+  // === 3. Apply info to UI ===
+  function applyUserInfo(user) {
+    const nameEl = $("#user-name");
+    const handleEl = $("#user-username");
+    const imgEl = $("#user-avatar");
+
+    const fullName =
+      (user.first_name || "") +
+      (user.last_name ? " " + user.last_name : "");
+    const username = user.username ? "@" + user.username : "";
+
+    if (nameEl) nameEl.textContent = fullName || "Unknown";
+    if (handleEl) handleEl.textContent = username || "";
+
+    if (user.photo_url) {
+      imgEl.src = user.photo_url;
+    } else {
+      const wrap = imgEl.parentElement;
+      const newAvatar = createInitialAvatar(
+        user.first_name,
+        user.last_name,
+        user.username || user.id
+      );
+      imgEl.remove();
+      wrap.prepend(newAvatar);
+    }
+  }
+
+  // === 4. Init ===
+  document.addEventListener("DOMContentLoaded", () => {
+    const tgUser = getTelegramUser();
+    if (tgUser) {
+      applyUserInfo(tgUser);
+    }
+    // তোমার বাকি Grand App লজিক আগের মতো চলবে
+  });
+})();

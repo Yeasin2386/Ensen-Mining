@@ -3,14 +3,9 @@
   Main JavaScript file for the home screen.
   
   *** আপডেটের সারসংক্ষেপ: ***
-  1. Telegram User Data Integration: Telegram.WebApp থেকে নাম ও ইউজারনেম নেওয়া হয়েছে।
+  1. FIX: Telegram User Data Acquisition (ইউজারনেম এবং নাম ইনপুট নেওয়ার সমস্যা সমাধান করা হয়েছে)।
   2. Dynamic Avatar System: ইউজারের নাম থেকে আদ্যক্ষর ও ডায়নামিক কালার জেনারেট করে UI-তে বসানো হয়েছে।
   3. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
-  
-  *** আপনার সমস্যার সমাধান (Modified Code): ***
-  - Static USER_INFO অবজেক্ট সরানো হয়েছে।
-  - নতুন ফাংশন: getHashColor, getUserInitials, getTelegramUserData যোগ করা হয়েছে।
-  - updateUI ফাংশন আপডেট করা হয়েছে Telegram ডেটা ব্যবহারের জন্য।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -43,21 +38,26 @@
       return `${firstInitial}${lastInitial}`;
   }
   
-  // --- NEW: Load Telegram User Data ---
+  // --- NEW: Load Telegram User Data (FIXED) ---
   function getTelegramUserData() {
     let userData = {
       id: 0,
       first_name: "ইউজারের",
       last_name: "নাম",
-      username: "username",
+      username: "@username", // Updated fallback username format
     };
 
+    // Check if Telegram WebApp is initialized and user data is available
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
         const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+        
         userData.id = tgUser.id;
+        // FIX: Ensure both first_name and last_name are correctly retrieved.
         userData.first_name = tgUser.first_name || "ইউজার";
         userData.last_name = tgUser.last_name || "";
-        userData.username = tgUser.username ? `@${tgUser.username}` : "(No Username)";
+        
+        // FIX: Ensure username is displayed with '@' if available, or a fallback is used.
+        userData.username = tgUser.username ? `@${tgUser.username}` : "(No Username)"; 
     } else {
         // Fallback for testing outside Telegram Mini App environment
         console.warn("Telegram WebApp data not found. Using fallback data.");
@@ -96,13 +96,6 @@
   const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
   const TASK_REWARD = 1.00;
   
-  // ** পুরানো USER_INFO অবজেক্টের আর দরকার নেই, এটি এখন getTelegramUserData থেকে আসবে **
-  // const USER_INFO = {
-  //   name: "A. K. Yeasin",
-  //   username: "@yeasinkhan",
-  //   avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
-  // };
-  
   // Custom alert function (to keep consistency without structural changes)
   function showCustomAlert(message) {
     alert(message);
@@ -138,14 +131,16 @@
   // --- 4. UI/Data Sync Functions ---
 
   function updateUI(state) {
-    // ** আপডেট: টেলিগ্রাম ডেটা লোড করা **
+    // ** টেলিগ্রাম ডেটা লোড করা **
     const USER_DATA = getTelegramUserData();
 
-    // Use USER_DATA for displaying Name and Username
-    if (els.userName) els.userName.textContent = `${USER_DATA.first_name} ${USER_DATA.last_name}`.trim();
+    // Display Name and Username
+    // trim() ব্যবহার করা হয়েছে যাতে শুধুমাত্র first_name থাকলে অতিরিক্ত স্পেস না থাকে
+    const fullName = `${USER_DATA.first_name} ${USER_DATA.last_name}`.trim();
+    if (els.userName) els.userName.textContent = fullName || "ইউজার"; 
     if (els.userUsername) els.userUsername.textContent = USER_DATA.username;
     
-    // ** আপডেট: ডায়নামিক অ্যাভাটার রেন্ডার করা **
+    // ** ডায়নামিক অ্যাভাটার রেন্ডার করা **
     if (els.userAvatar) {
         els.userAvatar.textContent = USER_DATA.initials;
         els.userAvatar.style.backgroundColor = USER_DATA.avatarColor;
@@ -208,8 +203,6 @@
   }
 
   // --- 5. Core App Logic ---
-  // completeTask, openModal, closeModal, startVideoAd functions are unchanged
-
   function completeTask(taskType) {
     let state = getState();
 

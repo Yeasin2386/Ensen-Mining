@@ -6,10 +6,13 @@
   1. Monetag Integration FIX: Rewarded Interstitial (show_10002890) কল লজিক আপডেট করা হয়েছে।
   2. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
   3. UI Cleanup: মডাল থেকে অপ্রয়োজনীয় 'Confirm Task' বাটন লজিক মুছে ফেলা হয়েছে।
+  4. Telegram User Data Import: টেলিগ্রাম থেকে ইউজারনেম, ফার্স্ট নেম এবং লাস্ট নেম ইমপোর্ট করা হবে।
+  5. Profile Avatar Generation: ইউজারের প্রথম অক্ষর দিয়ে র্যান্ডম কালারের অ্যাভাটার জেনারেট করা হবে।
   
   *** আপনার সমস্যার সমাধান (Modified Code): ***
   - startVideoAd: এখন সরাসরি show_10002890() কল করে এবং .then() এ completeTask() কল করে।
   - openModal/bindEvents: 'confirm-task' লজিক বাদ দেওয়া হয়েছে।
+  - initializeUserData: টেলিগ্রাম ডেটা ইমপোর্ট এবং অ্যাভাটার জেনারেশন যোগ করা হয়েছে।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -19,6 +22,92 @@
   // --- 1. Helper Functions ---
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
+
+  // --- Telegram User Data Integration ---
+  function getTelegramUserData() {
+      // Check if we're in Telegram Web App
+      if (window.Telegram && Telegram.WebApp) {
+          const initData = Telegram.WebApp.initData || '';
+          const initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
+          const user = initDataUnsafe.user || {};
+          
+          if (user) {
+              return {
+                  firstName: user.first_name || '',
+                  lastName: user.last_name || '',
+                  username: user.username ? `@${user.username}` : '',
+                  telegramId: user.id || null
+              };
+          }
+      }
+      return null;
+  }
+
+  function generateAvatarFromName(name) {
+      if (!name) return '';
+      
+      // Get first letter
+      const firstLetter = name.charAt(0).toUpperCase();
+      
+      // Color palette: light green, light red, light blue
+      const colors = [
+          '#E8F5E8', // Light Green
+          '#FFEBEE', // Light Red  
+          '#E3F2FD'  // Light Blue
+      ];
+      
+      // Generate consistent color based on first letter
+      const colorIndex = firstLetter.charCodeAt(0) % colors.length;
+      const backgroundColor = colors[colorIndex];
+      const textColor = '#1F2328'; // Dark text for contrast
+      
+      // Create SVG avatar
+      const svg = `
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="32" fill="${backgroundColor}"/>
+              <text x="32" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="600" fill="${textColor}">${firstLetter}</text>
+          </svg>
+      `;
+      
+      return 'data:image/svg+xml;base64,' + btoa(svg);
+  }
+
+  function initializeUserData() {
+      const STORE_KEYS = {
+          userInfo: "grand_user_info_v3"
+      };
+      
+      // Check if user data already exists in localStorage
+      let userInfo = JSON.parse(localStorage.getItem(STORE_KEYS.userInfo)) || null;
+      
+      // If no user data exists, try to get from Telegram
+      if (!userInfo) {
+          const telegramData = getTelegramUserData();
+          
+          if (telegramData && telegramData.firstName) {
+              // Use Telegram data
+              userInfo = {
+                  name: `${telegramData.firstName} ${telegramData.lastName}`.trim(),
+                  username: telegramData.username || `@user${telegramData.telegramId || Date.now()}`,
+                  avatar: generateAvatarFromName(telegramData.firstName || 'User'),
+                  source: 'telegram'
+              };
+          } else {
+              // Use default data (your existing system)
+              userInfo = {
+                  name: "A. K. Yeasin",
+                  username: "@yeasinkhan", 
+                  avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
+                  source: 'default'
+              };
+          }
+          
+          // Save to localStorage
+          localStorage.setItem(STORE_KEYS.userInfo, JSON.stringify(userInfo));
+      }
+      
+      return userInfo;
+  }
 
   // --- 2. DOM Element Cache ---
   const els = {
@@ -39,15 +128,14 @@
     tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
     homeTaskDone: "grand_home_task_done_v3",
+    userInfo: "grand_user_info_v3"
   };
   
   const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
   const TASK_REWARD = 1.00;
-  const USER_INFO = {
-    name: "A. K. Yeasin",
-    username: "@yeasinkhan",
-    avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
-  };
+  
+  // Initialize user data dynamically
+  const USER_INFO = initializeUserData();
   
   // Custom alert function (to keep consistency without structural changes)
   function showCustomAlert(message) {
@@ -84,9 +172,12 @@
   // --- 4. UI/Data Sync Functions ---
 
   function updateUI(state) {
-    if (els.userName) els.userName.textContent = USER_INFO.name;
-    if (els.userUsername) els.userUsername.textContent = USER_INFO.username;
-    if (els.userAvatar) els.userAvatar.src = USER_INFO.avatar;
+    // Ensure user data is loaded
+    const userInfo = initializeUserData();
+    
+    if (els.userName) els.userName.textContent = userInfo.name;
+    if (els.userUsername) els.userUsername.textContent = userInfo.username;
+    if (els.userAvatar) els.userAvatar.src = userInfo.avatar;
 
     if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
     if (els.referralsCount) els.referralsCount.textContent = state.referrals;
@@ -324,92 +415,4 @@
   
   document.addEventListener("DOMContentLoaded", init);
 
-})();
-
-/*
-  Grand App - Telegram Integrated Avatar Update
-  ---------------------------------------------
-  - Real Telegram WebApp integration (initDataUnsafe.user)
-  - Auto-generated avatar when photo_url missing
-  - Unique pastel color per user (username / id hash)
-*/
-
-(() => {
-  "use strict";
-
-  const $ = (s, p = document) => p.querySelector(s);
-
-  // === 1. Telegram user loader ===
-  function getTelegramUser() {
-    if (window.Telegram && window.Telegram.WebApp) {
-      const user = window.Telegram.WebApp.initDataUnsafe?.user;
-      if (user) return user;
-    }
-    return null;
-  }
-
-  // === 2. Color + initials avatar generator ===
-  function createInitialAvatar(first, last, seedValue) {
-    const initials =
-      (first?.charAt(0)?.toUpperCase() || "") +
-      (last?.charAt(0)?.toUpperCase() || "");
-
-    // simple hash → hue
-    const seed = String(seedValue || initials);
-    let hash = 0;
-    for (let i = 0; i < seed.length; i++)
-      hash = seed.charCodeAt(i) + ((hash << 5) - hash);
-    const hue = Math.abs(hash) % 360;
-    const bg = `hsl(${hue}, 70%, 70%)`;
-
-    const el = document.createElement("div");
-    el.style.width = "64px";
-    el.style.height = "64px";
-    el.style.borderRadius = "50%";
-    el.style.display = "grid";
-    el.style.placeItems = "center";
-    el.style.fontWeight = "700";
-    el.style.fontSize = "1.5rem";
-    el.style.color = "#fff";
-    el.style.backgroundColor = bg;
-    el.textContent = initials || "?";
-    return el;
-  }
-
-  // === 3. Apply info to UI ===
-  function applyUserInfo(user) {
-    const nameEl = $("#user-name");
-    const handleEl = $("#user-username");
-    const imgEl = $("#user-avatar");
-
-    const fullName =
-      (user.first_name || "") +
-      (user.last_name ? " " + user.last_name : "");
-    const username = user.username ? "@" + user.username : "";
-
-    if (nameEl) nameEl.textContent = fullName || "Unknown";
-    if (handleEl) handleEl.textContent = username || "";
-
-    if (user.photo_url) {
-      imgEl.src = user.photo_url;
-    } else {
-      const wrap = imgEl.parentElement;
-      const newAvatar = createInitialAvatar(
-        user.first_name,
-        user.last_name,
-        user.username || user.id
-      );
-      imgEl.remove();
-      wrap.prepend(newAvatar);
-    }
-  }
-
-  // === 4. Init ===
-  document.addEventListener("DOMContentLoaded", () => {
-    const tgUser = getTelegramUser();
-    if (tgUser) {
-      applyUserInfo(tgUser);
-    }
-    // তোমার বাকি Grand App লজিক আগের মতো চলবে
-  });
 })();

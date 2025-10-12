@@ -6,13 +6,10 @@
   1. Monetag Integration FIX: Rewarded Interstitial (show_10002890) কল লজিক আপডেট করা হয়েছে।
   2. Reward Automation: অ্যাড দেখা শেষ হলে "Complete" বাটনে ক্লিক করার দরকার নেই, স্বয়ংক্রিয়ভাবে পুরষ্কার যোগ হবে।
   3. UI Cleanup: মডাল থেকে অপ্রয়োজনীয় 'Confirm Task' বাটন লজিক মুছে ফেলা হয়েছে।
-  4. Telegram User Data Import: টেলিগ্রাম থেকে ইউজারনেম, ফার্স্ট নেম এবং লাস্ট নেম ইমপোর্ট করা হবে।
-  5. Profile Avatar Generation: ইউজারের প্রথম অক্ষর দিয়ে র্যান্ডম কালারের অ্যাভাটার জেনারেট করা হবে।
   
   *** আপনার সমস্যার সমাধান (Modified Code): ***
   - startVideoAd: এখন সরাসরি show_10002890() কল করে এবং .then() এ completeTask() কল করে।
   - openModal/bindEvents: 'confirm-task' লজিক বাদ দেওয়া হয়েছে।
-  - initializeUserData: টেলিগ্রাম ডেটা ইমপোর্ট এবং অ্যাভাটার জেনারেশন যোগ করা হয়েছে।
 */
 
 // Using an IIFE (Immediately Activated Function Expression) to avoid polluting the global scope.
@@ -22,109 +19,6 @@
   // --- 1. Helper Functions ---
   const $ = (selector, parent = document) => parent.querySelector(selector);
   const $$ = (selector, parent = document) => Array.from(parent.querySelectorAll(selector));
-
-  // --- Telegram User Data Integration ---
-  function getTelegramUserData() {
-      // Check if we're in Telegram Web App with proper error handling
-      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
-          try {
-              const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe || {};
-              const user = initDataUnsafe.user || {};
-              
-              if (user && user.first_name) {
-                  return {
-                      firstName: user.first_name || '',
-                      lastName: user.last_name || '',
-                      username: user.username ? `@${user.username}` : '',
-                      telegramId: user.id || null
-                  };
-              }
-          } catch (error) {
-              console.log('Telegram Web App data not available:', error);
-          }
-      }
-      return null;
-  }
-
-  function generateAvatarFromName(name) {
-      if (!name) return '';
-      
-      // Get first letter
-      const firstLetter = name.charAt(0).toUpperCase();
-      
-      // Color palette: light green, light red, light blue
-      const colors = [
-          '#E8F5E8', // Light Green
-          '#FFEBEE', // Light Red  
-          '#E3F2FD'  // Light Blue
-      ];
-      
-      // Generate consistent color based on first letter
-      const colorIndex = firstLetter.charCodeAt(0) % colors.length;
-      const backgroundColor = colors[colorIndex];
-      const textColor = '#1F2328'; // Dark text for contrast
-      
-      // Create SVG avatar
-      const svg = `
-          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="32" cy="32" r="32" fill="${backgroundColor}"/>
-              <text x="32" y="42" text-anchor="middle" font-family="Inter, sans-serif" font-size="24" font-weight="600" fill="${textColor}">${firstLetter}</text>
-          </svg>
-      `;
-      
-      return 'data:image/svg+xml;base64,' + btoa(svg);
-  }
-
-  function initializeUserData() {
-      const STORE_KEYS = {
-          userInfo: "grand_user_info_v3"
-      };
-      
-      // Check if user data already exists in localStorage
-      let userInfo = null;
-      try {
-          userInfo = JSON.parse(localStorage.getItem(STORE_KEYS.userInfo));
-      } catch (e) {
-          console.log('No user data in localStorage');
-      }
-      
-      // If no user data exists, try to get from Telegram
-      if (!userInfo) {
-          const telegramData = getTelegramUserData();
-          
-          if (telegramData && telegramData.firstName) {
-              // Use Telegram data
-              const fullName = `${telegramData.firstName} ${telegramData.lastName || ''}`.trim();
-              userInfo = {
-                  name: fullName,
-                  username: telegramData.username || `@user${telegramData.telegramId || Date.now()}`,
-                  avatar: generateAvatarFromName(telegramData.firstName),
-                  source: 'telegram'
-              };
-              console.log('Loaded user data from Telegram:', userInfo);
-          } else {
-              // Use default data (your existing system)
-              userInfo = {
-                  name: "A. K. Yeasin",
-                  username: "@yeasinkhan", 
-                  avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
-                  source: 'default'
-              };
-              console.log('Using default user data');
-          }
-          
-          // Save to localStorage
-          try {
-              localStorage.setItem(STORE_KEYS.userInfo, JSON.stringify(userInfo));
-          } catch (e) {
-              console.log('Failed to save user data to localStorage');
-          }
-      } else {
-          console.log('Loaded user data from localStorage:', userInfo);
-      }
-      
-      return userInfo;
-  }
 
   // --- 2. DOM Element Cache ---
   const els = {
@@ -145,14 +39,15 @@
     tasks: "grand_tasks_v3",
     referrals: "grand_referrals_v3",
     homeTaskDone: "grand_home_task_done_v3",
-    userInfo: "grand_user_info_v3"
   };
   
   const TASK_LIMIT = 20; // মোট দৈনিক টাস্ক লিমিট
   const TASK_REWARD = 1.00;
-  
-  // Initialize user data dynamically
-  const USER_INFO = initializeUserData();
+  const USER_INFO = {
+    name: "A. K. Yeasin",
+    username: "@yeasinkhan",
+    avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
+  };
   
   // Custom alert function (to keep consistency without structural changes)
   function showCustomAlert(message) {
@@ -189,23 +84,9 @@
   // --- 4. UI/Data Sync Functions ---
 
   function updateUI(state) {
-    // Ensure user data is loaded
-    const userInfo = initializeUserData();
-    
-    console.log('Updating UI with user data:', userInfo);
-    
-    if (els.userName) {
-        els.userName.textContent = userInfo.name;
-        console.log('Set user name to:', userInfo.name);
-    }
-    if (els.userUsername) {
-        els.userUsername.textContent = userInfo.username;
-        console.log('Set username to:', userInfo.username);
-    }
-    if (els.userAvatar) {
-        els.userAvatar.src = userInfo.avatar;
-        console.log('Set avatar to:', userInfo.avatar);
-    }
+    if (els.userName) els.userName.textContent = USER_INFO.name;
+    if (els.userUsername) els.userUsername.textContent = USER_INFO.username;
+    if (els.userAvatar) els.userAvatar.src = USER_INFO.avatar;
 
     if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
     if (els.referralsCount) els.referralsCount.textContent = state.referrals;

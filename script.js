@@ -25,19 +25,22 @@
 
   // --- Telegram User Data Integration ---
   function getTelegramUserData() {
-      // Check if we're in Telegram Web App
-      if (window.Telegram && Telegram.WebApp) {
-          const initData = Telegram.WebApp.initData || '';
-          const initDataUnsafe = Telegram.WebApp.initDataUnsafe || {};
-          const user = initDataUnsafe.user || {};
-          
-          if (user) {
-              return {
-                  firstName: user.first_name || '',
-                  lastName: user.last_name || '',
-                  username: user.username ? `@${user.username}` : '',
-                  telegramId: user.id || null
-              };
+      // Check if we're in Telegram Web App with proper error handling
+      if (typeof window !== 'undefined' && window.Telegram && window.Telegram.WebApp) {
+          try {
+              const initDataUnsafe = window.Telegram.WebApp.initDataUnsafe || {};
+              const user = initDataUnsafe.user || {};
+              
+              if (user && user.first_name) {
+                  return {
+                      firstName: user.first_name || '',
+                      lastName: user.last_name || '',
+                      username: user.username ? `@${user.username}` : '',
+                      telegramId: user.id || null
+                  };
+              }
+          } catch (error) {
+              console.log('Telegram Web App data not available:', error);
           }
       }
       return null;
@@ -78,7 +81,12 @@
       };
       
       // Check if user data already exists in localStorage
-      let userInfo = JSON.parse(localStorage.getItem(STORE_KEYS.userInfo)) || null;
+      let userInfo = null;
+      try {
+          userInfo = JSON.parse(localStorage.getItem(STORE_KEYS.userInfo));
+      } catch (e) {
+          console.log('No user data in localStorage');
+      }
       
       // If no user data exists, try to get from Telegram
       if (!userInfo) {
@@ -86,12 +94,14 @@
           
           if (telegramData && telegramData.firstName) {
               // Use Telegram data
+              const fullName = `${telegramData.firstName} ${telegramData.lastName || ''}`.trim();
               userInfo = {
-                  name: `${telegramData.firstName} ${telegramData.lastName}`.trim(),
+                  name: fullName,
                   username: telegramData.username || `@user${telegramData.telegramId || Date.now()}`,
-                  avatar: generateAvatarFromName(telegramData.firstName || 'User'),
+                  avatar: generateAvatarFromName(telegramData.firstName),
                   source: 'telegram'
               };
+              console.log('Loaded user data from Telegram:', userInfo);
           } else {
               // Use default data (your existing system)
               userInfo = {
@@ -100,10 +110,17 @@
                   avatar: "image/Gemini_Generated_Image_dcsl0idcsl0idcsl.png",
                   source: 'default'
               };
+              console.log('Using default user data');
           }
           
           // Save to localStorage
-          localStorage.setItem(STORE_KEYS.userInfo, JSON.stringify(userInfo));
+          try {
+              localStorage.setItem(STORE_KEYS.userInfo, JSON.stringify(userInfo));
+          } catch (e) {
+              console.log('Failed to save user data to localStorage');
+          }
+      } else {
+          console.log('Loaded user data from localStorage:', userInfo);
       }
       
       return userInfo;
@@ -175,9 +192,20 @@
     // Ensure user data is loaded
     const userInfo = initializeUserData();
     
-    if (els.userName) els.userName.textContent = userInfo.name;
-    if (els.userUsername) els.userUsername.textContent = userInfo.username;
-    if (els.userAvatar) els.userAvatar.src = userInfo.avatar;
+    console.log('Updating UI with user data:', userInfo);
+    
+    if (els.userName) {
+        els.userName.textContent = userInfo.name;
+        console.log('Set user name to:', userInfo.name);
+    }
+    if (els.userUsername) {
+        els.userUsername.textContent = userInfo.username;
+        console.log('Set username to:', userInfo.username);
+    }
+    if (els.userAvatar) {
+        els.userAvatar.src = userInfo.avatar;
+        console.log('Set avatar to:', userInfo.avatar);
+    }
 
     if (els.balanceAmount) els.balanceAmount.textContent = state.balance.toFixed(2);
     if (els.referralsCount) els.referralsCount.textContent = state.referrals;
